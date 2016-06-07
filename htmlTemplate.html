@@ -1,0 +1,448 @@
+模板更新时间：2016/05/18
+
+1.简单搜索
+
+<div class="search-advanced-box" ng-init="inputfocus = false"
+     ng-class="{'active': inputfocus}">
+    <div class="search-input-box">
+        <span class="iconfont" ng-click="v.search.simple.method()">&#xe60e;</span>
+        <input class="search-advanced" ng-focus="inputfocus = true" ng-blur="inputfocus = false"
+               ng-model="v.search.simple.form.keyword" my-search="v.search.simple.method()" type="text"
+               placeholder="请输入店铺名称或联系电话"/>
+        <span class="ft-clear iconfont">&#58904;</span>
+    </div>
+    <span ng-click="v.search.advanced.open()">高级搜索<span
+            class="icon-arrow icon-arrow-dark icon-arrow-down"
+            ng-class="{'active': v.search.advanced.showed}"></span></span>
+</div>
+
+2.高级搜索
+
+<div class="form-search" ng-if="v.search.advanced.showed">
+    <form name="formSearch" ng-submit="" novalidate="novalidate" autocomplete="off">
+        <ul class="form-list fn-clear">
+            <li class="form-group">
+                <div class="item-wrap store-name">
+                    <label class="item-name">店铺名称</label>
+                    <div class="item-input-wrap"
+                         ng-class="{'has-error': (formSearch.storeName.$invalid &amp;&amp; (formSearch.storeName.$touched || v.search.advanced.touched))}">
+                        <input class="form-control" placeholder="请输入店铺名称" name="storeName" max-word="256"
+                               ng-model="v.search.advanced.form.name" ng-trim="false" replace-space="" type="text"/>
+                        <div class="form-tips help-block form-error-icon"
+                             ng-messages="formSearch.storeName.$error"
+                             ng-show="formSearch.storeName.$invalid &amp;&amp; (formSearch.storeName.$touched || v.search.advanced.touched)">
+                            <div ng-message="maxword">最长只能输入256个字符</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="form-group">
+                <div class="item-wrap phone-num">
+                    <label class="item-name">联系电话</label>
+                    <div class="item-input-wrap"
+                         ng-class="{'has-error': (formSearch.phoneNum.$invalid &amp;&amp; (formSearch.phoneNum.$touched || v.search.advanced.touched))}">
+                        <input class="form-control" placeholder="请输入联系电话" name="phoneNum" max-word="11"
+                               ng-model="v.search.advanced.form.phone" ng-trim="false" replace-space="" type="text"/>
+                        <div class="form-tips help-block form-error-icon"
+                             ng-messages="formSearch.phoneNum.$error"
+                             ng-show="formSearch.phoneNum.$invalid &amp;&amp; (formSearch.phoneNum.$touched || v.search.advanced.touched)">
+                            <div ng-message="maxword">最长只能输入11个字符</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="form-group">
+                <div class="item-wrap auth-type">
+                    <label class="item-name">店铺类型</label>
+                    <div class="item-input-wrap">
+                        <my-select options="v.control.select.type.options"
+                                   current="v.control.select.type.current" key="_key"
+                                   val="_value" placeholder="请选择"></my-select>
+                    </div>
+                </div>
+            </li>
+            <!--<li class="form-group">-->
+            <!--<div class="item-wrap start-time">-->
+            <!--<label class="item-name">申请开始时间</label>-->
+            <!--<div class="item-input-wrap">-->
+            <!--<div class="input-group datetime-picker-wrap">-->
+            <!--<div class="input-group-addon iconfont"-->
+            <!--ng-click="v.control.date._config.method('startTime')">&#xe62e;</div>-->
+            <!--<input readonly="readonly" type="text" class="form-control"-->
+            <!--datetime-picker="yyyy-MM-dd HH:mm:ss"-->
+            <!--ng-model="v.control.date.startTime.value"-->
+            <!--is-open="v.control.date.startTime.showed" enable-time="true" today-Text="今天"-->
+            <!--now-Text="现在" date-Text="日期" time-Text="时间" clear-Text="清空" close-Text="关闭"-->
+            <!--show-Button-Bar="true"-->
+            <!--datepicker-options="v.control.date._config.dateOptions"-->
+            <!--timepicker-options="v.control.date._config.timeOptions"-->
+            <!--ng-click="v.control.date._config.method('startTime')" name="startTime"-->
+            <!--max-date="v.control.date.endTime.value"/>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</li>-->
+            <!--<li class="form-group">-->
+            <!--<div class="item-wrap end-time">-->
+            <!--<label class="item-name">申请结束时间</label>-->
+            <!--<div class="item-input-wrap">-->
+            <!--<div class="input-group datetime-picker-wrap">-->
+            <!--<div class="input-group-addon iconfont"-->
+            <!--ng-click="v.control.date._config.method('endTime')">&#xe62e;</div>-->
+            <!--<input readonly="readonly" type="text" class="form-control"-->
+            <!--datetime-picker="yyyy-MM-dd HH:mm:ss" ng-model="v.control.date.endTime.value"-->
+            <!--is-open="v.control.date.endTime.showed" enable-time="true" today-Text="今天"-->
+            <!--now-Text="现在" date-Text="日期" time-Text="时间" clear-Text="清空" close-Text="关闭"-->
+            <!--show-Button-Bar="true"-->
+            <!--datepicker-options="v.control.date._config.dateOptions"-->
+            <!--timepicker-options="v.control.date._config.timeOptions"-->
+            <!--ng-click="v.control.date._config.method('endTime')" name="endTime"-->
+            <!--min-date="v.control.date.startTime.value"/>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</li>-->
+            <li class="form-group">
+                <div class="item-wrap time-interval">
+                    <label class="item-name">创建时间</label>
+                    <div class="item-input-wrap">
+                        <div class="start-time-wrap">
+                            <div class="input-group datetime-picker-wrap">
+                                <div class="input-group-addon iconfont"
+                                     ng-click="v.control.date._config.method('startTime')">&#xe62e;</div>
+                                <input readonly="readonly" type="text" class="form-control"
+                                       datetime-picker="yyyy-MM-dd HH:mm:ss"
+                                       ng-model="v.control.date.startTime.value"
+                                       is-open="v.control.date.startTime.showed" enable-time="true"
+                                       today-Text="今天"
+                                       now-Text="现在" date-Text="日期" time-Text="时间" clear-Text="清空"
+                                       close-Text="关闭"
+                                       show-Button-Bar="true"
+                                       datepicker-options="v.control.date._config.dateOptions"
+                                       timepicker-options="v.control.date._config.timeOptions"
+                                       ng-click="v.control.date._config.method('startTime')" name="startTime"
+                                       max-date="v.control.date.endTime.value"/>
+                            </div>
+                        </div>
+                        <span class="short-line"></span>
+                        <div class="end-time-wrap">
+                            <div class="input-group datetime-picker-wrap">
+                                <div class="input-group-addon iconfont"
+                                     ng-click="v.control.date._config.method('endTime')">&#xe62e;</div>
+                                <input readonly="readonly" type="text" class="form-control"
+                                       datetime-picker="yyyy-MM-dd HH:mm:ss"
+                                       ng-model="v.control.date.endTime.value"
+                                       is-open="v.control.date.endTime.showed" enable-time="true"
+                                       today-Text="今天"
+                                       now-Text="现在" date-Text="日期" time-Text="时间" clear-Text="清空"
+                                       close-Text="关闭"
+                                       show-Button-Bar="true"
+                                       datepicker-options="v.control.date._config.dateOptions"
+                                       timepicker-options="v.control.date._config.timeOptions"
+                                       ng-click="v.control.date._config.method('endTime')" name="endTime"
+                                       min-date="v.control.date.startTime.value"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="form-submit">
+            <button class="btn btn-primary btn-search" type="button" ng-click="v.search.advanced.method()"
+                    ng-disabled="v.search.advanced.submitted">搜索
+            </button>
+            <button class="btn btn-default btn-clear" type="button" ng-click="v.search.advanced.clear()">清除
+            </button>
+        </div>
+    </form>
+</div>
+
+3.搜索返回
+
+<div class="search-return fn-clear" ng-if="v.search.isProcessing">
+    <p class="text fn-left">搜索结果</p>
+    <a href="javascript:;" class="btn-back fn-right" ng-click="v.search.cancel()"><i class="iconfont">
+        &#xe615;</i>返回</a>
+</div>
+
+4.表格
+
+<table class="table table-hover tab-fixed tab-cut">
+    <colgroup>
+        <col width="10%"></col>
+        <col width="10%"></col>
+        <col width="10%"></col>
+        <col width="10%"></col>
+        <col width="10%"></col>
+        <col width="10%"></col>
+        <col width="10%"></col>
+        <col width="10%"></col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th>店铺名称</th>
+        <th>联系电话</th>
+        <th>店铺类型</th>
+        <th>创建时间</th>
+        <th>更新时间</th>
+        <th>保证金</th>
+        <th>佣金比例</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="r in v.lstData">
+        <td ng-bind="r.name"></td>
+        <td ng-bind="r.phone"></td>
+        <td>
+            <span ng-if="r.type === 'geren'">个人店铺</span>
+            <span ng-if="r.type === 'qiye'">企业店铺</span>
+        </td>
+        <td ng-bind="r.regTime | date:'yyyy-MM-dd HH:mm:ss'"></td>
+        <td ng-bind="r.updateTime | date:'yyyy-MM-dd HH:mm:ss'"></td>
+        <td>
+            <a ng-if="r.baozheng === null" href="javascript:;" ng-click="f.setSecurityDeposit(r)">设置保证金</a>
+            <span ng-if="r.baozheng !== null">
+                <i ng-bind="(r.baozheng / 100) | currency"></i>
+                <br/>
+                <a href="javascript:;" ng-click="f.setSecurityDeposit(r)">修改</a>
+            </span>
+        </td>
+        <td>
+            <a ng-if="r.yongjin === null" href="javascript:;" ng-click="f.setCommission(r)">设置佣金</a>
+            <span ng-if="r.yongjin !== null">
+                <i ng-bind="r.yongjin + '%'"></i>
+                <br/>
+                <a href="javascript:;" ng-click="f.setCommission(r)">修改</a>
+            </span>
+        </td>
+        <td>
+            <a href="javascript:;" ng-click="f.closeStore(r)" ng-if="r.status === 'open'">关闭店铺</a>
+            <a href="javascript:;" ng-click="f.openStore(r)" ng-if="r.status === 'close'">恢复店铺</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+5.空数据
+
+<div class="mod-noneData"
+     ng-if="(v.page.init === false) &amp;&amp; (v.lstData.length === 0) &amp;&amp; (v.page.hasData === false)">
+    <div data-th-replace="fragments/noneData"></div>
+</div>
+
+6.列表尾部
+
+<div class="mod-footer fn-clear" ng-if="v.lstData.length &gt; 0">
+    <div class="fn-left">
+        <span class="page-all" ng-bind="'总共 '+ v.control.pagination.count + ' 条记录'"></span>
+    </div>
+    <!-- 分页 -->
+    <div class="fn-right">
+        <pagination total-items="v.control.pagination.count" ng-model="v.control.pagination.pageNo"
+                    items-per-page="v.control.pagination.pageSize" max-size="v.control.pagination.maxSize"
+                    class="pagination-xl" boundary-links="true" first-text="首页" last-text="末页"
+                    direction-links="false" rotate="false"></pagination>
+    </div>
+</div>
+
+7.面包屑
+
+<div data-layout-fragment="currentPath">
+    <p>
+        <a data-th-href="@{~/promotion/activity-manage}">活动列表</a>
+        <breadcrumb></breadcrumb>
+        <a data-th-href="${'/promotion/activity-detail?id=' + id + '&amp;type=' + type}">活动详情</a>
+        <breadcrumb></breadcrumb>
+        <span class="current">查看活动效果</span>
+    </p>
+</div>
+
+8.页面ID传值
+
+<input type="hidden" data-th-value="${id}" id="id"/>
+<input type="hidden" data-th-value="${type}" id="type"/>
+<input type="hidden" data-th-value="${appKey}" id="appKey"/>
+
+9.Tab 模板
+
+<div class="tab-list">
+    <a href="javascript:;" class="tab-item"
+       ng-repeat="tab in v.control.tab.main.options" ng-bind="tab._value"
+       ng-class="{true : 'active', false: ''}[v.control.tab.main.current._key === tab._key]"
+       ng-click="v.control.tab.main.change($index)"></a>
+</div>
+
+10.下拉框模板
+
+<my-select options="v.control.select.type.options"
+           current="v.control.select.type.current" key="_key"
+           val="_value" placeholder="请选择"></my-select>
+
+11.checkbox 模板
+
+<label class="ui-checkbox">
+    <input type="checkbox" name="productOther" ng-model="v.form.others" ng-true-value="true" ng-false-value="false"/>
+    <i>设置为推荐商品</i>
+</label>
+
+12.radio 模板
+
+<label class="ui-radio">
+    <input type="radio" name="productPublish" value="ONSALE" ng-model="v.form.status"/>
+    <i>立即发布</i>
+</label>
+
+13.弹窗模板
+
+ <script type="text/ng-template" id="thirds-log-orders-modal.html">
+     <div class="thirds-log-orders-modal ng-cloak">
+         <div class="modal-header">
+             <span>已选择</span>
+             <span class="dialog-close" ng-click="f.close()"></span>
+         </div>
+         <div class="modal-body">
+         </div>
+         <div class="modal-footer">
+             <button class="btn btn-primary btn-lg" type="button" ng-click="f.ok()" ng-disabled="v.submitted">确定</button>
+             <button class="btn btn-default btn-lg" type="button" ng-click="f.cancel()">取消</button>
+         </div>
+     </div>
+ </script>
+
+14.发布页面底部三个按钮
+
+<div class="form-submit">
+    <button class="btn btn-primary btn-lg btn-submit" type="button"
+            ng-click="f.submit(formMain)" ng-disabled="v.form._action.submitted"
+            ng-if="!v.page.editing">确定
+    </button>
+    <button class="btn btn-primary btn-lg btn-ok" type="button" ng-click="f.ok(formMain)"
+            ng-disabled="v.form._action.submitted" ng-if="v.page.editing">确定修改
+    </button>
+    <button class="btn btn-default btn-lg btn-cancel" ng-click="f.cancel()"
+            ng-disabled="v.form._action.submitted" ng-if="v.page.editing">取消
+    </button>
+</div>
+
+15.身份证图片上传模板
+
+<div class="ui-upload-img">
+    <div class="ui-upload-action" plupload="v.control.uploader.ins.positive.url"
+         plupload-options="v.control.uploader.ins.positive.options"
+         plupload-callbacks="v.control.uploader.ins.positive.callback"
+         ng-if="v.control.uploader.ins.positive.data.length === 0">
+        <p class="ui-uploader-tip">身份证正面照</p>
+    </div>
+    <div class="ui-upload-show"
+         ng-if="v.control.uploader.ins.positive.data.length &gt; 0">
+        <img class="" ng-src="{{v.control.uploader.ins.positive.data[0].url}}" alt=""/>
+        <div class="ui-upload-show-panel">
+            <span class="left-panel" ng-click="f.askForDelUploaded('positive', 0)"><i
+                    class="iconfont">&#xe62c;</i>删除</span>
+            <span class="right-panel" ng-click="f.fangda()"><i
+                    class="iconfont">&#xe65b;</i>放大</span>
+        </div>
+    </div>
+</div>
+
+16.整个页面模板
+
+<!DOCTYPE html>
+<html data-layout-decorator="/layout/mainPage">
+
+<head>
+    <title>认证信息</title>
+</head>
+
+<body>
+    <input type="hidden" data-th-value="${id}" id="activityId"/>
+    <input type="hidden" data-th-value="${type}" id="activityType"/>
+
+    <div data-layout-fragment="currentPath">
+        <p>
+            <a data-th-href="@{~/promotion/activity-manage}">店铺审核</a>
+            <breadcrumb></breadcrumb>
+            <span class="current">认证信息</span>
+        </p>
+    </div>
+    <div data-layout-fragment="main">
+        <div class="wrap-container personal-detail ng-cloak" my-auto="" ng-controller="ctrlPersonalDetail">
+            <!-- 导航栏 -->
+            <div class="mod-nav fn-clear">
+                <div class="fn-left"></div>
+                <div class="fn-right"></div>
+            </div>
+            <!-- 开头 -->
+            <div class="mod-header fn-clear">
+                <div class="fn-left"></div>
+                <div class="fn-right"></div>
+            </div>
+            <!-- 内容 -->
+            <div class="mod-contain fn-clear">
+                <form name="formMain" ng-submit="" novalidate="novalidate" autocomplete="off">
+                    <div class="form-wrap">
+                        <ul class="form-list">
+                            <li class="form-group fn-clear">
+                                <label class="form-label"><span class="required-marker">*</span>联系电话</label>
+                                <div class="form-main"
+                                     ng-class="{'has-error': (formMain.productTitle.$invalid &amp;&amp; (formMain.productTitle.$touched || v.form._action.touched))}">
+                                    <input class="form-control" type="text" placeholder="请输入商品标题（必填）" required="required"
+                                           name="productTitle" max-word="32" ng-model="v.form.title" ng-trim="false"
+                                           replace-space=""/>
+                                    <div class="form-tips help-block form-error-icon"
+                                         ng-messages="formMain.productTitle.$error"
+                                         ng-show="formMain.productTitle.$touched || v.form._action.touched">
+                                        <div ng-message="required">请输入商品标题</div>
+                                        <div ng-message="maxword">最长只能输入32个字符</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-submit">
+                        <button class="btn btn-primary btn-lg btn-submit" type="button"
+                                ng-click="f.submit(formMain)" ng-disabled="v.form._action.submitted"
+                                ng-if="!v.page.editing">确定
+                        </button>
+                        <button class="btn btn-primary btn-lg btn-ok" type="button" ng-click="f.ok(formMain)"
+                                ng-disabled="v.form._action.submitted" ng-if="v.page.editing">确定修改
+                        </button>
+                        <button class="btn btn-default btn-lg btn-cancel" ng-click="f.cancel()"
+                                ng-disabled="v.form._action.submitted" ng-if="v.page.editing">取消
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- 结尾 -->
+            <div class="mod-footer fn-clear">
+                <div class="fn-left"></div>
+                <div class="fn-right"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+17.手机号码正则表达式
+
+pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
+
+18.白板模板
+
+<div class="white-block">
+    <!-- 头部 -->
+    <div class="block-header fn-clear">
+        <div class="fn-left">
+            <span class="block-title">基本信息</span>
+        </div>
+        <div class="fn-right"></div>
+    </div>
+    <!-- 内容 -->
+    <div class="block-body">
+    </div>
+    <!-- 尾部 -->
+    <div class="block-footer">
+    </div>
+</div>
