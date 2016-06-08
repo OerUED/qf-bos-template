@@ -5,13 +5,13 @@
 <div class="search-advanced-box" ng-init="inputfocus = false"
      ng-class="{'active': inputfocus}">
     <div class="search-input-box">
-        <span class="iconfont" ng-click="v.search.simple.method()">&#xe60e;</span>
+        <span class="iconfont" ng-click="v.search.simple.method('main', false)">&#xe60e;</span>
         <input class="search-advanced" ng-focus="inputfocus = true" ng-blur="inputfocus = false"
-               ng-model="v.search.simple.form.keyword" my-search="v.search.simple.method()" type="text"
+               ng-model="v.search.simple.form.keyword" my-search="v.search.simple.method('main', false)" type="text"
                placeholder="请输入店铺名称或联系电话"/>
         <span class="ft-clear iconfont">&#58904;</span>
     </div>
-    <span ng-click="v.search.advanced.open()">高级搜索<span
+    <span ng-click="v.search.advanced.show()">高级搜索<span
             class="icon-arrow icon-arrow-dark icon-arrow-down"
             ng-class="{'active': v.search.advanced.showed}"></span></span>
 </div>
@@ -55,8 +55,8 @@
                 <div class="item-wrap auth-type">
                     <label class="item-name">店铺类型</label>
                     <div class="item-input-wrap">
-                        <my-select options="v.control.select.type.options"
-                                   current="v.control.select.type.current" key="_key"
+                        <my-select options="v.control.select.ins.type.options"
+                                   current="v.control.select.ins.type.current" key="_key"
                                    val="_value" placeholder="请选择"></my-select>
                     </div>
                 </div>
@@ -67,17 +67,17 @@
             <!--<div class="item-input-wrap">-->
             <!--<div class="input-group datetime-picker-wrap">-->
             <!--<div class="input-group-addon iconfont"-->
-            <!--ng-click="v.control.date._config.method('startTime')">&#xe62e;</div>-->
+            <!--ng-click="v.control.date._config.show('startTime')">&#xe62e;</div>-->
             <!--<input readonly="readonly" type="text" class="form-control"-->
             <!--datetime-picker="yyyy-MM-dd HH:mm:ss"-->
-            <!--ng-model="v.control.date.startTime.value"-->
-            <!--is-open="v.control.date.startTime.showed" enable-time="true" today-Text="今天"-->
+            <!--ng-model="v.control.date.ins.startTime.value"-->
+            <!--is-open="v.control.date.ins.startTime.showed" enable-time="true" today-Text="今天"-->
             <!--now-Text="现在" date-Text="日期" time-Text="时间" clear-Text="清空" close-Text="关闭"-->
             <!--show-Button-Bar="true"-->
-            <!--datepicker-options="v.control.date._config.dateOptions"-->
-            <!--timepicker-options="v.control.date._config.timeOptions"-->
-            <!--ng-click="v.control.date._config.method('startTime')" name="startTime"-->
-            <!--max-date="v.control.date.endTime.value"/>-->
+            <!--datepicker-options="v.control.date._config.date"-->
+            <!--timepicker-options="v.control.date._config.time"-->
+            <!--ng-click="v.control.date._config.show('startTime')" name="startTime"-->
+            <!--max-date="v.control.date.ins.endTime.value"/>-->
             <!--</div>-->
             <!--</div>-->
             <!--</div>-->
@@ -88,16 +88,16 @@
             <!--<div class="item-input-wrap">-->
             <!--<div class="input-group datetime-picker-wrap">-->
             <!--<div class="input-group-addon iconfont"-->
-            <!--ng-click="v.control.date._config.method('endTime')">&#xe62e;</div>-->
+            <!--ng-click="v.control.date._config.show('endTime')">&#xe62e;</div>-->
             <!--<input readonly="readonly" type="text" class="form-control"-->
-            <!--datetime-picker="yyyy-MM-dd HH:mm:ss" ng-model="v.control.date.endTime.value"-->
-            <!--is-open="v.control.date.endTime.showed" enable-time="true" today-Text="今天"-->
+            <!--datetime-picker="yyyy-MM-dd HH:mm:ss" ng-model="v.control.date.ins.endTime.value"-->
+            <!--is-open="v.control.date.ins.endTime.showed" enable-time="true" today-Text="今天"-->
             <!--now-Text="现在" date-Text="日期" time-Text="时间" clear-Text="清空" close-Text="关闭"-->
             <!--show-Button-Bar="true"-->
-            <!--datepicker-options="v.control.date._config.dateOptions"-->
-            <!--timepicker-options="v.control.date._config.timeOptions"-->
-            <!--ng-click="v.control.date._config.method('endTime')" name="endTime"-->
-            <!--min-date="v.control.date.startTime.value"/>-->
+            <!--datepicker-options="v.control.date._config.date"-->
+            <!--timepicker-options="v.control.date._config.time"-->
+            <!--ng-click="v.control.date._config.show('endTime')" name="endTime"-->
+            <!--min-date="v.control.date.ins.startTime.value"/>-->
             <!--</div>-->
             <!--</div>-->
             <!--</div>-->
@@ -109,38 +109,38 @@
                         <div class="start-time-wrap">
                             <div class="input-group datetime-picker-wrap">
                                 <div class="input-group-addon iconfont"
-                                     ng-click="v.control.date._config.method('startTime')">&#xe62e;</div>
+                                     ng-click="v.control.date._config.show('startTime')">&#xe62e;</div>
                                 <input readonly="readonly" type="text" class="form-control"
                                        datetime-picker="yyyy-MM-dd HH:mm:ss"
-                                       ng-model="v.control.date.startTime.value"
-                                       is-open="v.control.date.startTime.showed" enable-time="true"
+                                       ng-model="v.control.date.ins.startTime.value"
+                                       is-open="v.control.date.ins.startTime.showed" enable-time="true"
                                        today-Text="今天"
                                        now-Text="现在" date-Text="日期" time-Text="时间" clear-Text="清空"
                                        close-Text="关闭"
                                        show-Button-Bar="true"
-                                       datepicker-options="v.control.date._config.dateOptions"
-                                       timepicker-options="v.control.date._config.timeOptions"
-                                       ng-click="v.control.date._config.method('startTime')" name="startTime"
-                                       max-date="v.control.date.endTime.value"/>
+                                       datepicker-options="v.control.date._config.date"
+                                       timepicker-options="v.control.date._config.time"
+                                       ng-click="v.control.date._config.show('startTime')" name="startTime"
+                                       max-date="v.control.date.ins.endTime.value"/>
                             </div>
                         </div>
                         <span class="short-line"></span>
                         <div class="end-time-wrap">
                             <div class="input-group datetime-picker-wrap">
                                 <div class="input-group-addon iconfont"
-                                     ng-click="v.control.date._config.method('endTime')">&#xe62e;</div>
+                                     ng-click="v.control.date._config.show('endTime')">&#xe62e;</div>
                                 <input readonly="readonly" type="text" class="form-control"
                                        datetime-picker="yyyy-MM-dd HH:mm:ss"
-                                       ng-model="v.control.date.endTime.value"
-                                       is-open="v.control.date.endTime.showed" enable-time="true"
+                                       ng-model="v.control.date.ins.endTime.value"
+                                       is-open="v.control.date.ins.endTime.showed" enable-time="true"
                                        today-Text="今天"
                                        now-Text="现在" date-Text="日期" time-Text="时间" clear-Text="清空"
                                        close-Text="关闭"
                                        show-Button-Bar="true"
-                                       datepicker-options="v.control.date._config.dateOptions"
-                                       timepicker-options="v.control.date._config.timeOptions"
-                                       ng-click="v.control.date._config.method('endTime')" name="endTime"
-                                       min-date="v.control.date.startTime.value"/>
+                                       datepicker-options="v.control.date._config.date"
+                                       timepicker-options="v.control.date._config.time"
+                                       ng-click="v.control.date._config.show('endTime')" name="endTime"
+                                       min-date="v.control.date.ins.startTime.value"/>
                             </div>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
             </li>
         </ul>
         <div class="form-submit">
-            <button class="btn btn-primary btn-search" type="button" ng-click="v.search.advanced.method()"
+            <button class="btn btn-primary btn-search" type="button" ng-click="v.search.advanced.method('main', false)"
                     ng-disabled="v.search.advanced.submitted">搜索
             </button>
             <button class="btn btn-default btn-clear" type="button" ng-click="v.search.advanced.clear()">清除
@@ -161,7 +161,7 @@
 
 <div class="search-return fn-clear" ng-if="v.search.isProcessing">
     <p class="text fn-left">搜索结果</p>
-    <a href="javascript:;" class="btn-back fn-right" ng-click="v.search.cancel()"><i class="iconfont">
+    <a href="javascript:;" class="btn-back fn-right" ng-click="v.search.cancel('main')"><i class="iconfont">
         &#xe615;</i>返回</a>
 </div>
 
@@ -235,12 +235,12 @@
 
 <div class="mod-footer fn-clear" ng-if="v.lstData.length &gt; 0">
     <div class="fn-left">
-        <span class="page-all" ng-bind="'总共 '+ v.control.pagination.count + ' 条记录'"></span>
+        <span class="page-all" ng-bind="'总共 '+ v.control.pagination.ins.main.count + ' 条记录'"></span>
     </div>
     <!-- 分页 -->
     <div class="fn-right">
-        <pagination total-items="v.control.pagination.count" ng-model="v.control.pagination.pageNo"
-                    items-per-page="v.control.pagination.pageSize" max-size="v.control.pagination.maxSize"
+        <pagination total-items="v.control.pagination.ins.main.count" ng-model="v.control.pagination.ins.main.pageNo"
+                    items-per-page="v.control.pagination._config.pageSize" max-size="v.control.pagination._config.maxSize"
                     class="pagination-xl" boundary-links="true" first-text="首页" last-text="末页"
                     direction-links="false" rotate="false"></pagination>
     </div>
@@ -268,28 +268,33 @@
 
 <div class="tab-list">
     <a href="javascript:;" class="tab-item"
-       ng-repeat="tab in v.control.tab.main.options" ng-bind="tab._value"
-       ng-class="{true : 'active', false: ''}[v.control.tab.main.current._key === tab._key]"
-       ng-click="v.control.tab.main.change($index)"></a>
+       ng-repeat="tab in v.control.tab.ins.main.options" ng-bind="tab._value"
+       ng-class="{true : 'active', false: ''}[v.control.tab.ins.main.current._key === tab._key]"
+       ng-click="v.control.tab.ins.main.change('main', $index)"></a>
 </div>
 
 10.下拉框模板
 
-<my-select options="v.control.select.type.options"
-           current="v.control.select.type.current" key="_key"
+<my-select options="v.control.select.ins.type.options"
+           current="v.control.select.ins.type.current" key="_key"
            val="_value" placeholder="请选择"></my-select>
 
 11.checkbox 模板
 
 <label class="ui-checkbox">
-    <input type="checkbox" name="productOther" ng-model="v.form.others" ng-true-value="true" ng-false-value="false"/>
+    <input type="checkbox" name="productOther"
+           ng-model="v.control.checkbox.ins.single.value"
+           ng-disabled="v.control.checkbox.ins.single.disabled"
+           ng-true-value="true"
+           ng-false-value="false"/>
     <i>设置为推荐商品</i>
 </label>
 
 12.radio 模板
 
 <label class="ui-radio">
-    <input type="radio" name="productPublish" value="ONSALE" ng-model="v.form.status"/>
+    <input type="radio" name="productPublish" value="ONSALE"
+           ng-model="v.control.radio.ins.group.value"/>
     <i>立即发布</i>
 </label>
 

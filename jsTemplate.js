@@ -1,5 +1,16 @@
 // JS模板更新日志：
 //
+// 2016/06/08
+// 1.添加手动修改页码触发的请求回调处理；
+// 2.统一联动 Tab 和 Menu 和 Select 菜单，同一时间只能有一个请求操作；
+// 3.修复 Tab 或 Menu 或 Select 菜单改变的时候，页码不变的问题；
+// 4.统一修改所有控件处理都支持多实例；
+// 5.添加 setLstData() 函数统一处理页面数据赋值；
+// 6.添加遍历判断控件里是否有值的方法 checkAdvSearchCtrlData()，不再手工输入；
+// 7.添加遍历复制控件里值的方法 copyAdvSearchCtrlData()，不再手工输入；
+// 8.添加遍历设置控件里值为 null 的方法 setAdvSearchCtrlDataNull()，不再手工输入；
+// 9.所有涉及到翻页的方法统一添加 _name 参数实现多实例；
+//
 // 2016/06/07
 // 1.添加 checkbox 的单个和多个选项的使用例子；
 // 2.添加 radio 的使用例子；
@@ -83,18 +94,25 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             },
             // 高级搜索的数据
             'advanced': {
-                'open': showAdvSearch,
+                'show': showAdvSearch,
                 'clear': clearAdvSearchForm,
                 'method': advSearch,
                 'showed': false,
                 'touched': false,
                 'submitted': false,
                 'form': {
-                    'startTime': null,
-                    'endTime': null,
                     'name': null,
-                    'status': null,
-                    'type': null,
+                },
+                'ctrls': {
+                    'pagination': [],
+                    'tab': [],
+                    'menu': [],
+                    'select': ['status', 'type', ],
+                    'checkbox': [],
+                    'radio': [],
+                    'date': ['startTime', 'endTime', ],
+                    'editor': [],
+                    'uploader': [],
                 },
                 'data': {}, // 不需要重复写跟form一样的变量
             },
@@ -142,18 +160,34 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 分页配置
         $scope.v.control.pagination = {
-            'pageSize': 25,
-            'maxSize': 7,
-            'pageNo': 1,
-            'count': 0,
-        };
-
-        // tab 控件
-        $scope.v.control.tab = {
+            '_config': {
+                'pageSize': 25,
+                'maxSize': 7,
+            },
             '_action': {
                 // 数据请求状态
                 'submitted': false,
             },
+        };
+
+        $scope.v.control.pagination.ins = {
+            'main': {
+                '_action': null,
+                'pageNo': 1,
+                'count': 0,
+            },
+        };
+
+        // tab 控件
+        $scope.v.control.tab = {
+            '_config': {},
+            '_action': {
+                // 数据请求状态
+                'submitted': false,
+            },
+        };
+
+        $scope.v.control.tab.ins = {
             'main': {
                 'options': [{
                     _value: '全部商品',
@@ -175,10 +209,14 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // menu 控件
         $scope.v.control.menu = {
+            '_config': {},
             '_action': {
                 // 数据请求状态
                 'submitted': false,
             },
+        };
+
+        $scope.v.control.menu.ins = {
             'main': {
                 'options': [],
                 'current': null,
@@ -188,10 +226,14 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // select 控件
         $scope.v.control.select = {
+            '_config': {},
             '_action': {
                 // 数据请求状态
                 'submitted': false,
             },
+        };
+
+        $scope.v.control.select.ins = {
             'status': {
                 'options': [{
                     '_key': 'ONSALE',
@@ -223,11 +265,19 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'change': null,
                 'disabled': false,
                 'showed': false,
-            }
+            },
         };
 
         // checkbox 控件
         $scope.v.control.checkbox = {
+            '_config': {},
+            '_action': {
+                // 数据请求状态
+                'submitted': false,
+            },
+        };
+
+        $scope.v.control.checkbox.ins = {
             // 单个选项
             'single': {
                 'disabled': false,
@@ -239,7 +289,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'group': {
                 'value': [],
                 'change': null,
-                'ins': {
+                'choices': {
                     'no1': { 'disabled': false, 'showed': false },
                     'no2': { 'disabled': false, 'showed': false },
                 },
@@ -248,14 +298,22 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // radio 控件
         $scope.v.control.radio = {
-            'example': {
+            '_config': {},
+            '_action': {
+                // 数据请求状态
+                'submitted': false,
+            },
+        };
+
+        $scope.v.control.radio.ins = {
+            'group': {
                 'value': null,
                 'change': null,
-                'ins': {
+                'choices': {
                     'no1': { 'disabled': false, 'showed': false },
                     'no2': { 'disabled': false, 'showed': false },
                 },
-            }
+            },
         };
 
         // 日期控件
@@ -267,17 +325,32 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'min': calcDate(1, true),
                 'max': calcDate(7, true),
                 // 时间选项
-                'timeOptions': {
+                'time': {
                     'showMeridian': false,
                 },
                 // 日期选项
-                'dateOptions': {
+                'date': {
                     'showWeeks': false,
                 },
-                'method': showCalendar,
+                'show': showCalendar,
             },
-            'startTime': { 'disabled': false, 'showed': false, 'value': null },
-            'endTime': { 'disabled': false, 'showed': false, 'value': null },
+            '_action': {
+                // 数据请求状态
+                'submitted': false,
+            },
+        };
+
+        $scope.v.control.date.ins = {
+            'startTime': {
+                'disabled': false,
+                'showed': false,
+                'value': null,
+            },
+            'endTime': {
+                'disabled': false,
+                'showed': false,
+                'value': null,
+            },
         };
 
         // 富文本编辑器
@@ -286,11 +359,15 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'options': getEditorOptions(),
                 'ready': readyEditor,
             },
+            '_action': {
+                // 数据请求状态
+                'submitted': false,
+            },
         };
 
         // 富文本编辑器实例
         $scope.v.control.editor.ins = {
-            'desc': {'instance': null, 'content': null, 'disabled': false, 'showed': false},
+            'desc': { 'instance': null, 'content': null, 'disabled': false, 'showed': false },
         };
 
         // 上传插件
@@ -303,6 +380,10 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     file_data_name: 'imageFile',
                 },
                 // 'callbacks': uploaderCallbacks,
+            },
+            '_action': {
+                // 数据请求状态
+                'submitted': false,
             },
         };
 
@@ -349,73 +430,73 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // }
 
         // 上传回调函数
-        function uploaderCallbacks(name) {
+        function uploaderCallbacks(_name) {
             return {
-                'filesAdded': function (uploader, files) {
-                    if ($scope.v.control.uploader.ins[name].data.length > uploader.settings.max_files ||
+                'filesAdded': function(uploader, files) {
+                    if ($scope.v.control.uploader.ins[_name].data.length > uploader.settings.max_files ||
                         // uploader.files.length > uploader.settings.max_files ||
-                        $scope.v.control.uploader.ins[name].data.length + files.length > uploader.settings.max_files ||
+                        $scope.v.control.uploader.ins[_name].data.length + files.length > uploader.settings.max_files ||
                         files.length > uploader.settings.max_files) {
                         uploader.splice();
                         return false;
                     } else {
-                        $scope.v.control.uploader.ins[name].loading = true;
+                        $scope.v.control.uploader.ins[_name].loading = true;
                         uploader.settings.multipart_params._appKey = $scope.v.form.appKey;
                         uploader.start();
                         return true;
                     }
                 },
-                'uploadProgress': function (uploader, file) {
-                    $scope.v.control.uploader.ins[name].loading = parseFloat(file.percent / 100.0);
+                'uploadProgress': function(uploader, file) {
+                    $scope.v.control.uploader.ins[_name].loading = parseFloat(file.percent / 100.0);
                 },
-                'fileUploaded': function (uploader, file, response) {
-                    $scope.v.control.uploader.ins[name].loading = false;
+                'fileUploaded': function(uploader, file, response) {
+                    $scope.v.control.uploader.ins[_name].loading = false;
                     var resp = JSON.parse(response.response);
 
-                    $scope.v.control.uploader.ins[name].push(name, resp);
+                    $scope.v.control.uploader.ins[_name].push(_name, resp);
 
-                    $timeout(function () {
+                    $timeout(function() {
                         uploader.destroy();
                     }, 50);
                 },
-                'error': function (uploader, error) {
-                    $scope.v.control.uploader.ins[name].loading = false;
+                'error': function(uploader, error) {
+                    $scope.v.control.uploader.ins[_name].loading = false;
                 }
             };
         }
 
         // 添加上传后的数据
-        function addUploaded(name, data) {
-            $scope.v.control.uploader.ins[name].data.push(data);
+        function addUploaded(_name, data) {
+            $scope.v.control.uploader.ins[_name].data.push(data);
         }
 
         // 公共的图片上传成功后的回调
-        function pushUploaded(name, res) {
+        function pushUploaded(_name, res) {
             if ((res.status === 1) && (hasValue(res.data))) {
-                addUploaded(name, res.data);
+                addUploaded(_name, res.data);
             } else {
 
             }
         }
 
         // 删除上传后的数据
-        function delUploaded(name, index) {
-            $scope.v.control.uploader.ins[name].data.splice(index, 1);
+        function delUploaded(_name, index) {
+            $scope.v.control.uploader.ins[_name].data.splice(index, 1);
         }
 
         // 询问删除数据
-        function askForDelUploaded(name, index) {
-            $scope.message('确定删除该图片？', 'confirm').then(function () {
-                delUploaded(name, index);
-            }).catch(function () {
+        function askForDelUploaded(_name, index) {
+            $scope.message('确定删除该图片？', 'confirm').then(function() {
+                delUploaded(_name, index);
+            }).catch(function() {
                 //取消
             });
         }
 
         // 放大图片
-        function zoomInImg(name){
-            if (hasLength($scope.v.control.uploader.ins[name].data)) {
-                window.open($scope.v.control.uploader.ins[name].data[0].url, '_blank');
+        function zoomInImg(_name) {
+            if (hasLength($scope.v.control.uploader.ins[_name].data)) {
+                window.open($scope.v.control.uploader.ins[_name].data[0].url, '_blank');
             }
         }
 
@@ -431,9 +512,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // }
 
         // 编辑器加载完毕之后
-        function readyEditor(name, instance) {
+        function readyEditor(_name, instance) {
             // 保存编辑器实例
-            $scope.v.control.editor[name].instance = instance;
+            $scope.v.control.editor[_name].instance = instance;
             // 初始化编辑器附加功能
             addEditorFeatures(instance);
             // 页面主函数（有需要的时候要等编辑器加载完毕后才去请求数据）
@@ -451,9 +532,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // 显示日期选择器
-        function showCalendar(name) {
-            if ($scope.v.control.date[name].disabled === false) {
-                $scope.v.control.date[name].showed = !$scope.v.control.date[name].showed;
+        function showCalendar(_name) {
+            if ($scope.v.control.date.ins[_name].disabled === false) {
+                $scope.v.control.date.ins[_name].showed = !$scope.v.control.date.ins[_name].showed;
             }
         }
 
@@ -499,107 +580,131 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             //     if (keyCode == 8) {
             //         var domUtils = UE.dom.domUtils;
 
-                    // console.log('getStartElementPath:');console.dir(editor.selection.getStartElementPath());
-                    // console.log('getRange:');console.dir(editor.selection.getRange());
-                    // console.log('getStart:');console.dir(editor.selection.getStart());
+            // console.log('getStartElementPath:');console.dir(editor.selection.getStartElementPath());
+            // console.log('getRange:');console.dir(editor.selection.getRange());
+            // console.log('getStart:');console.dir(editor.selection.getStart());
 
-                    // var range = editor.selection.getRange();
-                    // if (range.collapsed && !domUtils.findParentByTagName(range.startContainer, 'a', true)){
-                    //     return true;
-                    // }
+            // var range = editor.selection.getRange();
+            // if (range.collapsed && !domUtils.findParentByTagName(range.startContainer, 'a', true)){
+            //     return true;
+            // }
 
-                    // if (editor.selection.getStart().tagName.toLowerCase() === 'a') {
-                    //     var childNode = editor.selection.getStartElementPath()[0];
-                    //     // console.log('childNode:');console.dir(childNode);
-                    //     var parentNode = childNode.parentNode;
-                    //     // console.log('parentNode:');console.dir(parentNode);
-                    //     parentNode.removeChild(childNode);
-                    //     // domUtils.preventDefault(evt);
-                    //     return false;
-                    // }
+            // if (editor.selection.getStart().tagName.toLowerCase() === 'a') {
+            //     var childNode = editor.selection.getStartElementPath()[0];
+            //     // console.log('childNode:');console.dir(childNode);
+            //     var parentNode = childNode.parentNode;
+            //     // console.log('parentNode:');console.dir(parentNode);
+            //     parentNode.removeChild(childNode);
+            //     // domUtils.preventDefault(evt);
+            //     return false;
+            // }
 
-                    // if (editor.selection.getStart().tagName.toLowerCase() === 'a') {
-                    //     UE.dom.domUtils.remove(editor.selection.getStartElementPath()[0]);
-                    //     // UE.dom.domUtils.remove(editor.selection.getRange().startContainer);
-                    //     evt.preventDefault();
-                    //     return false;
-                    // }
+            // if (editor.selection.getStart().tagName.toLowerCase() === 'a') {
+            //     UE.dom.domUtils.remove(editor.selection.getStartElementPath()[0]);
+            //     // UE.dom.domUtils.remove(editor.selection.getRange().startContainer);
+            //     evt.preventDefault();
+            //     return false;
+            // }
 
-                    // var start = range.startContainer, end = range.endContainer;
-                    // if ( start = domUtils.findParentByTagName( start, 'a', true ) ) {
-                    //     range.setStartBefore( start );
-                    // }
-                    // if ( end = domUtils.findParentByTagName( end, 'a', true ) ) {
-                    //     range.setEndAfter( end );
-                    // }
+            // var start = range.startContainer, end = range.endContainer;
+            // if ( start = domUtils.findParentByTagName( start, 'a', true ) ) {
+            //     range.setStartBefore( start );
+            // }
+            // if ( end = domUtils.findParentByTagName( end, 'a', true ) ) {
+            //     range.setEndAfter( end );
+            // }
 
-                    // console.dir(start);
-                    // console.dir(end);
-                    // start.outerHTML = '';
-                    // start.outerText = '';
-                    // start.innerHTML = '';
-                    // start.innerText = '';
-                    // start.Text = '';
-                    // start.textContent = '';
+            // console.dir(start);
+            // console.dir(end);
+            // start.outerHTML = '';
+            // start.outerText = '';
+            // start.innerHTML = '';
+            // start.innerText = '';
+            // start.Text = '';
+            // start.textContent = '';
 
-                    // range.deleteContents();
+            // range.deleteContents();
 
-                    // domUtils.preventDefault(evt);
-                    // return false;
+            // domUtils.preventDefault(evt);
+            // return false;
             //     }
             // });
         }
 
-        // 状态更改
-        function changeStatus(newVal) {
-            // 异步执行
-            $timeout(function() {
-                updateLstData();
-            });
+        // 判断 Tab 或 Menu 或 Select 是否有一项正在处于请求状态
+        function isProcSubmitStatus() {
+            return ($scope.v.control.tab._action.submitted ||
+                $scope.v.control.menu._action.submitted ||
+                $scope.v.control.select._action.submitted);
+        }
+
+        // 判断页码是否在第一页，是的话就不用手动触发请求新数据
+        function needManualChangePage(_name, action) {
+            // 新搜索更改页码
+            if ($scope.v.control.pagination.ins[_name].pageNo !== 1) {
+                // 请求结束之后的回调函数需要修改状态
+                if (hasValue(action)) {
+                    $scope.v.control.pagination.ins[_name]._action = action;
+                }
+
+                $scope.v.control.pagination.ins[_name].pageNo = 1;
+                return false; // 已经修改页码可以直接跳出，不走请求流程
+            } else {
+                return true;
+            }
         }
 
         // Tab 菜单改变
-        function changeMainTab(index) {
-            if ($scope.v.control.tab._action.submitted === false) {
+        function changeMainTab(_name, index) {
+            if (isProcSubmitStatus() === false) {
                 $scope.v.control.tab._action.submitted = true;
-                $scope.v.control.tab.main.current = angular.copy($scope.v.control.tab.main.options[index]);
-                // 异步执行
-                $timeout(function() {
-                    updateLstData().finally(function () {
-                        $scope.v.control.tab._action.submitted = false;
+                $scope.v.control.tab.ins[_name].current = angular.copy($scope.v.control.tab.ins[_name].options[index]);
+                // 是否手动触发请求
+                if (needManualChangePage(_name, $scope.v.control.tab._action) === true) {
+                    // 异步执行
+                    $timeout(function() {
+                        updateLstData(_name, false).finally(function() {
+                            $scope.v.control.tab._action.submitted = false;
+                        });
                     });
-                });
+                }
             } else {
                 $scope.message('正在请求数据中……', 'error');
             }
         }
 
         // Menu 菜单改变
-        function changeMainMenu(index) {
-            if ($scope.v.control.menu._action.submitted === false) {
+        function changeMainMenu(_name, index) {
+            if (isProcSubmitStatus() === false) {
                 $scope.v.control.menu._action.submitted = true;
-                $scope.v.control.menu.main.current = angular.copy($scope.v.control.menu.main.options[index]);
-                // 异步执行
-                $timeout(function() {
-                    updateLstData().finally(function () {
-                        $scope.v.control.menu._action.submitted = false;
+                $scope.v.control.menu.ins[_name].current = angular.copy($scope.v.control.menu.ins[_name].options[index]);
+                // 是否手动触发请求
+                if (needManualChangePage(_name, $scope.v.control.menu._action) === true) {
+                    // 异步执行
+                    $timeout(function() {
+                        updateLstData(_name, false).finally(function() {
+                            $scope.v.control.menu._action.submitted = false;
+                        });
                     });
-                });
+                }
             } else {
                 $scope.message('正在请求数据中……', 'error');
             }
         }
 
         // Select 菜单改变
-        function changeMainSelect(name) {
-            if ($scope.v.control.select._action.submitted === false) {
+        function changeMainSelect(_name) {
+            if (isProcSubmitStatus() === false) {
                 $scope.v.control.select._action.submitted = true;
-                // 异步执行
-                $timeout(function() {
-                    updateLstData().finally(function () {
-                        $scope.v.control.select._action.submitted = false;
+                // 是否手动触发请求
+                if (needManualChangePage(_name, $scope.v.control.select._action) === true) {
+                    // 异步执行
+                    $timeout(function() {
+                        updateLstData(_name, false).finally(function() {
+                            $scope.v.control.select._action.submitted = false;
+                        });
                     });
-                });
+                }
             } else {
                 $scope.message('正在请求数据中……', 'error');
             }
@@ -669,7 +774,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             return procRequest($scope.v.api.save(data)).then(function(res) {
                 if ((res.result === 1) && (hasValue(res.data))) {
                     $scope.message('保存成功！').finally(function() {
-                        // location.href = '/promotion/coupon-manage';
+                        location.href = '/promotion/coupon-manage';
                     });
                 }
                 if ($scope.v.form._action.submitted === true) {
@@ -823,43 +928,28 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // 搜索，返回
-        function cancelSearching() {
+        function cancelSearching(_name) {
             resetSearching();
 
-            if ($scope.v.control.pagination.pageNo !== 1) {
-                $scope.v.control.pagination.pageNo = 1;
+            if ($scope.v.control.pagination.ins[_name].pageNo !== 1) {
+                $scope.v.control.pagination.ins[_name].pageNo = 1;
             } else {
-                getLstData();
+                getLstData(_name, false);
             }
-        }
-
-        // 简单搜索请求
-        function reqSmpSearch(data, isNextPage) {
-            return procRequest($scope.v.api.search(data)).then(function(res) {
-                if ((res.result === 1) && (hasValue(res.data))) {
-                    $scope.v.control.pagination.count = res.data.total;
-                    $scope.v.lstData = res.data.rows;
-
-                    if (hasTrue(isNextPage)) {
-                        scroll2Top();
-                    }
-                }
-                return res;
-            });
         }
 
         // 没有关键词返回空结果
         function returnEmptyResult() {
             $scope.v.lstData = [];
-            $scope.v.control.pagination.count = 0;
+            $scope.v.control.pagination.ins.main.count = 0;
             return true;
         }
 
         // 没有关键词返回所有结果
         function returnSearchResult() {
             // 新搜索更改页码
-            if ($scope.v.control.pagination.pageNo !== 1) {
-                $scope.v.control.pagination.pageNo = 1;
+            if ($scope.v.control.pagination.ins.main.pageNo !== 1) {
+                $scope.v.control.pagination.ins.main.pageNo = 1;
                 return true; // 已经修改页面可以直接跳出，不走请求流程
             } else {
                 return false;
@@ -867,7 +957,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // 简单搜索（这个函数的返回值必须是 Promises）
-        function smpSearch(isNextPage) {
+        function smpSearch(_name, isNextPage) {
             // 页面按钮点击的时候没有传入这个参数
             var isNewSearch = !hasValue(isNextPage);
 
@@ -902,96 +992,261 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 }
             }
 
-            var data = getQueryData();
+            var data = getQueryData(_name);
 
             _.extend(data, {
                 'name': $scope.v.search.simple.data.keyword
             });
 
-            return reqSmpSearch(data, isNextPage);
+            return reqSmpSearch(_name, data, isNextPage);
+        }
+
+        // 简单搜索请求
+        function reqSmpSearch(_name, data, isNextPage) {
+            return procRequest($scope.v.api.search(data)).then(function(res) {
+                if ((res.result === 1) && (hasValue(res.data))) {
+                    setLstData(_name, res.data.total, res.data.rows);
+
+                    if (hasTrue(isNextPage)) {
+                        scroll2Top();
+                    }
+                }
+                return res;
+            });
+        }
+
+        // 遍历判断控件里是否有值
+        function checkAdvSearchCtrlData() {
+            for (var ctrl in $scope.v.search.advanced.ctrls) {
+                if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
+                    var ctl = $scope.v.search.advanced.ctrls[ctrl];
+                    if (hasLength(ctl)) {
+                        _.each(ctl, function (_name) {
+                            switch (ctrl) {
+                                case 'pagination':
+                                    if (hasValue($scope.v.control[ctrl].ins[_name].pageNo)) {
+                                        return true;
+                                    }
+                                    break;
+                                case 'tab':
+                                case 'menu':
+                                case 'select':
+                                    if (hasValue($scope.v.control[ctrl].ins[_name].current)) {
+                                        return true;
+                                    }
+                                    break;
+                                case 'checkbox':
+                                case 'radio':
+                                case 'date':
+                                    if (hasValue($scope.v.control[ctrl].ins[_name].value)) {
+                                        return true;
+                                    }
+                                    break;
+                                case 'editor':
+                                    if (hasLength($scope.v.control[ctrl].ins[_name].content)) {
+                                        return true;
+                                    }
+                                    break;
+                                case 'uploader':
+                                    if (hasLength($scope.v.control[ctrl].ins[_name].data)) {
+                                        return true;
+                                    }
+                                    break;
+                            }
+                        });
+                    }
+                }
+            }
+            return false;
         }
 
         // 是否有高级搜索内容
         function hasAdvSearchFormData() {
-            var hasFormData = false;
-
             // 循环判断form下的key是否有值
             for (var prop in $scope.v.search.advanced.form) {
                 if ($scope.v.search.advanced.form.hasOwnProperty(prop)) {
                     var value = $scope.v.search.advanced.form[prop];
                     if (_.isArray(value) || _.isString(value)) {
                         if (hasLength(value)) {
-                            hasFormData = true;
-                            break;
+                            return true;
                         }
                     } else {
                         if (hasValue(value)) {
-                            hasFormData = true;
-                            break;
+                            return true;
                         }
                     }
                 }
             }
 
-            if (hasFormData === false) {
-                // 逐个判断控件里是否有值
-                if (hasValue($scope.v.control.select.type.current)) {
-                    return true;
-                }
-                if (hasValue($scope.v.control.select.status.current)) {
-                    return true;
-                }
+            // 判断控件里是否有值
+            if (checkAdvSearchCtrlData() === true) {
+                return true;
             }
 
-            return hasFormData;
+            // 逐个判断控件里是否有值
+            // if (hasValue($scope.v.control.select.ins.type.current)) {
+            //     return true;
+            // }
+
+            // if (hasValue($scope.v.control.select.ins.status.current)) {
+            //     return true;
+            // }
+
+            return false;
+        }
+
+        // 遍历复制控件里的值
+        function copyAdvSearchCtrlData() {
+            for (var ctrl in $scope.v.search.advanced.ctrls) {
+                if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
+                    var ctl = $scope.v.search.advanced.ctrls[ctrl];
+                    if (hasLength(ctl)) {
+                        _.each(ctl, function (_name) {
+                            var src = null;
+                            var dst = $scope.v.search.advanced.data[_name];
+                            switch (ctrl) {
+                                case 'pagination':
+                                    src = $scope.v.control[ctrl].ins[_name].pageNo;
+                                    dst = hasValue(src) ? src : null;
+                                    break;
+                                case 'tab':
+                                case 'menu':
+                                case 'select':
+                                    src = $scope.v.control[ctrl].ins[_name].current;
+                                    dst = hasValue(src) ? src : null;
+                                    break;
+                                case 'checkbox':
+                                    src = $scope.v.control[ctrl].ins[_name].value;
+                                    // dst = hasValue(src) ? src : null; // 单个
+                                    dst = hasLength(src) ? src : null; // 多个
+                                    break;
+                                case 'radio':
+                                    src = $scope.v.control[ctrl].ins[_name].value;
+                                    dst = hasValue(src) ? src : null;
+                                    break;
+                                case 'date':
+                                    src = $scope.v.control[ctrl].ins[_name].value;
+                                    dst = hasValue(src) ? src : null;
+                                    break;
+                                case 'editor':
+                                    src = $scope.v.control[ctrl].ins[_name].content;
+                                    dst = hasLength(src) ? src : null;
+                                    break;
+                                case 'uploader':
+                                    src = $scope.v.control[ctrl].ins[_name].data;
+                                    dst = hasLength(src) ? src : null;
+                                    break;
+                            }
+                        });
+                    }
+                }
+            }
         }
 
         // 配置高级搜索参数
         function setAdvSearchData() {
             $scope.v.search.advanced.data = {};
 
-            if (hasValue($scope.v.control.date.startTime.value)) {
-                $scope.v.search.advanced.form.startTime = angular.copy($scope.v.control.date.startTime.value.getTime());
-                $scope.v.search.advanced.data.startTime = angular.copy($scope.v.search.advanced.form.startTime);
-            } else {
-                $scope.v.search.advanced.data.startTime = null;
+            // 遍历表单输入框的值赋值
+            for (var prop in $scope.v.search.advanced.form) {
+                if ($scope.v.search.advanced.form.hasOwnProperty(prop)) {
+                    var ipt = $scope.v.search.advanced.form[prop];
+                    if (hasLength(ipt)) {
+                        $scope.v.search.advanced.data[prop] = angular.copy(ipt);
+                    } else {
+                        $scope.v.search.advanced.data[prop] = null;
+                    }
+                }
             }
 
-            if (hasValue($scope.v.control.date.endTime.value)) {
-                $scope.v.search.advanced.form.endTime = angular.copy($scope.v.control.date.endTime.value.getTime());
-                $scope.v.search.advanced.data.endTime = angular.copy($scope.v.search.advanced.form.endTime);
-            } else {
-                $scope.v.search.advanced.data.endTime = null;
-            }
+            // 遍历复制控件里的值
+            copyAdvSearchCtrlData();
 
-            if (hasLength($scope.v.search.advanced.form.name)) {
-                $scope.v.search.advanced.data.name = angular.copy($scope.v.search.advanced.form.name);
-            } else {
-                $scope.v.search.advanced.data.name = null;
-            }
+            // 逐个复制控件里的值
+            // if (hasValue($scope.v.control.date.ins.startTime.value)) {
+            //     $scope.v.search.advanced.form.startTime = angular.copy($scope.v.control.date.ins.startTime.value.getTime());
+            //     $scope.v.search.advanced.data.startTime = angular.copy($scope.v.search.advanced.form.startTime);
+            // } else {
+            //     $scope.v.search.advanced.data.startTime = null;
+            // }
 
-            if (hasValue($scope.v.control.select.status.current)) {
-                $scope.v.search.advanced.form.status = angular.copy($scope.v.control.select.status.current._key);
-                $scope.v.search.advanced.data.status = angular.copy($scope.v.search.advanced.form.status);
-            } else {
-                $scope.v.search.advanced.data.status = null;
-            }
+            // if (hasValue($scope.v.control.date.ins.endTime.value)) {
+            //     $scope.v.search.advanced.form.endTime = angular.copy($scope.v.control.date.ins.endTime.value.getTime());
+            //     $scope.v.search.advanced.data.endTime = angular.copy($scope.v.search.advanced.form.endTime);
+            // } else {
+            //     $scope.v.search.advanced.data.endTime = null;
+            // }
 
-            if (hasValue($scope.v.control.select.type.current)) {
-                $scope.v.search.advanced.form.type = angular.copy($scope.v.control.select.type.current._key);
-                $scope.v.search.advanced.data.type = angular.copy($scope.v.search.advanced.form.type);
-            } else {
-                $scope.v.search.advanced.data.type = null;
+            // if (hasLength($scope.v.search.advanced.form.name)) {
+            //     $scope.v.search.advanced.data.name = angular.copy($scope.v.search.advanced.form.name);
+            // } else {
+            //     $scope.v.search.advanced.data.name = null;
+            // }
+
+            // if (hasValue($scope.v.control.select.ins.status.current)) {
+            //     $scope.v.search.advanced.form.status = angular.copy($scope.v.control.select.ins.status.current._key);
+            //     $scope.v.search.advanced.data.status = angular.copy($scope.v.search.advanced.form.status);
+            // } else {
+            //     $scope.v.search.advanced.data.status = null;
+            // }
+
+            // if (hasValue($scope.v.control.select.ins.type.current)) {
+            //     $scope.v.search.advanced.form.type = angular.copy($scope.v.control.select.ins.type.current._key);
+            //     $scope.v.search.advanced.data.type = angular.copy($scope.v.search.advanced.form.type);
+            // } else {
+            //     $scope.v.search.advanced.data.type = null;
+            // }
+        }
+
+        // 遍历设置控件里的值为 null
+        function setAdvSearchCtrlDataNull() {
+            for (var ctrl in $scope.v.search.advanced.ctrls) {
+                if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
+                    var ctl = $scope.v.search.advanced.ctrls[ctrl];
+                    if (hasLength(ctl)) {
+                        _.each(ctl, function (_name) {
+                            switch (ctrl) {
+                                case 'pagination':
+                                    $scope.v.control[ctrl].ins[_name].pageNo = 1;
+                                    break;
+                                case 'tab':
+                                case 'menu':
+                                case 'select':
+                                    $scope.v.control[ctrl].ins[_name].current = angular.copy($scope.v.control[ctrl].ins[_name].options[0]);
+                                    break;
+                                case 'checkbox':
+                                    // $scope.v.control[ctrl].ins[_name].value = null; // 单个的情况
+                                    $scope.v.control[ctrl].ins[_name].value = []; // 多个的情况
+                                    break;
+                                case 'radio':
+                                    $scope.v.control[ctrl].ins[_name].value = 'default'; // 默认值，不能等于 null
+                                    break;
+                                case 'date':
+                                    $scope.v.control[ctrl].ins[_name].value = null;
+                                    break;
+                                case 'editor':
+                                    $scope.v.control[ctrl].ins[_name].content = null;
+                                    break;
+                                case 'uploader':
+                                    $scope.v.control[ctrl].ins[_name].data = [];
+                                    break;
+                            }
+                        });
+                    }
+                }
             }
         }
 
         // 清空高级搜索内容
         function clearAdvSearchForm() {
+            // 遍历设置控件里的值为 null
+            setAdvSearchCtrlDataNull();
+
             // 如果有控件部分，要单独处理
-            $scope.v.control.date.startTime.value = null;
-            $scope.v.control.date.endTime.value = null;
-            $scope.v.control.select.status.current = null;
-            $scope.v.control.select.type.current = null;
+            // $scope.v.control.date.ins.startTime.value = null;
+            // $scope.v.control.date.ins.endTime.value = null;
+            // $scope.v.control.select.ins.status.current = null;
+            // $scope.v.control.select.ins.type.current = null;
 
             // 循环把form下的key全部置null
             for (var prop in $scope.v.search.advanced.form) {
@@ -1017,13 +1272,13 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
             if (hasValue($scope.v.search.advanced.data.startTime)) {
                 _.extend(result, {
-                    'startTime': $scope.v.search.advanced.data.startTime
+                    'startTime': $scope.v.search.advanced.data.startTime.getTime()
                 });
             }
 
             if (hasValue($scope.v.search.advanced.data.endTime)) {
                 _.extend(result, {
-                    'endTime': $scope.v.search.advanced.data.endTime
+                    'endTime': $scope.v.search.advanced.data.endTime.getTime()
                 });
             }
 
@@ -1035,13 +1290,13 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
             if (hasValue($scope.v.search.advanced.data.status)) {
                 _.extend(result, {
-                    'status': $scope.v.search.advanced.data.status
+                    'status': $scope.v.search.advanced.data.status._key
                 });
             }
 
             if (hasValue($scope.v.search.advanced.data.type)) {
                 _.extend(result, {
-                    'type': $scope.v.search.advanced.data.type
+                    'type': $scope.v.search.advanced.data.type._key
                 });
             }
 
@@ -1058,7 +1313,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // 高级搜索（这个函数的返回值必须是 Promises）
-        function advSearch(isNextPage) {
+        function advSearch(_name, isNextPage) {
             $scope.v.search.advanced.touched = true;
 
             // 页面按钮点击的时候没有传入这个参数
@@ -1095,7 +1350,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 }
             }
 
-            var data = getQueryData();
+            var data = getQueryData(_name);
 
             data = extendAdvSearchData(data);
 
@@ -1108,15 +1363,14 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 }, 5000);
             }
 
-            return reqAdvSearch(data, isNextPage);
+            return reqAdvSearch(_name, data, isNextPage);
         }
 
         // 高级搜索请求
-        function reqAdvSearch(data, isNextPage) {
+        function reqAdvSearch(_name, data, isNextPage) {
             return procRequest($scope.v.api.search(data)).then(function(res) {
                 if ((res.result === 1) && (hasValue(res.data))) {
-                    $scope.v.control.pagination.count = res.data.total;
-                    $scope.v.lstData = res.data.rows;
+                    setLstData(_name, res.data.total, res.data.rows);
 
                     if (hasTrue(isNextPage)) {
                         scroll2Top();
@@ -1159,22 +1413,21 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // 列表数据统一获取（基础数据）
-        function getQueryData() {
+        function getQueryData(_name) {
             return {
-                'pageNo': $scope.v.control.pagination.pageNo,
-                'pagesize': $scope.v.control.pagination.pageSize,
-                'status': $scope.v.control.tab.main.current._key,
+                'pageNo': $scope.v.control.pagination.ins[_name].pageNo,
+                'pagesize': $scope.v.control.pagination._config.pageSize,
+                'status': $scope.v.control.tab.ins.main.current._key,
             };
         }
 
         // 列表数据（这个函数的返回值必须是 Promises）
-        function getLstData(isNextPage) {
-            var data = getQueryData();
+        function getLstData(_name, isNextPage) {
+            var data = getQueryData(_name);
 
             return procRequest($scope.v.api.list(data)).then(function(res) {
                 if ((res.result === 1) && (hasValue(res.data))) {
-                    $scope.v.control.pagination.count = res.data.total;
-                    $scope.v.lstData = res.data.rows;
+                    setLstData(_name, res.data.total, res.data.rows);
 
                     if (hasTrue(isNextPage)) {
                         scroll2Top();
@@ -1184,6 +1437,12 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 }
                 return res;
             });
+        }
+
+        // 统一处理页面数据赋值
+        function setLstData(_name, total, data) {
+            $scope.v.control.pagination.ins[_name].count = total;
+            $scope.v.lstData = data;
         }
 
         // 页面主函数
@@ -1203,7 +1462,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             }
 
             // 列表页获取数据
-            getLstData().finally(function() {
+            getLstData('main', false).finally(function() {
                 loadDataComplete();
             });
 
@@ -1267,36 +1526,48 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // }
 
         // Promise 使用例子
-        // function asyncGreet(name) {
-            // return $q(function(resolve, reject) {
-                // setTimeout(function() {
-                    // if (okToGreet(name)) {
-                        // resolve('Hello, ' + name + '!');
-                    // } else {
-                        // reject('Greeting ' + name + ' is not allowed.');
-                    // }
-                // }, 1000);
-            // });
+        // function asyncGreet(_name) {
+        // return $q(function(resolve, reject) {
+        // setTimeout(function() {
+        // if (okToGreet(_name)) {
+        // resolve('Hello, ' + _name + '!');
+        // } else {
+        // reject('Greeting ' + _name + ' is not allowed.');
+        // }
+        // }, 1000);
+        // });
         // }
 
-        function updateLstData(isNextPage) {
+        function updateLstData(_name, isNextPage) {
             // 搜索状态下的翻页
             if ($scope.v.search.isProcessing === true) {
                 // 高级搜索
                 if ($scope.v.search.useAdvanced === true) {
-                    return advSearch(isNextPage);
+                    return advSearch(_name, isNextPage);
                 } else { // 简单搜索
-                    return smpSearch(isNextPage);
+                    return smpSearch(_name, isNextPage);
                 }
             } else { // 非搜索状态
-                return getLstData(isNextPage);
+                return getLstData(_name, isNextPage);
+            }
+        }
+
+        // 由于手动修改页码引起的状态修改
+        function afterChangePage(_name) {
+            if (hasValue($scope.v.control.pagination.ins[_name]._action)) {
+                if (hasTrue($scope.v.control.pagination.ins[_name]._action.submitted)) {
+                    $scope.v.control.pagination.ins[_name]._action.submitted = false;
+                }
+                $scope.v.control.pagination.ins[_name]._action = null;
             }
         }
 
         // 点击分页的时候，页面跳转
-        $scope.$watch('v.control.pagination.pageNo', function(newVal, oldVal) {
+        $scope.$watch('v.control.pagination.ins.main.pageNo', function(newVal, oldVal) {
             if (newVal !== oldVal) {
-                updateLstData(true);
+                updateLstData('main', true).finally(function() {
+                    afterChangePage('main');
+                });
             }
         }, true);
     }
@@ -1334,4 +1605,3 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 //         }
 //     }
 // ]);
-

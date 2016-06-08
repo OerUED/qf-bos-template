@@ -15,6 +15,18 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/06/08
+
+1. 添加手动修改页码触发的请求回调处理；
+2. 统一联动 Tab 和 Menu 和 Select 菜单，同一时间只能有一个请求操作；
+3. 修复 Tab 或 Menu 或 Select 菜单改变的时候，页码不变的问题；
+4. 统一修改所有控件处理都支持多实例；
+5. 添加 setLstData() 函数统一处理页面数据赋值；
+6. 添加遍历判断控件里是否有值的方法 checkAdvSearchCtrlData()，不再手工输入；
+7. 添加遍历复制控件里值的方法 copyAdvSearchCtrlData()，不再手工输入；
+8. 添加遍历设置控件里值为 null 的方法 setAdvSearchCtrlDataNull()，不再手工输入；
+9. 所有涉及到翻页的方法统一添加 _name 参数实现多实例；
+
 #### 2016/06/07
 
 1. 添加 checkbox 的单个和多个选项的使用例子；
