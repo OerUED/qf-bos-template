@@ -1,4 +1,10 @@
-模板更新时间：2016/05/18
+// LESS模板更新日志：
+//
+// 2016/06/12
+// 1.添加 checkbox 带输入框的样式；
+//
+// 2016/05/18
+// 1.模板代码初始化；
 
 1.列表页面样式模板
 
@@ -329,6 +335,34 @@
         }
         .dropdown-menu:before {
             left: 16px;
+        }
+    }
+    .checkbox-wrap {
+        line-height: 40px;
+        position: relative;
+        .ui-checkbox .addon-text {
+            position: absolute;
+            top: 0;
+            left: 240px;
+            white-space: nowrap;
+        }
+        .checkbox-addon {
+            position: absolute;
+            top: 0;
+            left: 86px;
+        }
+        .input-group {
+            width: 140px;
+            input {
+                border-radius: 4px;
+            }
+            .input-group-addon {
+                width: 41px;
+                font-size: 12px;
+                cursor: default;
+                border: none;
+                background: transparent;
+            }
         }
     }
 }

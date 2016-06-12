@@ -1,5 +1,12 @@
 // JS模板更新日志：
 //
+// 2016/06/12
+// 1.单个选项的 checkbox 添加 input 输入数据；
+// 2.简单搜索添加 replace 属性，将后端的参数名直接放在结构体里面做替换修改；
+// 3.修改 copyAdvSearchCtrlData() 函数里的赋值；
+// 4.高级搜索添加 replace 属性，将后端的参数名直接放在结构体里面做替换修改；
+// 5.修改 extendAdvSearchData() 函数的赋值方式；
+//
 // 2016/06/08
 // 1.添加手动修改页码触发的请求回调处理；
 // 2.统一联动 Tab 和 Menu 和 Select 菜单，同一时间只能有一个请求操作；
@@ -89,6 +96,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'form': {
                     'keyword': null,
                 },
+                'replace': {
+                    'keyword': 'name',
+                },
                 'data': {}, // 不需要重复写跟form一样的变量
                 'method': smpSearch,
             },
@@ -113,6 +123,13 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     'date': ['startTime', 'endTime', ],
                     'editor': [],
                     'uploader': [],
+                },
+                'replace': {
+                    'name': 'name',
+                    'status': 'status',
+                    'type': 'type',
+                    'startTime': 'startTime',
+                    'endTime': 'endTime',
                 },
                 'data': {}, // 不需要重复写跟form一样的变量
             },
@@ -284,6 +301,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'showed': false,
                 'value': null,
                 'change': null,
+                'input': null,
             },
             // 多个选项
             'group': {
@@ -994,9 +1012,10 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
             var data = getQueryData(_name);
 
-            _.extend(data, {
-                'name': $scope.v.search.simple.data.keyword
-            });
+            // _.extend(data, {
+            //     'name': $scope.v.search.simple.data.keyword
+            // });
+            data[$scope.v.search.simple.replace.keyword] = $scope.v.search.simple.data.keyword;
 
             return reqSmpSearch(_name, data, isNextPage);
         }
@@ -1112,7 +1131,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                                 case 'tab':
                                 case 'menu':
                                 case 'select':
-                                    src = $scope.v.control[ctrl].ins[_name].current;
+                                    src = $scope.v.control[ctrl].ins[_name].current._key;
                                     dst = hasValue(src) ? src : null;
                                     break;
                                 case 'checkbox':
@@ -1125,7 +1144,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                                     dst = hasValue(src) ? src : null;
                                     break;
                                 case 'date':
-                                    src = $scope.v.control[ctrl].ins[_name].value;
+                                    src = $scope.v.control[ctrl].ins[_name].value.getTime();
                                     dst = hasValue(src) ? src : null;
                                     break;
                                 case 'editor':
@@ -1164,14 +1183,14 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
             // 逐个复制控件里的值
             // if (hasValue($scope.v.control.date.ins.startTime.value)) {
-            //     $scope.v.search.advanced.form.startTime = angular.copy($scope.v.control.date.ins.startTime.value.getTime());
+            //     $scope.v.search.advanced.form.startTime = angular.copy($scope.v.control.date.ins.startTime.value);
             //     $scope.v.search.advanced.data.startTime = angular.copy($scope.v.search.advanced.form.startTime);
             // } else {
             //     $scope.v.search.advanced.data.startTime = null;
             // }
 
             // if (hasValue($scope.v.control.date.ins.endTime.value)) {
-            //     $scope.v.search.advanced.form.endTime = angular.copy($scope.v.control.date.ins.endTime.value.getTime());
+            //     $scope.v.search.advanced.form.endTime = angular.copy($scope.v.control.date.ins.endTime.value);
             //     $scope.v.search.advanced.data.endTime = angular.copy($scope.v.search.advanced.form.endTime);
             // } else {
             //     $scope.v.search.advanced.data.endTime = null;
@@ -1184,14 +1203,14 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // }
 
             // if (hasValue($scope.v.control.select.ins.status.current)) {
-            //     $scope.v.search.advanced.form.status = angular.copy($scope.v.control.select.ins.status.current._key);
+            //     $scope.v.search.advanced.form.status = angular.copy($scope.v.control.select.ins.status.current;
             //     $scope.v.search.advanced.data.status = angular.copy($scope.v.search.advanced.form.status);
             // } else {
             //     $scope.v.search.advanced.data.status = null;
             // }
 
             // if (hasValue($scope.v.control.select.ins.type.current)) {
-            //     $scope.v.search.advanced.form.type = angular.copy($scope.v.control.select.ins.type.current._key);
+            //     $scope.v.search.advanced.form.type = angular.copy($scope.v.control.select.ins.type.current);
             //     $scope.v.search.advanced.data.type = angular.copy($scope.v.search.advanced.form.type);
             // } else {
             //     $scope.v.search.advanced.data.type = null;
@@ -1268,39 +1287,56 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 扩展高级搜索请求参数
         function extendAdvSearchData(data) {
-            var result = angular.copy(data);
+            // 遍历请求数据进行赋值
+            for (var prop in $scope.v.search.advanced.data) {
+                if ($scope.v.search.advanced.data.hasOwnProperty(prop)) {
+                    var raw = $scope.v.search.advanced.data[prop];
+                    if (_.isArray(raw) || _.isString(raw)) {
+                        if (hasLength(raw)) {
+                            var k = $scope.v.search.advanced.replace[prop];
+                            data[k] = angular.copy(raw);
+                        }
+                    } else {
+                        if (hasValue(raw)) {
+                            var k = $scope.v.search.advanced.replace[prop];
+                            data[k] = angular.copy(raw);
+                        }
+                    }
 
-            if (hasValue($scope.v.search.advanced.data.startTime)) {
-                _.extend(result, {
-                    'startTime': $scope.v.search.advanced.data.startTime.getTime()
-                });
+                }
             }
+            
+            // if (hasValue($scope.v.search.advanced.data.startTime)) {
+            //     _.extend(data, {
+            //         'startTime': $scope.v.search.advanced.data.startTime.getTime()
+            //     });
+            // }
 
-            if (hasValue($scope.v.search.advanced.data.endTime)) {
-                _.extend(result, {
-                    'endTime': $scope.v.search.advanced.data.endTime.getTime()
-                });
-            }
+            // if (hasValue($scope.v.search.advanced.data.endTime)) {
+            //     _.extend(data, {
+            //         'endTime': $scope.v.search.advanced.data.endTime.getTime()
+            //     });
+            // }
 
-            if (hasLength($scope.v.search.advanced.data.name)) {
-                _.extend(result, {
-                    'name': $scope.v.search.advanced.data.name
-                });
-            }
+            // if (hasLength($scope.v.search.advanced.data.name)) {
+            //     _.extend(data, {
+            //         'name': $scope.v.search.advanced.data.name
+            //     });
+            // }
 
-            if (hasValue($scope.v.search.advanced.data.status)) {
-                _.extend(result, {
-                    'status': $scope.v.search.advanced.data.status._key
-                });
-            }
+            // if (hasValue($scope.v.search.advanced.data.status)) {
+            //     _.extend(data, {
+            //         'status': $scope.v.search.advanced.data.status._key
+            //     });
+            // }
 
-            if (hasValue($scope.v.search.advanced.data.type)) {
-                _.extend(result, {
-                    'type': $scope.v.search.advanced.data.type._key
-                });
-            }
+            // if (hasValue($scope.v.search.advanced.data.type)) {
+            //     _.extend(data, {
+            //         'type': $scope.v.search.advanced.data.type._key
+            //     });
+            // }
 
-            return result;
+            return data;
         }
 
         // 根据状态做一些请求数据修改

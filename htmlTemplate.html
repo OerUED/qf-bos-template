@@ -1,4 +1,12 @@
-模板更新时间：2016/05/18
+<!--
+// HTML模板更新日志：
+//
+// 2016/06/12
+// 1.添加 checkbox 带输入框的代码；
+//
+// 2016/05/18
+// 1.模板代码初始化；
+-->
 
 1.简单搜索
 
@@ -449,5 +457,46 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
     </div>
     <!-- 尾部 -->
     <div class="block-footer">
+    </div>
+</div>
+
+19.带输入框的 checkbox 模板
+
+<div class="checkbox-wrap">
+    <label class="ui-checkbox">
+        <input type="checkbox" name="timesLimit"
+               ng-model="v.control.checkbox.timesLimit.current"
+               ng-true-value="true" ng-false-value="false"/>
+        <i>同一个ID只能购买 1 次</i>
+    </label>
+</div>
+
+<div class="checkbox-wrap">
+    <label class="ui-checkbox">
+        <input type="checkbox" name="quantityLimit"
+               ng-model="v.control.checkbox.quantityLimit.current"
+               ng-true-value="true" ng-false-value="false"/>
+        <i>数量限制<span class="addon-text">附加信息</span></i>
+    </label>
+    <div class="checkbox-addon"
+         ng-class="{'has-error': ((v.control.checkbox.quantityLimit.current === true) &amp;&amp; formMain.maxQuantity.$invalid &amp;&amp; (formMain.maxQuantity.$touched || v.touched))}">
+        <div class="input-group">
+            <input type="number" class="form-control" placeholder=""
+                   ng-model="v.control.checkbox.quantityLimit.input" min="1" step="1"
+                   max="999999999" ng-pattern="/^\d*$/"
+                   name="maxQuantity"
+                   ng-required="v.control.checkbox.quantityLimit.current === true"
+                   ng-focus="v.control.checkbox.quantityLimit.current = true"/>
+            <div class="input-group-addon">个</div>
+        </div>
+        <div class="form-tips help-block form-error-icon"
+             ng-messages="formMain.maxQuantity.$error"
+             ng-show="(v.control.checkbox.quantityLimit.current === true) &amp;&amp; (formMain.maxQuantity.$touched || v.touched)">
+            <div ng-message="required">请输入数量限制</div>
+            <div ng-message="number">请输入正确的数量数字</div>
+            <div ng-message="min">最小为 1</div>
+            <div ng-message="max">最大为 999999999</div>
+            <div ng-message="pattern">数量只能输入自然数</div>
+        </div>
     </div>
 </div>
