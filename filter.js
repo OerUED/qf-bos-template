@@ -95,3 +95,24 @@ app.filter('percentage', ['$filter', function ($filter) {
         return $filter('number')(input * 10000 / 100, decimals) + '%';
     };
 }]);
+
+// 价格显示
+app.filter('showPrice', ['$filter', function ($filter) {
+    return function (input, isSku) {
+        var minPrice = null, maxPrice = null;
+        
+        if (hasTrue(isSku)) {
+            minPrice = toRMBYuan(input.minSkuPrice);
+            maxPrice = toRMBYuan(input.maxSkuPrice);
+        } else {
+            minPrice = toRMBYuan(input.minPrice);
+            maxPrice = toRMBYuan(input.maxPrice);
+        }
+
+        if (minPrice === maxPrice) {
+            return '￥' + minPrice;
+        } else {
+            return '￥' + minPrice + '-' + maxPrice;
+        }
+    };
+}]);
