@@ -3,17 +3,41 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/06/12
+
+1. 添加 checkbox 带输入框的代码；
+
 #### 2016/06/07
 
 1. 修改模板中的一些错误代码；
 
-## cssTemplate.css
+#### 2016/05/18
+
+1. 模板代码初始化；
+
+## lessTemplate.less
+
+#### 2016/06/12
+
+1. 添加 checkbox 带输入框的样式；
 
 #### 2016/06/07
 
 1. 添加高级搜索表单的错误提示样式；
 
+#### 2016/05/18
+
+1. 模板代码初始化；
+
 ## jsTemplate.js
+
+#### 2016/06/12
+
+1. 单个选项的 checkbox 添加 input 输入数据；
+2. 简单搜索添加 replace 属性，将后端的参数名直接放在结构体里面做替换修改；
+3. 修改 copyAdvSearchCtrlData() 函数里的赋值；
+4. 高级搜索添加 replace 属性，将后端的参数名直接放在结构体里面做替换修改；
+5. 修改 extendAdvSearchData() 函数的赋值方式；
 
 #### 2016/06/08
 
