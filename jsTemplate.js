@@ -537,7 +537,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             addEditorFeatures(instance);
             // 页面主函数（有需要的时候要等编辑器加载完毕后才去请求数据）
             //main();
-        };
+        }
 
         // 计算时间间隔
         function calcDate(day, isResetTime) {
@@ -1624,7 +1624,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 //         $scope.f = {
 //             'ok': ok,
 //             'cancel': cancel,
-//             'close': cancel,
+//             'close': close,
 //         };
 
 //         // data 例子
@@ -1639,5 +1639,10 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 //         function cancel() {
 //             $modalInstance.dismiss('cancel');
 //         }
+
+//        function close() {
+//            $modalInstance.dismiss('close');
+//        }
+
 //     }
 // ]);
