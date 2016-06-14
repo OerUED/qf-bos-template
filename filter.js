@@ -96,8 +96,8 @@ app.filter('percentage', ['$filter', function ($filter) {
     };
 }]);
 
-// 价格显示
-app.filter('showPrice', ['$filter', function ($filter) {
+// 价格区间显示
+app.filter('showPriceSummary', ['$filter', function ($filter) {
     return function (input, isSku) {
         var minPrice = null, maxPrice = null;
         
@@ -114,5 +114,12 @@ app.filter('showPrice', ['$filter', function ($filter) {
         } else {
             return '￥' + minPrice + '-' + maxPrice;
         }
+    };
+}]);
+
+// 显示价格
+app.filter('showPrice', ['$filter', function ($filter) {
+    return function (input) {
+        return $filter('currency')(toRMBYuan(input));
     };
 }]);
