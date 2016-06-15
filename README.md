@@ -31,6 +31,11 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+### 2016/06/15
+
+1. 添加 enum 变量保存枚举类型；
+2. 添加 enumFilter 枚举处理供页面调用；
+
 #### 2016/06/12
 
 1. 单个选项的 checkbox 添加 input 输入数据；
