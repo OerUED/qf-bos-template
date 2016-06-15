@@ -129,7 +129,7 @@ function serializeObj(obj, prefix) {
 // 将 元 转换为 分
 function toRMBFen(yuan) {
     if (hasValue(yuan)) {
-        return (parseFloat(yuan) * 100);
+        return parseInt((parseFloat(yuan) * 100).toFixed(2), 10);
     } else {
         return yuan;
     }
@@ -138,7 +138,7 @@ function toRMBFen(yuan) {
 // 将 分 转换为 元
 function toRMBYuan(fen) {
     if (hasValue(fen)) {
-        return (parseInt(fen, 10) / 100);
+        return parseFloat((parseInt(fen, 10) / 100).toFixed(2));
     } else {
         return fen;
     }

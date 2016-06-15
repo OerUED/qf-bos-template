@@ -92,7 +92,7 @@ app.filter('nullToSpace', function() {
 // 百分比
 app.filter('percentage', ['$filter', function ($filter) {
     return function (input, decimals) {
-        return $filter('number')(input * 10000 / 100, decimals) + '%';
+        return $filter('number')(toRMBFen(input), decimals) + '%';
     };
 }]);
 
@@ -100,7 +100,7 @@ app.filter('percentage', ['$filter', function ($filter) {
 app.filter('showPriceSummary', ['$filter', function ($filter) {
     return function (input, isSku) {
         var minPrice = null, maxPrice = null;
-        
+
         if (hasTrue(isSku)) {
             minPrice = toRMBYuan(input.minSkuPrice);
             maxPrice = toRMBYuan(input.maxSkuPrice);
