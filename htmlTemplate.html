@@ -1,6 +1,9 @@
 <!--
 // HTML模板更新日志：
 //
+// 2016/06/15
+// 1.修改分页的配置；
+//
 // 2016/06/12
 // 1.添加 checkbox 带输入框的代码；
 //
@@ -247,10 +250,13 @@
     </div>
     <!-- 分页 -->
     <div class="fn-right">
-        <pagination total-items="v.control.pagination.ins.main.count" ng-model="v.control.pagination.ins.main.pageNo"
-                    items-per-page="v.control.pagination._config.pageSize" max-size="v.control.pagination._config.maxSize"
-                    class="pagination-xl" boundary-links="true" first-text="首页" last-text="末页"
-                    direction-links="false" rotate="false"></pagination>
+        <pagination class="pagination-xl"
+                    total-items="v.control.pagination.ins.main.count"
+                    ng-model="v.control.pagination.ins.main.pageNo"
+                    items-per-page="v.control.pagination._config.pageSize"
+                    max-size="v.control.pagination._config.maxSize"
+                    boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false" force-ellipses="true"
+                    first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
     </div>
 </div>
 

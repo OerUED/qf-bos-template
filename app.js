@@ -7,13 +7,13 @@ app.config(['pluploadOptionProvider', function(pluploadOptionProvider) {
         flash_swf_url: 'vendor/plupload/js/Moxie.swf',
         silverlight_xap_url: 'vendor/plupload/js/Moxie.xap',
         filters: {
+            prevent_duplicates : true
             max_file_size: '3mb',
             mime_types: [{
                 title: 'Image files',
                 extensions: 'jpg,png'
             }]
         },
-        prevent_duplicates: false,
         multipart_params: {
             '_appKey': null
         }

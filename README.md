@@ -3,6 +3,10 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/06/15
+
+1. 修改分页的配置；
+
 #### 2016/06/12
 
 1. 添加 checkbox 带输入框的代码；
@@ -35,6 +39,7 @@ Some useful template files for qf-bos.
 
 1. 添加 enum 变量保存枚举类型；
 2. 添加 enumFilter 枚举处理供页面调用；
+3. 添加上传插件的错误提示；
 
 #### 2016/06/12
 

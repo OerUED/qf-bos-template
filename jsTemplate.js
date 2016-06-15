@@ -3,6 +3,7 @@
 // 2016/06/15
 // 1. 添加 enum 变量保存枚举类型；
 // 2. 添加 enumFilter 枚举处理供页面调用；
+// 3. 添加上传插件的错误提示；
 //
 // 2016/06/12
 // 1. 单个选项的 checkbox 添加 input 输入数据；
@@ -487,6 +488,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                         $scope.v.control.uploader.ins[_name].data.length + files.length > uploader.settings.max_files ||
                         files.length > uploader.settings.max_files) {
                         uploader.splice();
+                        $scope.message('操作失败：上传个数超出限制！', 'error');
                         return false;
                     } else {
                         $scope.v.control.uploader.ins[_name].loading = true;
@@ -510,6 +512,16 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 },
                 'error': function(uploader, error) {
                     $scope.v.control.uploader.ins[_name].loading = false;
+                    switch (error.code) {
+                        case -600:
+                            $scope.message('操作失败：文件大小超出限制！', 'error');
+                            break;
+                        case -601:
+                            $scope.message('操作失败：不支持上传该类型文件！', 'error');
+                            break;
+                        default:
+                            $scope.message('操作失败：' + error.code + ' - ' + error.message, 'error');
+                    }
                 }
             };
         }
