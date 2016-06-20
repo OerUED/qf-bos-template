@@ -1,4 +1,8 @@
 // JS模板更新日志：
+// 
+// 2016/06/20
+// 1. 添加 modifyNewData() 方法来修改新建时的请求数据；
+// 2. 重命名 modifySpecial() 为 modifyOldData()；
 //
 // 2016/06/15
 // 1. 添加 enum 变量保存枚举类型；
@@ -445,7 +449,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'FAILED': '失败',
             },
         };
-        
+
         // 表单数据
         $scope.v.form = {
             '_action': {
@@ -468,7 +472,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         function enumFilter(_name, _key) {
             return $scope.v.enum[_name][_key];
         }
-        
+
         // 获取全局的上传地址
         // function getUploaderUrl() {
         //     return $rootScope.uploadSkuImgUrl;
@@ -811,18 +815,29 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             });
         }
 
-        // 对需要提交的数据做一些改动
-        function modifySpecial(data) {
+        // 编辑状态下的数据修改
+        function modifyOldData(data) {
+            return data;
+        }
+
+        // 新建状态下的数据修改
+        function modifyNewData(data) {
             return data;
         }
 
         // 将页面表单的数据填充到结构体中发给后端
         function getForm() {
-            var data = {};
+            // 先将发给后端的数据结构全部列一下
+            // 然后再针对新建和编辑的情况下，对某些字段进行修改
+            var data = {
+                
+            };
 
             // 编辑状态下对需要提交的数据做一些改动
             if ($scope.v.page.editing === true) {
-                data = modifySpecial(data);
+                data = modifyOldData(data);
+            } else {
+                data = modifyNewData(data);
             }
 
             return data;
@@ -1348,7 +1363,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
                 }
             }
-            
+
             // if (hasValue($scope.v.search.advanced.data.startTime)) {
             //     _.extend(data, {
             //         'startTime': $scope.v.search.advanced.data.startTime.getTime()

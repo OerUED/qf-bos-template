@@ -35,6 +35,11 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+### 2016/06/20
+
+1. 添加 modifyNewData() 方法来修改新建时的请求数据；
+2. 重命名 modifySpecial() 为 modifyOldData()；
+
 ### 2016/06/15
 
 1. 添加 enum 变量保存枚举类型；
