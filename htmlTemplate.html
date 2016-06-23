@@ -1,16 +1,3 @@
-<!--
-// HTML模板更新日志：
-//
-// 2016/06/15
-// 1.修改分页的配置；
-//
-// 2016/06/12
-// 1.添加 checkbox 带输入框的代码；
-//
-// 2016/05/18
-// 1.模板代码初始化；
--->
-
 1.简单搜索
 
 <div class="search-advanced-box" ng-init="inputfocus = false"
@@ -365,7 +352,7 @@
     </div>
 </div>
 
-16.整个页面模板
+16.发布页面模板
 
 <!DOCTYPE html>
 <html data-layout-decorator="/layout/mainPage">
@@ -386,7 +373,7 @@
         </p>
     </div>
     <div data-layout-fragment="main">
-        <div class="wrap-container personal-detail ng-cloak" my-auto="" ng-controller="ctrlPersonalDetail">
+        <div class="personal-detail ng-cloak" ng-controller="ctrlPersonalDetail">
             <!-- 导航栏 -->
             <div class="mod-nav fn-clear">
                 <div class="fn-left"></div>
@@ -398,7 +385,7 @@
                 <div class="fn-right"></div>
             </div>
             <!-- 内容 -->
-            <div class="mod-contain fn-clear">
+            <div class="mod-contain fn-clear wrap-container" my-auto="">
                 <form name="formMain" ng-submit="" novalidate="novalidate" autocomplete="off">
                     <div class="form-wrap">
                         <ul class="form-list">
@@ -444,11 +431,121 @@
 
 </html>
 
-17.手机号码正则表达式
+17.列表页面模板
+
+<!DOCTYPE html>
+<html data-layout-decorator="/layout/mainPage">
+
+<head>
+    <title>认证信息</title>
+</head>
+
+<body>
+    <div data-layout-fragment="main">
+        <div class="personal-detail ng-cloak" ng-controller="ctrlPersonalDetail">
+            <!-- 导航栏 -->
+            <div class="mod-nav fn-clear">
+                <div class="fn-left"></div>
+                <div class="fn-right"></div>
+            </div>
+            <!-- 开头 -->
+            <div class="mod-header fn-clear">
+                <div class="fn-left">
+                    <div class="tab-list">
+                        <a href="javascript:;" class="tab-item"
+                           ng-repeat="tab in v.control.tab.ins.main.options" ng-bind="tab._value"
+                           ng-class="{true : 'active', false: ''}[v.control.tab.ins.main.current._key === tab._key]"
+                           ng-click="v.control.tab.ins.main.change('main', $index)"></a>
+                    </div>
+                </div>
+                <div class="fn-right"></div>
+            </div>
+            <!-- 内容 -->
+            <div class="mod-contain fn-clear wrap-container" my-auto="">
+                <table class="table table-hover tab-fixed tab-cut">
+                    <colgroup>
+                        <col width="10%"></col>
+                        <col width="10%"></col>
+                        <col width="10%"></col>
+                        <col width="10%"></col>
+                        <col width="10%"></col>
+                        <col width="10%"></col>
+                        <col width="10%"></col>
+                        <col width="10%"></col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>店铺名称</th>
+                        <th>联系电话</th>
+                        <th>店铺类型</th>
+                        <th>创建时间</th>
+                        <th>更新时间</th>
+                        <th>保证金</th>
+                        <th>佣金比例</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="r in v.lstData">
+                        <td ng-bind="r.name"></td>
+                        <td ng-bind="r.phone"></td>
+                        <td>
+                            <span ng-if="r.type === 'geren'">个人店铺</span>
+                            <span ng-if="r.type === 'qiye'">企业店铺</span>
+                        </td>
+                        <td ng-bind="r.regTime | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                        <td ng-bind="r.updateTime | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                        <td>
+                            <a ng-if="r.baozheng === null" href="javascript:;" ng-click="f.setSecurityDeposit(r)">设置保证金</a>
+                            <span ng-if="r.baozheng !== null">
+                                <i ng-bind="(r.baozheng / 100) | currency"></i>
+                                <br/>
+                                <a href="javascript:;" ng-click="f.setSecurityDeposit(r)">修改</a>
+                            </span>
+                        </td>
+                        <td>
+                            <a ng-if="r.yongjin === null" href="javascript:;" ng-click="f.setCommission(r)">设置佣金</a>
+                            <span ng-if="r.yongjin !== null">
+                                <i ng-bind="r.yongjin + '%'"></i>
+                                <br/>
+                                <a href="javascript:;" ng-click="f.setCommission(r)">修改</a>
+                            </span>
+                        </td>
+                        <td>
+                            <a href="javascript:;" ng-click="f.closeStore(r)" ng-if="r.status === 'open'">关闭店铺</a>
+                            <a href="javascript:;" ng-click="f.openStore(r)" ng-if="r.status === 'close'">恢复店铺</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 结尾 -->
+            <div class="mod-footer fn-clear" ng-if="v.lstData.length &gt; 0">
+                <div class="fn-left">
+                    <span class="page-all" ng-bind="'总共 '+ v.control.pagination.ins.main.count + ' 条记录'"></span>
+                </div>
+                <!-- 分页 -->
+                <div class="fn-right">
+                    <pagination class="pagination-xl"
+                                total-items="v.control.pagination.ins.main.count"
+                                ng-model="v.control.pagination.ins.main.pageNo"
+                                items-per-page="v.control.pagination._config.pageSize"
+                                max-size="v.control.pagination._config.maxSize"
+                                boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false" force-ellipses="true"
+                                first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+18.手机号码正则表达式
 
 pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
 
-18.白板模板
+19.白板模板
 
 <div class="white-block">
     <!-- 头部 -->
@@ -466,7 +563,7 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
     </div>
 </div>
 
-19.带输入框的 checkbox 模板
+20.带输入框的 checkbox 模板
 
 <div class="checkbox-wrap">
     <label class="ui-checkbox">

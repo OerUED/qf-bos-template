@@ -3,6 +3,11 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/06/23
+
+1. 添加列表页面模板；
+2. 修改发布页面模板；
+
 #### 2016/06/15
 
 1. 修改分页的配置；
@@ -35,12 +40,12 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
-### 2016/06/20
+#### 2016/06/20
 
 1. 添加 modifyNewData() 方法来修改新建时的请求数据；
 2. 重命名 modifySpecial() 为 modifyOldData()；
 
-### 2016/06/15
+#### 2016/06/15
 
 1. 添加 enum 变量保存枚举类型；
 2. 添加 enumFilter 枚举处理供页面调用；
