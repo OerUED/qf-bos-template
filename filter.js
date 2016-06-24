@@ -110,9 +110,9 @@ app.filter('showPriceSummary', ['$filter', function ($filter) {
         }
 
         if (minPrice === maxPrice) {
-            return '￥' + minPrice;
+            return '&yen;' + minPrice;
         } else {
-            return '￥' + minPrice + '-' + maxPrice;
+            return '&yen;' + minPrice + '-' + maxPrice;
         }
     };
 }]);
