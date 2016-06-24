@@ -37,6 +37,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'hasData': false,
             // 编辑状态
             'editing': false,
+            // http 请求状态
+            'requesting': false,
         };
 
         // 搜索配置
@@ -771,7 +773,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 先将发给后端的数据结构全部列一下
             // 然后再针对新建和编辑的情况下，对某些字段进行修改
             var data = {
-                
+
             };
 
             // 编辑状态下对需要提交的数据做一些改动
@@ -1426,8 +1428,14 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'result': -1
             };
 
+            // 正在请求
+            $scope.v.page.requesting = true;
+
             return req.then(
                 function success(response) {
+                    // 关闭请求状态
+                    $scope.v.page.requesting = false;
+
                     if (response.status === 1) {
                         res.result = 1;
                         res.data = response.data;
@@ -1439,6 +1447,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     return res;
                 },
                 function error(response) {
+                    // 关闭请求状态
+                    $scope.v.page.requesting = false;
+
                     res.result = -1;
                     res.data = response;
                     $scope.message('服务器未响应', 'error');

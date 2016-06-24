@@ -40,6 +40,10 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/06/24
+
+1. 添加页面请求状态 $scope.v.page.requesting；
+
 #### 2016/06/20
 
 1. 添加 modifyNewData() 方法来修改新建时的请求数据；
