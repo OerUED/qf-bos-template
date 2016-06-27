@@ -803,7 +803,6 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 先将发给后端的数据结构全部列一下
             // 然后再针对新建和编辑的情况下，对某些字段进行修改
             var data = {
-
             };
 
             // 编辑状态下对需要提交的数据做一些改动
@@ -1214,10 +1213,18 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             for (var prop in $scope.v.search.advanced.form) {
                 if ($scope.v.search.advanced.form.hasOwnProperty(prop)) {
                     var ipt = $scope.v.search.advanced.form[prop];
-                    if (hasLength(ipt)) {
-                        $scope.v.search.advanced.data[prop] = angular.copy(ipt);
+                    if (_.isArray(ipt) || _.isString(ipt)) {
+                        if (hasLength(ipt)) {
+                            $scope.v.search.advanced.data[prop] = angular.copy(ipt);
+                        } else {
+                            $scope.v.search.advanced.data[prop] = null;
+                        }
                     } else {
-                        $scope.v.search.advanced.data[prop] = null;
+                        if (hasValue(ipt)) {
+                            $scope.v.search.advanced.data[prop] = angular.copy(ipt);
+                        } else {
+                            $scope.v.search.advanced.data[prop] = null;
+                        }
                     }
                 }
             }

@@ -52,6 +52,7 @@ Some useful template files for qf-bos.
 4. 重命名 loadDataComplete() 方法为 initPageComplete()；
 5. 重命名 loadDataSuccess() 方法为 hasPageData()；
 6. 页面中每个请求之前都要做 isProcRequesting() 状态判断；
+7. 修复遍历表单输入框的赋值判断问题；
 
 #### 2016/06/24
 
