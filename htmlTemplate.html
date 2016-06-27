@@ -147,7 +147,7 @@
         </ul>
         <div class="form-submit">
             <button class="btn btn-primary btn-search" type="button" ng-click="v.search.advanced.method('main', false)"
-                    ng-disabled="v.search.advanced.submitted">搜索
+                    ng-disabled="v.page.requesting">搜索
             </button>
             <button class="btn btn-default btn-clear" type="button" ng-click="v.search.advanced.clear()">清除
             </button>
@@ -310,7 +310,7 @@
          <div class="modal-body">
          </div>
          <div class="modal-footer">
-             <button class="btn btn-primary btn-lg" type="button" ng-click="f.ok()" ng-disabled="v.submitted">确定</button>
+             <button class="btn btn-primary btn-lg" type="button" ng-click="f.ok()" ng-disabled="v.page.requesting">确定</button>
              <button class="btn btn-default btn-lg" type="button" ng-click="f.cancel()">取消</button>
          </div>
      </div>
@@ -320,14 +320,14 @@
 
 <div class="form-submit">
     <button class="btn btn-primary btn-lg btn-submit" type="button"
-            ng-click="f.submit(formMain)" ng-disabled="v.form._action.submitted"
+            ng-click="f.submit(formMain)" ng-disabled="v.page.requesting"
             ng-if="!v.page.editing">确定
     </button>
     <button class="btn btn-primary btn-lg btn-ok" type="button" ng-click="f.ok(formMain)"
-            ng-disabled="v.form._action.submitted" ng-if="v.page.editing">确定修改
+            ng-disabled="v.page.requesting" ng-if="v.page.editing">确定修改
     </button>
     <button class="btn btn-default btn-lg btn-cancel" ng-click="f.cancel()"
-            ng-disabled="v.form._action.submitted" ng-if="v.page.editing">取消
+            ng-disabled="v.page.requesting" ng-if="v.page.editing">取消
     </button>
 </div>
 
@@ -408,14 +408,14 @@
                     </div>
                     <div class="form-submit">
                         <button class="btn btn-primary btn-lg btn-submit" type="button"
-                                ng-click="f.submit(formMain)" ng-disabled="v.form._action.submitted"
+                                ng-click="f.submit(formMain)" ng-disabled="v.page.requesting"
                                 ng-if="!v.page.editing">确定
                         </button>
                         <button class="btn btn-primary btn-lg btn-ok" type="button" ng-click="f.ok(formMain)"
-                                ng-disabled="v.form._action.submitted" ng-if="v.page.editing">确定修改
+                                ng-disabled="v.page.requesting" ng-if="v.page.editing">确定修改
                         </button>
                         <button class="btn btn-default btn-lg btn-cancel" ng-click="f.cancel()"
-                                ng-disabled="v.form._action.submitted" ng-if="v.page.editing">取消
+                                ng-disabled="v.page.requesting" ng-if="v.page.editing">取消
                         </button>
                     </div>
                 </form>

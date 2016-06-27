@@ -639,11 +639,33 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // });
         }
 
-        // 判断 Tab 或 Menu 或 Select 是否有一项正在处于请求状态
-        function isProcSubmitStatus() {
-            return ($scope.v.control.tab._action.submitted ||
-                $scope.v.control.menu._action.submitted ||
-                $scope.v.control.select._action.submitted);
+        // 判断页面是否有一项正在处于请求状态
+        function isProcRequesting() {
+            // return ($scope.v.control.tab._action.submitted ||
+            //     $scope.v.control.menu._action.submitted ||
+            //     $scope.v.control.select._action.submitted);
+
+            if (hasTrue($scope.v.page.requesting)) {
+                $scope.message('正在请求数据中……', 'error');
+                return true;
+            } else {
+                // 进入请求状态
+                $scope.v.page.requesting = true;
+                // 延时重置请求状态
+                $timeout(function() {
+                    $scope.v.page.requesting = false;
+                }, 5000);
+
+                return false;
+            }
+        }
+
+        function endOfRequest() {
+            if (hasTrue($scope.v.page.requesting)) {
+                $scope.v.page.requesting = false;
+            } else {
+                $scope.message('请求数据接口较慢！', 'error');
+            }
         }
 
         // 判断页码是否在第一页，是的话就不用手动触发请求新数据
@@ -664,57 +686,60 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // Tab 菜单改变
         function changeMainTab(_name, index) {
-            if (isProcSubmitStatus() === false) {
-                $scope.v.control.tab._action.submitted = true;
-                $scope.v.control.tab.ins[_name].current = angular.copy($scope.v.control.tab.ins[_name].options[index]);
-                // 是否手动触发请求
-                if (needManualChangePage(_name, $scope.v.control.tab._action) === true) {
-                    // 异步执行
-                    $timeout(function() {
-                        updateLstData(_name, false).finally(function() {
-                            $scope.v.control.tab._action.submitted = false;
-                        });
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return false;
+            }
+
+            // $scope.v.control.tab._action.submitted = true;
+            $scope.v.control.tab.ins[_name].current = angular.copy($scope.v.control.tab.ins[_name].options[index]);
+            // 是否手动触发请求
+            if (needManualChangePage(_name, $scope.v.control.tab._action) === true) {
+                // 异步执行
+                $timeout(function() {
+                    updateLstData(_name, false).finally(function() {
+                        // $scope.v.control.tab._action.submitted = false;
                     });
-                }
-            } else {
-                $scope.message('正在请求数据中……', 'error');
+                });
             }
         }
 
         // Menu 菜单改变
         function changeMainMenu(_name, index) {
-            if (isProcSubmitStatus() === false) {
-                $scope.v.control.menu._action.submitted = true;
-                $scope.v.control.menu.ins[_name].current = angular.copy($scope.v.control.menu.ins[_name].options[index]);
-                // 是否手动触发请求
-                if (needManualChangePage(_name, $scope.v.control.menu._action) === true) {
-                    // 异步执行
-                    $timeout(function() {
-                        updateLstData(_name, false).finally(function() {
-                            $scope.v.control.menu._action.submitted = false;
-                        });
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return false;
+            }
+
+            // $scope.v.control.menu._action.submitted = true;
+            $scope.v.control.menu.ins[_name].current = angular.copy($scope.v.control.menu.ins[_name].options[index]);
+            // 是否手动触发请求
+            if (needManualChangePage(_name, $scope.v.control.menu._action) === true) {
+                // 异步执行
+                $timeout(function() {
+                    updateLstData(_name, false).finally(function() {
+                        // $scope.v.control.menu._action.submitted = false;
                     });
-                }
-            } else {
-                $scope.message('正在请求数据中……', 'error');
+                });
             }
         }
 
         // Select 菜单改变
         function changeMainSelect(_name) {
-            if (isProcSubmitStatus() === false) {
-                $scope.v.control.select._action.submitted = true;
-                // 是否手动触发请求
-                if (needManualChangePage(_name, $scope.v.control.select._action) === true) {
-                    // 异步执行
-                    $timeout(function() {
-                        updateLstData(_name, false).finally(function() {
-                            $scope.v.control.select._action.submitted = false;
-                        });
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return false;
+            }
+
+            // $scope.v.control.select._action.submitted = true;
+            // 是否手动触发请求
+            if (needManualChangePage(_name, $scope.v.control.select._action) === true) {
+                // 异步执行
+                $timeout(function() {
+                    updateLstData(_name, false).finally(function() {
+                        // $scope.v.control.select._action.submitted = false;
                     });
-                }
-            } else {
-                $scope.message('正在请求数据中……', 'error');
+                });
             }
         }
 
@@ -744,8 +769,13 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // 将后端的数据填充到页面表单的结构体
         function setForm(data) {}
 
-        // 从后端获取数据
+        // 从后端获取数据（这个函数的返回值必须是 Promises）
         function getFormData() {
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return procPromises(getPromises(false, false));
+            }
+
             var data = {
                 'id': $scope.v.form.id
             };
@@ -796,9 +826,6 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                         location.href = '/promotion/coupon-manage';
                     });
                 }
-                if ($scope.v.form._action.submitted === true) {
-                    $scope.v.form._action.submitted = false;
-                }
                 return res;
             });
         }
@@ -813,9 +840,6 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     $scope.message('修改成功！').finally(function() {
                         jump2where();
                     });
-                }
-                if ($scope.v.form._action.submitted === true) {
-                    $scope.v.form._action.submitted = false;
                 }
                 return res;
             });
@@ -840,7 +864,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // 取消
-        function cancel(e) {
+        function cancel() {
             jump2where();
         }
 
@@ -861,7 +885,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             $scope.v.form._action.touched = true;
 
             if (checkFormData() === false) {
-                return;
+                return false;
             }
 
             // 表单最终校验
@@ -886,28 +910,41 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     }
                 }, 50);
                 //});
-                return;
+                return false;
             }
 
-            if ($scope.v.form._action.submitted === true) {
-                $scope.message('请勿重复提交表单！');
-                return;
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return false;
             }
 
-            $scope.v.form._action.submitted = true;
+            // if ($scope.v.form._action.submitted === true) {
+            //     $scope.message('请勿重复提交表单！');
+            //     return;
+            // }
+
+            // $scope.v.form._action.submitted = true;
 
             // 编辑
             if ($scope.v.page.editing === true) {
-                postEditData();
+                return postEditData().finally(function() {
+                    // if ($scope.v.form._action.submitted === true) {
+                    //     $scope.v.form._action.submitted = false;
+                    // }
+                });
             } else { // 新建
-                postFormData();
+                return postFormData().finally(function() {
+                    // if ($scope.v.form._action.submitted === true) {
+                    //     $scope.v.form._action.submitted = false;
+                    // }
+                });
             }
 
-            if ($scope.v.form._action.submitted === true) {
-                $timeout(function() {
-                    $scope.v.form._action.submitted = false;
-                }, 5000);
-            }
+            // if ($scope.v.form._action.submitted === true) {
+            //     $timeout(function() {
+            //         $scope.v.form._action.submitted = false;
+            //     }, 5000);
+            // }
         }
 
         // 返回顶部
@@ -918,7 +955,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // 页面刚加载，所有请求接口都走完之后调用
-        function loadDataComplete() {
+        function initPageComplete() {
             // 因为watch的原因要异步处理
             if ($scope.v.page.init === true) {
                 $timeout(function() {
@@ -929,7 +966,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // 请求接口，然后有数据返回，用来标识数据库里是否有数据（列表页面时会用到）
-        function loadDataSuccess() {
+        function hasPageData() {
             // 因为watch的原因要异步处理
             if ($scope.v.page.hasData === false) {
                 $timeout(function() {
@@ -977,6 +1014,11 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 简单搜索（这个函数的返回值必须是 Promises）
         function smpSearch(_name, isNextPage) {
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return procPromises(getPromises(false, false));
+            }
+
             // 页面按钮点击的时候没有传入这个参数
             var isNewSearch = !hasValue(isNextPage);
 
@@ -1016,6 +1058,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // _.extend(data, {
             //     'name': $scope.v.search.simple.data.keyword
             // });
+
             data[$scope.v.search.simple.replace.keyword] = $scope.v.search.simple.data.keyword;
 
             return reqSmpSearch(_name, data, isNextPage);
@@ -1353,6 +1396,11 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         function advSearch(_name, isNextPage) {
             $scope.v.search.advanced.touched = true;
 
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return procPromises(getPromises(false, false));
+            }
+
             // 页面按钮点击的时候没有传入这个参数
             var isNewSearch = !hasValue(isNextPage);
 
@@ -1360,7 +1408,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 if (hasAdvSearchFormData()) {
                     $scope.v.search.isProcessing = true;
                     $scope.v.search.useAdvanced = true;
-                    $scope.v.search.advanced.submitted = true;
+                    // $scope.v.search.advanced.submitted = true;
 
                     setAdvSearchData();
 
@@ -1371,7 +1419,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 } else { // 新的搜索没有关键词
                     $scope.v.search.isProcessing = true;
                     $scope.v.search.useAdvanced = true;
-                    $scope.v.search.advanced.submitted = true;
+                    // $scope.v.search.advanced.submitted = true;
 
                     resetAdvSearchData();
 
@@ -1394,11 +1442,11 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 根据状态做一些请求数据修改
             data = extraModifyData(data);
 
-            if ($scope.v.search.advanced.submitted === true) {
-                $timeout(function() {
-                    $scope.v.search.advanced.submitted = false;
-                }, 5000);
-            }
+            // if ($scope.v.search.advanced.submitted === true) {
+            //     $timeout(function() {
+            //         $scope.v.search.advanced.submitted = false;
+            //     }, 5000);
+            // }
 
             return reqAdvSearch(_name, data, isNextPage);
         }
@@ -1414,9 +1462,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     }
                 }
 
-                if ($scope.v.search.advanced.submitted === true) {
-                    $scope.v.search.advanced.submitted = false;
-                }
+                // if ($scope.v.search.advanced.submitted === true) {
+                //     $scope.v.search.advanced.submitted = false;
+                // }
                 return res;
             });
         }
@@ -1428,14 +1476,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'result': -1
             };
 
-            // 正在请求
-            $scope.v.page.requesting = true;
-
             return req.then(
                 function success(response) {
-                    // 关闭请求状态
-                    $scope.v.page.requesting = false;
-
                     if (response.status === 1) {
                         res.result = 1;
                         res.data = response.data;
@@ -1444,15 +1486,16 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                         res.data = response;
                         $scope.message('操作失败：' + response.msg, 'error');
                     }
+                    // 关闭请求状态
+                    endOfRequest();
                     return res;
                 },
                 function error(response) {
-                    // 关闭请求状态
-                    $scope.v.page.requesting = false;
-
                     res.result = -1;
                     res.data = response;
                     $scope.message('服务器未响应', 'error');
+                    // 关闭请求状态
+                    endOfRequest();
                     return res;
                 }
             );
@@ -1463,12 +1506,17 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             return {
                 'pageNo': $scope.v.control.pagination.ins[_name].pageNo,
                 'pagesize': $scope.v.control.pagination._config.pageSize,
-                'status': $scope.v.control.tab.ins.main.current._key,
+                // 'status': $scope.v.control.tab.ins.main.current._key,
             };
         }
 
         // 列表数据（这个函数的返回值必须是 Promises）
         function getLstData(_name, isNextPage) {
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return procPromises(getPromises(false, false));
+            }
+
             var data = getQueryData(_name);
 
             return procRequest($scope.v.api.list(data)).then(function(res) {
@@ -1479,7 +1527,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                         scroll2Top();
                     }
 
-                    loadDataSuccess();
+                    hasPageData();
                 }
                 return res;
             });
@@ -1502,19 +1550,17 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
             // 编辑状态
             if ($scope.v.page.editing === true) {
-
             } else {
-
             }
 
             // 列表页获取数据
             getLstData('main', false).finally(function() {
-                loadDataComplete();
+                initPageComplete();
             });
 
             // 编辑页获取数据
             getFormData().finally(function() {
-                loadDataComplete();
+                initPageComplete();
             });
         })(window);
 
@@ -1528,7 +1574,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         //         <div class="modal-body">
         //         </div>
         //         <div class="modal-footer">
-        //             <button class="btn btn-primary btn-lg" type="button" ng-click="f.ok()" ng-disabled="v.submitted">确定修改</button>
+        //             <button class="btn btn-primary btn-lg" type="button" ng-click="f.ok()" ng-disabled="v.page.requesting">确定修改</button>
         //             <button class="btn btn-default btn-lg" type="button" ng-click="f.cancel()">取消</button>
         //         </div>
         //     </div>
@@ -1571,19 +1617,6 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         //     );
         // }
 
-        // Promise 使用例子
-        // function asyncGreet(_name) {
-        // return $q(function(resolve, reject) {
-        // setTimeout(function() {
-        // if (okToGreet(_name)) {
-        // resolve('Hello, ' + _name + '!');
-        // } else {
-        // reject('Greeting ' + _name + ' is not allowed.');
-        // }
-        // }, 1000);
-        // });
-        // }
-
         function updateLstData(_name, isNextPage) {
             // 搜索状态下的翻页
             if ($scope.v.search.isProcessing === true) {
@@ -1612,7 +1645,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         $scope.$watch('v.control.pagination.ins.main.pageNo', function(newVal, oldVal) {
             if (newVal !== oldVal) {
                 updateLstData('main', true).finally(function() {
-                    afterChangePage('main');
+                    // afterChangePage('main');
                 });
             }
         }, true);

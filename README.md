@@ -3,6 +3,10 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/06/27
+
+1. 删除 submitted 的状态判断；
+
 #### 2016/06/23
 
 1. 添加列表页面模板；
@@ -39,6 +43,15 @@ Some useful template files for qf-bos.
 1. 模板代码初始化；
 
 ## jsTemplate.js
+
+#### 2016/06/27
+
+1. 删除每个控件的 submitted 状态依赖；
+2. 修改 isProcSubmitStatus() 为 isProcRequesting() 统一处理页面请求状态；
+3. 添加 endOfRequest() 方法统一重置请求状态；
+4. 重命名 loadDataComplete() 方法为 initPageComplete()；
+5. 重命名 loadDataSuccess() 方法为 hasPageData()；
+6. 页面中每个请求之前都要做 isProcRequesting() 状态判断；
 
 #### 2016/06/24
 
