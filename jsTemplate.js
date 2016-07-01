@@ -1511,7 +1511,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // 列表数据统一获取（基础数据）
         function getQueryData(_name) {
             return {
-                'pageNo': $scope.v.control.pagination.ins[_name].pageNo,
+                'pageNo': $scope.v.control.pagination.ins[_name].pageNo - 1,
                 'pagesize': $scope.v.control.pagination._config.pageSize,
                 // 'status': $scope.v.control.tab.ins.main.current._key,
             };

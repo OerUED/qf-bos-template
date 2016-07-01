@@ -44,6 +44,10 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/07/01
+
+1.  修改页码参数统一从0开始传给后端；
+
 #### 2016/06/27
 
 1. 删除每个控件的 submitted 状态依赖；
