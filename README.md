@@ -3,6 +3,11 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/07/07
+
+1. 修改 tab 的 change() 函数位置；
+2. 添加可排序的表头模板代码；
+
 #### 2016/06/27
 
 1. 删除 submitted 的状态判断；
@@ -43,6 +48,13 @@ Some useful template files for qf-bos.
 1. 模板代码初始化；
 
 ## jsTemplate.js
+
+#### 2016/07/07
+
+1. 移动 tab 的 change() 函数位置；
+2. 移动 menu 的 change() 函数位置；
+3. 移动 select 的 change() 函数位置；
+4. 添加 sort 控件的处理方法；
 
 #### 2016/07/01
 

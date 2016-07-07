@@ -271,7 +271,7 @@
     <a href="javascript:;" class="tab-item"
        ng-repeat="tab in v.control.tab.ins.main.options" ng-bind="tab._value"
        ng-class="{true : 'active', false: ''}[v.control.tab.ins.main.current._key === tab._key]"
-       ng-click="v.control.tab.ins.main.change('main', $index)"></a>
+       ng-click="v.control.tab.change('main', $index)"></a>
 </div>
 
 10.下拉框模板
@@ -455,7 +455,7 @@
                         <a href="javascript:;" class="tab-item"
                            ng-repeat="tab in v.control.tab.ins.main.options" ng-bind="tab._value"
                            ng-class="{true : 'active', false: ''}[v.control.tab.ins.main.current._key === tab._key]"
-                           ng-click="v.control.tab.ins.main.change('main', $index)"></a>
+                           ng-click="v.control.tab.change('main', $index)"></a>
                     </div>
                 </div>
                 <div class="fn-right"></div>
@@ -603,3 +603,22 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
         </div>
     </div>
 </div>
+
+21.可排序的表头
+
+<tr>
+    <th>店铺名称</th>
+    <th>联系电话</th>
+    <th>店铺类型</th>
+    <th>创建时间</th>
+    <th>更新时间</th>
+    <th>
+        <span class="" ng-click="v.control.sort.change('main', 'sale')">销量
+            <i class="glyphicon glyphicon-sort" ng-if="(v.control.sort.ins.main.current.name === 'sale') && (v.control.sort.ins.main.current.sortBy === 'NONE')"></i>
+            <i class="glyphicon glyphicon-arrow-down" ng-if="(v.control.sort.ins.main.current.name === 'sale') && (v.control.sort.ins.main.current.sortBy === 'DESC')"></i>
+            <i class="glyphicon glyphicon-arrow-up" ng-if="(v.control.sort.ins.main.current.name === 'sale') && (v.control.sort.ins.main.current.sortBy === 'ASC')"></i>
+        </span>
+    </th>
+    <th>佣金比例</th>
+    <th>操作</th>
+</tr>

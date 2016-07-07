@@ -122,6 +122,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'pagination': null,
             'tab': null,
             'menu': null,
+            'sort': null,
             'select': null,
             'checkbox': null,
             'radio': null,
@@ -158,6 +159,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 // 数据请求状态
                 'submitted': false,
             },
+            'change': changeTab,
         };
 
         // tab 实例
@@ -177,7 +179,6 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     _value: '全部商品',
                     _key: 0,
                 },
-                'change': changeMainTab,
             },
         };
 
@@ -188,6 +189,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 // 数据请求状态
                 'submitted': false,
             },
+            'change': changeMenu,
         };
 
         // menu 实例
@@ -195,7 +197,31 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'main': {
                 'options': [],
                 'current': null,
-                'change': changeMainMenu,
+            },
+        };
+
+        // sort 控件
+        $scope.v.control.sort = {
+            '_config': {
+                'type': ['ASC', 'DESC', 'NONE'],
+            },
+            '_action': {
+                // 数据请求状态
+                'submitted': false,
+            },
+            'change': changeSort,
+        };
+
+        $scope.v.control.sort.ins = {
+            'main': {
+                'replace': {
+                    'price': {'ASC': 'PRICEASC', 'DESC': 'PRICEDESC', 'NONE': ''},
+                    'sale': {'ASC': 'SALESASC', 'DESC': 'SALEDESC', 'NONE': ''},
+                },
+                'current': {
+                    'name': null,
+                    'sortBy': null,
+                },
             },
         };
 
@@ -206,6 +232,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 // 数据请求状态
                 'submitted': false,
             },
+            'change': changeSelect,
         };
 
         // select 实例
@@ -222,7 +249,6 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     '_value': '已结束'
                 }],
                 'current': null,
-                'change': null,
                 'disabled': false,
                 'showed': false,
             },
@@ -238,7 +264,6 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                     '_value': '抽奖'
                 }],
                 'current': null,
-                'change': null,
                 'disabled': false,
                 'showed': false,
             },
@@ -685,7 +710,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // Tab 菜单改变
-        function changeMainTab(_name, index) {
+        function changeTab(_name, index) {
             // 页面处于请求状态
             if (isProcRequesting() === true) {
                 return false;
@@ -705,7 +730,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }
 
         // Menu 菜单改变
-        function changeMainMenu(_name, index) {
+        function changeMenu(_name, index) {
             // 页面处于请求状态
             if (isProcRequesting() === true) {
                 return false;
@@ -724,8 +749,41 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             }
         }
 
+        // 列表排序改变
+        function changeSort(_name, _item) {
+            // 页面处于请求状态
+            if (isProcRequesting() === true) {
+                return false;
+            }
+
+            var name = $scope.v.control.sort.ins[_name].current.name;
+            var sortBy = $scope.v.control.sort.ins[_name].current.sortBy;
+
+            if (name === _name) {
+                var index = $scope.v.control.sort._config.type.indexOf(sortBy);
+                index = index + 1;
+                if (index >= $scope.v.control.sort._config.type.length) {
+                    index = 0;
+                }
+                $scope.v.control.sort.ins[_name].current.sortBy = $scope.v.control.sort._config.type[index];
+            } else {
+                $scope.v.control.sort.ins[_name].current.name = _name;
+                $scope.v.control.sort.ins[_name].current.sortBy = $scope.v.control.sort._config.type[0];
+            }
+
+            // 是否手动触发请求
+            if (needManualChangePage(_name, $scope.v.control.sort._action) === true) {
+                // 异步执行
+                $timeout(function() {
+                    updateLstData(_name, false).finally(function() {
+                        // $scope.v.control.sort._action.submitted = false;
+                    });
+                });
+            }
+        }
+
         // Select 菜单改变
-        function changeMainSelect(_name) {
+        function changeSelect(_name) {
             // 页面处于请求状态
             if (isProcRequesting() === true) {
                 return false;
@@ -1514,6 +1572,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'pageNo': $scope.v.control.pagination.ins[_name].pageNo - 1,
                 'pagesize': $scope.v.control.pagination._config.pageSize,
                 // 'status': $scope.v.control.tab.ins.main.current._key,
+                'sortBy': $scope.v.control.sort.ins.main.replace[$scope.v.control.sort.ins.main.current.name][$scope.v.control.sort.ins.main.current.sortBy],
             };
         }
 
