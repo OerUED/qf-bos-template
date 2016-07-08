@@ -62,6 +62,11 @@ function hasLength(v) {
     return (hasValue(v) && (_.isArray(v) || _.isString(v)) && (v.length > 0));
 }
 
+// 判断 Promise
+function hasPromise(v) {
+    return (hasValue(v) && (_.isFunction(v) || _.isObject(v)) && _.isFunction(v.then));
+}
+
 // 判断变量有值
 function hasValue(v) {
     return (!_.isUndefined(v) && !_.isNull(v));
