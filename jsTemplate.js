@@ -1047,7 +1047,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             if ($scope.v.control.pagination.ins[_name].pageNo !== 1) {
                 $scope.v.control.pagination.ins[_name].pageNo = 1;
             } else {
-                getLstData(_name, false);
+                updateLstData(_name, false);
             }
         }
 

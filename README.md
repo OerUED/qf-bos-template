@@ -49,6 +49,10 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/07/08
+
+1. 修改取消搜索函数不能直接调用 getLstData()；
+
 #### 2016/07/07
 
 1. 移动 tab 的 change() 函数位置；
