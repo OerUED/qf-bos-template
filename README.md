@@ -49,6 +49,10 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/07/11
+
+1. 添加上传实例的 files 字段，供显示文件名；
+
 #### 2016/07/08
 
 1. 修改取消搜索函数不能直接调用 getLstData()；

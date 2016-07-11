@@ -401,6 +401,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'push': pushUploaded,
                 'loading': false,
                 'data': [],
+                'files': [],
                 'disabled': false,
                 'showed': false,
             },
@@ -464,6 +465,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                         return false;
                     } else {
                         $scope.v.control.uploader.ins[_name].loading = true;
+                        $scope.v.control.uploader.ins[_name].files = angular.copy(files);
                         uploader.settings.multipart_params._appKey = $scope.v.form.appKey;
                         uploader.start();
                         return true;
@@ -1602,7 +1604,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // 统一处理页面数据赋值
         function setLstData(_name, total, data) {
             $scope.v.control.pagination.ins[_name].count = total;
-            $scope.v.lstData = data;
+            $scope.v.lstData = angular.copy(data);
         }
 
         // 页面主函数
