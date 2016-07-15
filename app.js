@@ -136,7 +136,7 @@ function toRMBFen(yuan) {
     if (hasValue(yuan)) {
         return parseInt((parseFloat(yuan) * 100).toFixed(2), 10);
     } else {
-        return yuan;
+        return 0;
     }
 }
 
@@ -145,7 +145,7 @@ function toRMBYuan(fen) {
     if (hasValue(fen)) {
         return parseFloat((parseInt(fen, 10) / 100).toFixed(2));
     } else {
-        return fen;
+        return 0;
     }
 }
 
