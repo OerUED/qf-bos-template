@@ -92,7 +92,11 @@ app.filter('nullToSpace', function() {
 // 百分比
 app.filter('percentage', ['$filter', function ($filter) {
     return function (input, decimals) {
-        return $filter('number')(toRMBFen(input), decimals) + '%';
+        if (hasValue(input)) {
+            return $filter('number')(toRMBFen(input), decimals) + '%';
+        } else {
+            return '0%';
+        }
     };
 }]);
 
