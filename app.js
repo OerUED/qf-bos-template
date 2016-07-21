@@ -72,6 +72,20 @@ function hasValue(v) {
     return (!_.isUndefined(v) && !_.isNull(v));
 }
 
+// 自带数组和字符串判断的有值函数
+function _hasValue(v) {
+    return ((_.isArray(v) || _.isString(v)) ? hasLength(v) : hasValue(v));
+}
+
+// 获取带有默认值的返回值
+function _getValue(v, default) {
+    if (_.isArray(v) || _.isString(v)) {
+        return (hasLength(v) ? v : default);
+    } else {
+        return (hasValue(v) ? v : default);
+    }
+}
+
 // 获取url参数
 function getQueryString(name) {
     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
