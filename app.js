@@ -78,11 +78,11 @@ function _hasValue(v) {
 }
 
 // 获取带有默认值的返回值
-function _getValue(v, default) {
+function _getValue(v, d) {
     if (_.isArray(v) || _.isString(v)) {
-        return (hasLength(v) ? v : default);
+        return (hasLength(v) ? v : d);
     } else {
-        return (hasValue(v) ? v : default);
+        return (hasValue(v) ? v : d);
     }
 }
 
