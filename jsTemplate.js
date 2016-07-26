@@ -841,11 +841,11 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'id': $scope.v.form.id
             };
 
-            return procRequest($scope.v.api.get(data)).then(function(res) {
-                if ((res.result === 1) && (hasValue(res.data))) {
-                    setForm(res.data);
+            return procRequest($scope.v.api.get(data)).then(function(_data) {
+                if (_hasValue(_data)) {
+                    setForm(_data);
                 }
-                return res;
+                return _data;
             });
         }
 
@@ -880,13 +880,13 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         function postFormData() {
             var data = getForm();
 
-            return procRequest($scope.v.api.save(data)).then(function(res) {
-                if ((res.result === 1) && (hasValue(res.data))) {
+            return procRequest($scope.v.api.save(data)).then(function(_data) {
+                if (_hasValue(_data)) {
                     $scope.message('保存成功！').finally(function() {
                         location.href = '/promotion/coupon-manage';
                     });
                 }
-                return res;
+                return _data;
             });
         }
 
@@ -895,13 +895,13 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 请求数据
             var data = getForm();
 
-            return procRequest($scope.v.api.update(data)).then(function(res) {
-                if ((res.result === 1) && (hasValue(res.data))) {
+            return procRequest($scope.v.api.update(data)).then(function(_data) {
+                if (_hasValue(_data)) {
                     $scope.message('修改成功！').finally(function() {
                         jump2where();
                     });
                 }
-                return res;
+                return _data;
             });
         }
 
@@ -1126,15 +1126,15 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 简单搜索请求
         function reqSmpSearch(_name, data, isNextPage) {
-            return procRequest($scope.v.api.search(data)).then(function(res) {
-                if ((res.result === 1) && (hasValue(res.data))) {
-                    setLstData(_name, res.data.total, res.data.rows);
+            return procRequest($scope.v.api.search(data)).then(function(_data) {
+                if (_hasValue(_data)) {
+                    setLstData(_name, _data.total, _data.rows);
 
                     if (hasTrue(isNextPage)) {
                         scroll2Top();
                     }
                 }
-                return res;
+                return _data;
             });
         }
 
@@ -1520,9 +1520,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 高级搜索请求
         function reqAdvSearch(_name, data, isNextPage) {
-            return procRequest($scope.v.api.search(data)).then(function(res) {
-                if ((res.result === 1) && (hasValue(res.data))) {
-                    setLstData(_name, res.data.total, res.data.rows);
+            return procRequest($scope.v.api.search(data)).then(function(_data) {
+                if (_hasValue(_data)) {
+                    setLstData(_name, _data.total, _data.rows);
 
                     if (hasTrue(isNextPage)) {
                         scroll2Top();
@@ -1532,38 +1532,36 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 // if ($scope.v.search.advanced.submitted === true) {
                 //     $scope.v.search.advanced.submitted = false;
                 // }
-                return res;
+                return _data;
             });
+        }
+
+        function procSrvError(res) {
+            $scope.message('操作失败：' + res.msg, 'error');
+            return null;
+        }
+
+        function procReqError(res) {
+            $scope.message('服务器未响应', 'error');
+            return null;
         }
 
         // 统一的请求处理函数
         function procRequest(req) {
-            var res = {
-                'data': null,
-                'result': -1
-            };
-
             return req.then(
-                function success(response) {
+                function success(res) {
+                    endOfRequest(); // 关闭请求状态
                     if (response.status === 1) {
-                        res.result = 1;
-                        res.data = response.data;
+                        return response.data;
                     } else {
-                        res.result = 0;
-                        res.data = response;
-                        $scope.message('操作失败：' + response.msg, 'error');
+                        procSrvError(res);
+                        return null;
                     }
-                    // 关闭请求状态
-                    endOfRequest();
-                    return res;
                 },
-                function error(response) {
-                    res.result = -1;
-                    res.data = response;
-                    $scope.message('服务器未响应', 'error');
-                    // 关闭请求状态
-                    endOfRequest();
-                    return res;
+                function error(res) {
+                    endOfRequest(); // 关闭请求状态
+                    procReqError(res);
+                    return null;
                 }
             );
         }
@@ -1587,9 +1585,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
             var data = getQueryData(_name);
 
-            return procRequest($scope.v.api.list(data)).then(function(res) {
-                if ((res.result === 1) && (hasValue(res.data))) {
-                    setLstData(_name, res.data.total, res.data.rows);
+            return procRequest($scope.v.api.list(data)).then(function(_data) {
+                if (_hasValue(_data)) {
+                    setLstData(_name, _data.total, _data.rows);
 
                     if (hasTrue(isNextPage)) {
                         scroll2Top();
@@ -1597,7 +1595,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
                     hasPageData();
                 }
-                return res;
+                return _data;
             });
         }
 
