@@ -476,9 +476,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 },
                 'fileUploaded': function(uploader, file, response) {
                     $scope.v.control.uploader.ins[_name].loading = false;
-                    var resp = JSON.parse(response.response);
+                    var res = JSON.parse(response.response);
 
-                    $scope.v.control.uploader.ins[_name].push(_name, resp);
+                    $scope.v.control.uploader.ins[_name].push(_name, res);
 
                     $timeout(function() {
                         uploader.destroy();
@@ -507,7 +507,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 公共的图片上传成功后的回调
         function pushUploaded(_name, res) {
-            if ((res.status === 1) && (hasValue(res.data))) {
+            if ((res.status === 1) && (_hasValue(res.data))) {
                 addUploaded(_name, res.data);
             } else {
 
@@ -530,21 +530,10 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 放大图片
         function zoomInImg(_name) {
-            if (hasLength($scope.v.control.uploader.ins[_name].data)) {
+            if (_hasValue($scope.v.control.uploader.ins[_name].data)) {
                 window.open($scope.v.control.uploader.ins[_name].data[0].url, '_blank');
             }
         }
-
-        // 上传成功后的回调函数
-        // function afterThen(res) {
-        //     return $q(function (resolve, reject) {
-        //         if ((res.status === 1) && (hasValue(res.data))) {
-        //             resolve(res.data);
-        //         } else {
-        //             reject(res);
-        //         }
-        //     });
-        // }
 
         // 编辑器加载完毕之后
         function readyEditor(_name, instance) {
@@ -700,7 +689,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 新搜索更改页码
             if ($scope.v.control.pagination.ins[_name].pageNo !== 1) {
                 // 请求结束之后的回调函数需要修改状态
-                if (hasValue(action)) {
+                if (_hasValue(action)) {
                     $scope.v.control.pagination.ins[_name]._action = action;
                 }
 
@@ -930,9 +919,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 校验表单内容
         function checkFormData() {
-            // 强调：字符串或数组判断一律用 hasLength()，其他用 hasValue()
-
-            // if (!hasValue($scope.v.form.maxPeople)) {
+            // if (!_hasValue($scope.v.form.maxPeople)) {
             //    $scope.message('请输入成团人数！');
             //    return false;
             // }
@@ -956,13 +943,13 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 // 错误输入框的focus操作
                 $timeout(function() {
                     var errObj = document.querySelector('.form-group .has-error input');
-                    if (hasValue(errObj)) {
+                    if (_hasValue(errObj)) {
                         $timeout(function() {
                             errObj.focus();
                         });
                     } else {
                         errObj = document.querySelector('input.ng-invalid.ng-touched');
-                        if (hasValue(errObj)) {
+                        if (_hasValue(errObj)) {
                             $timeout(function() {
                                 errObj.focus();
                             });
@@ -1080,10 +1067,10 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             }
 
             // 页面按钮点击的时候没有传入这个参数
-            var isNewSearch = !hasValue(isNextPage);
+            var isNewSearch = !_hasValue(isNextPage);
 
             if (isNewSearch) {
-                if (hasLength($scope.v.search.simple.form.keyword)) { // 新的搜索有关键词
+                if (_hasValue($scope.v.search.simple.form.keyword)) { // 新的搜索有关键词
                     resetSearching();
                     $scope.v.search.isProcessing = true;
 
@@ -1143,35 +1130,35 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             for (let ctrl in $scope.v.search.advanced.ctrls) {
                 if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
                     let ctl = $scope.v.search.advanced.ctrls[ctrl];
-                    if (hasLength(ctl)) {
+                    if (_hasValue(ctl)) {
                         _.each(ctl, function(_name) {
                             switch (ctrl) {
                                 case 'pagination':
-                                    if (hasValue($scope.v.control[ctrl].ins[_name].pageNo)) {
+                                    if (_hasValue($scope.v.control[ctrl].ins[_name].pageNo)) {
                                         return true;
                                     }
                                     break;
                                 case 'tab':
                                 case 'menu':
                                 case 'select':
-                                    if (hasValue($scope.v.control[ctrl].ins[_name].current)) {
+                                    if (_hasValue($scope.v.control[ctrl].ins[_name].current)) {
                                         return true;
                                     }
                                     break;
                                 case 'checkbox':
                                 case 'radio':
                                 case 'date':
-                                    if (hasValue($scope.v.control[ctrl].ins[_name].value)) {
+                                    if (_hasValue($scope.v.control[ctrl].ins[_name].value)) {
                                         return true;
                                     }
                                     break;
                                 case 'editor':
-                                    if (hasLength($scope.v.control[ctrl].ins[_name].content)) {
+                                    if (_hasValue($scope.v.control[ctrl].ins[_name].content)) {
                                         return true;
                                     }
                                     break;
                                 case 'uploader':
-                                    if (hasLength($scope.v.control[ctrl].ins[_name].data)) {
+                                    if (_hasValue($scope.v.control[ctrl].ins[_name].data)) {
                                         return true;
                                     }
                                     break;
@@ -1189,14 +1176,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             for (let prop in $scope.v.search.advanced.form) {
                 if ($scope.v.search.advanced.form.hasOwnProperty(prop)) {
                     let value = $scope.v.search.advanced.form[prop];
-                    if (_.isArray(value) || _.isString(value)) {
-                        if (hasLength(value)) {
-                            return true;
-                        }
-                    } else {
-                        if (hasValue(value)) {
-                            return true;
-                        }
+                    if (_hasValue(value)) {
+                        return true;
                     }
                 }
             }
@@ -1207,11 +1188,11 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             }
 
             // 逐个判断控件里是否有值
-            // if (hasValue($scope.v.control.select.ins.type.current)) {
+            // if (_hasValue($scope.v.control.select.ins.type.current)) {
             //     return true;
             // }
 
-            // if (hasValue($scope.v.control.select.ins.status.current)) {
+            // if (_hasValue($scope.v.control.select.ins.status.current)) {
             //     return true;
             // }
 
@@ -1223,41 +1204,41 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             for (let ctrl in $scope.v.search.advanced.ctrls) {
                 if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
                     let ctl = $scope.v.search.advanced.ctrls[ctrl];
-                    if (hasLength(ctl)) {
+                    if (_hasValue(ctl)) {
                         _.each(ctl, function(_name) {
                             var src = null;
                             var dst = $scope.v.search.advanced;
                             switch (ctrl) {
                                 case 'pagination':
                                     src = $scope.v.control[ctrl].ins[_name].pageNo;
-                                    dst.data[_name] = hasValue(src) ? src : null;
+                                    dst.data[_name] = _hasValue(src) ? src : null;
                                     break;
                                 case 'tab':
                                 case 'menu':
                                 case 'select':
                                     src = $scope.v.control[ctrl].ins[_name].current._key;
-                                    dst.data[_name] = hasValue(src) ? src : null;
+                                    dst.data[_name] = _hasValue(src) ? src : null;
                                     break;
                                 case 'checkbox':
                                     src = $scope.v.control[ctrl].ins[_name].value;
-                                    // dst.data[_name] = hasValue(src) ? src : null; // 单个
-                                    dst.data[_name] = hasLength(src) ? src : null; // 多个
+                                    // dst.data[_name] = _hasValue(src) ? src : null; // 单个
+                                    dst.data[_name] = _hasValue(src) ? src : null; // 多个
                                     break;
                                 case 'radio':
                                     src = $scope.v.control[ctrl].ins[_name].value;
-                                    dst.data[_name] = hasValue(src) ? src : null;
+                                    dst.data[_name] = _hasValue(src) ? src : null;
                                     break;
                                 case 'date':
                                     src = $scope.v.control[ctrl].ins[_name].value.getTime();
-                                    dst.data[_name] = hasValue(src) ? src : null;
+                                    dst.data[_name] = _hasValue(src) ? src : null;
                                     break;
                                 case 'editor':
                                     src = $scope.v.control[ctrl].ins[_name].content;
-                                    dst.data[_name] = hasLength(src) ? src : null;
+                                    dst.data[_name] = _hasValue(src) ? src : null;
                                     break;
                                 case 'uploader':
                                     src = $scope.v.control[ctrl].ins[_name].data;
-                                    dst.data[_name] = hasLength(src) ? src : null;
+                                    dst.data[_name] = _hasValue(src) ? src : null;
                                     break;
                             }
                         });
@@ -1274,18 +1255,10 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             for (let prop in $scope.v.search.advanced.form) {
                 if ($scope.v.search.advanced.form.hasOwnProperty(prop)) {
                     let ipt = $scope.v.search.advanced.form[prop];
-                    if (_.isArray(ipt) || _.isString(ipt)) {
-                        if (hasLength(ipt)) {
-                            $scope.v.search.advanced.data[prop] = angular.copy(ipt);
-                        } else {
-                            $scope.v.search.advanced.data[prop] = null;
-                        }
+                    if (_hasValue(ipt)) {
+                        $scope.v.search.advanced.data[prop] = angular.copy(ipt);
                     } else {
-                        if (hasValue(ipt)) {
-                            $scope.v.search.advanced.data[prop] = angular.copy(ipt);
-                        } else {
-                            $scope.v.search.advanced.data[prop] = null;
-                        }
+                        $scope.v.search.advanced.data[prop] = null;
                     }
                 }
             }
@@ -1294,34 +1267,34 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             copyAdvSearchCtrlData();
 
             // 逐个复制控件里的值
-            // if (hasValue($scope.v.control.date.ins.startTime.value)) {
+            // if (_hasValue($scope.v.control.date.ins.startTime.value)) {
             //     $scope.v.search.advanced.form.startTime = angular.copy($scope.v.control.date.ins.startTime.value);
             //     $scope.v.search.advanced.data.startTime = angular.copy($scope.v.search.advanced.form.startTime);
             // } else {
             //     $scope.v.search.advanced.data.startTime = null;
             // }
 
-            // if (hasValue($scope.v.control.date.ins.endTime.value)) {
+            // if (_hasValue($scope.v.control.date.ins.endTime.value)) {
             //     $scope.v.search.advanced.form.endTime = angular.copy($scope.v.control.date.ins.endTime.value);
             //     $scope.v.search.advanced.data.endTime = angular.copy($scope.v.search.advanced.form.endTime);
             // } else {
             //     $scope.v.search.advanced.data.endTime = null;
             // }
 
-            // if (hasLength($scope.v.search.advanced.form.name)) {
+            // if (_hasValue($scope.v.search.advanced.form.name)) {
             //     $scope.v.search.advanced.data.name = angular.copy($scope.v.search.advanced.form.name);
             // } else {
             //     $scope.v.search.advanced.data.name = null;
             // }
 
-            // if (hasValue($scope.v.control.select.ins.status.current)) {
+            // if (_hasValue($scope.v.control.select.ins.status.current)) {
             //     $scope.v.search.advanced.form.status = angular.copy($scope.v.control.select.ins.status.current;
             //     $scope.v.search.advanced.data.status = angular.copy($scope.v.search.advanced.form.status);
             // } else {
             //     $scope.v.search.advanced.data.status = null;
             // }
 
-            // if (hasValue($scope.v.control.select.ins.type.current)) {
+            // if (_hasValue($scope.v.control.select.ins.type.current)) {
             //     $scope.v.search.advanced.form.type = angular.copy($scope.v.control.select.ins.type.current);
             //     $scope.v.search.advanced.data.type = angular.copy($scope.v.search.advanced.form.type);
             // } else {
@@ -1334,7 +1307,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             for (let ctrl in $scope.v.search.advanced.ctrls) {
                 if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
                     let ctl = $scope.v.search.advanced.ctrls[ctrl];
-                    if (hasLength(ctl)) {
+                    if (_hasValue(ctl)) {
                         _.each(ctl, function(_name) {
                             switch (ctrl) {
                                 case 'pagination':
@@ -1403,45 +1376,38 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             for (let prop in $scope.v.search.advanced.data) {
                 if ($scope.v.search.advanced.data.hasOwnProperty(prop)) {
                     let raw = $scope.v.search.advanced.data[prop];
-                    if (_.isArray(raw) || _.isString(raw)) {
-                        if (hasLength(raw)) {
-                            let k = $scope.v.search.advanced.replace[prop];
-                            data[k] = angular.copy(raw);
-                        }
-                    } else {
-                        if (hasValue(raw)) {
-                            let k = $scope.v.search.advanced.replace[prop];
-                            data[k] = angular.copy(raw);
-                        }
+                    if (_hasValue(raw)) {
+                        let k = $scope.v.search.advanced.replace[prop];
+                        data[k] = angular.copy(raw);
                     }
                 }
             }
 
-            // if (hasValue($scope.v.search.advanced.data.startTime)) {
+            // if (_hasValue($scope.v.search.advanced.data.startTime)) {
             //     _.extend(data, {
             //         'startTime': $scope.v.search.advanced.data.startTime.getTime()
             //     });
             // }
 
-            // if (hasValue($scope.v.search.advanced.data.endTime)) {
+            // if (_hasValue($scope.v.search.advanced.data.endTime)) {
             //     _.extend(data, {
             //         'endTime': $scope.v.search.advanced.data.endTime.getTime()
             //     });
             // }
 
-            // if (hasLength($scope.v.search.advanced.data.name)) {
+            // if (_hasValue($scope.v.search.advanced.data.name)) {
             //     _.extend(data, {
             //         'name': $scope.v.search.advanced.data.name
             //     });
             // }
 
-            // if (hasValue($scope.v.search.advanced.data.status)) {
+            // if (_hasValue($scope.v.search.advanced.data.status)) {
             //     _.extend(data, {
             //         'status': $scope.v.search.advanced.data.status._key
             //     });
             // }
 
-            // if (hasValue($scope.v.search.advanced.data.type)) {
+            // if (_hasValue($scope.v.search.advanced.data.type)) {
             //     _.extend(data, {
             //         'type': $scope.v.search.advanced.data.type._key
             //     });
@@ -1469,7 +1435,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             }
 
             // 页面按钮点击的时候没有传入这个参数
-            var isNewSearch = !hasValue(isNextPage);
+            var isNewSearch = !_hasValue(isNextPage);
 
             if (isNewSearch) {
                 if (hasAdvSearchFormData()) {
@@ -1551,8 +1517,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             return req.then(
                 function success(res) {
                     endOfRequest(); // 关闭请求状态
-                    if (response.status === 1) {
-                        return response.data;
+                    if (res.status === 1) {
+                        return res.data;
                     } else {
                         procSrvError(res);
                         return null;
@@ -1608,7 +1574,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // 页面主函数
         (function(window, undefined) {
             // 判断当前是否是编辑状态
-            if (hasLength($scope.v.form.id)) {
+            if (_hasValue($scope.v.form.id)) {
                 $scope.v.page.editing = true;
             } else {
                 $scope.v.page.editing = false;
@@ -1671,7 +1637,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         //     return modalInstance.result.then(
         //         function(data) {
-        //             // if (hasValue(data.result)) {
+        //             // if (_hasValue(data.result)) {
         //             // } else {
         //             // }
         //              return data;
@@ -1699,7 +1665,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 由于手动修改页码引起的状态修改
         function afterChangePage(_name) {
-            if (hasValue($scope.v.control.pagination.ins[_name]._action)) {
+            if (_hasValue($scope.v.control.pagination.ins[_name]._action)) {
                 if (hasTrue($scope.v.control.pagination.ins[_name]._action.submitted)) {
                     $scope.v.control.pagination.ins[_name]._action.submitted = false;
                 }

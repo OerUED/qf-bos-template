@@ -56,6 +56,7 @@ Some useful template files for qf-bos.
 3. 修改部分变量声明为 let；
 4. 修改 copyAdvSearchCtrlData() 里的 dst 变量；
 5. 简单化 procRequest() 处理函数，只返回成功的数据；
+6. 统一将 hasValue() 和 hasLength() 改成 _hasValue()；
 
 #### 2016/07/11
 
