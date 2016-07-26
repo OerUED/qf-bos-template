@@ -49,6 +49,13 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/07/26
+
+1. 添加 .eslintrc 和 .editorconfig；
+2. 修改多余的结尾逗号；
+3. 修改部分变量声明为 let；
+4. 修改 copyAdvSearchCtrlData() 里的 dst 变量；
+
 #### 2016/07/11
 
 1. 添加上传实例的 files 字段，供显示文件名；

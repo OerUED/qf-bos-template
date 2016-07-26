@@ -16,7 +16,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 控件
             'control': null,
             // 枚举
-            'enum': null,
+            'enum': null
         };
 
         // 函数
@@ -26,7 +26,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'submit': submit,
             'enumFilter': enumFilter,
             'askForDelUploaded': askForDelUploaded,
-            'zoomInImg': zoomInImg,
+            'zoomInImg': zoomInImg
         };
 
         // 页面参数
@@ -38,7 +38,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 编辑状态
             'editing': false,
             // http 请求状态
-            'requesting': false,
+            'requesting': false
         };
 
         // 搜索配置
@@ -49,13 +49,13 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 简单搜索的数据
             'simple': {
                 'form': {
-                    'keyword': null,
+                    'keyword': null
                 },
                 'replace': {
-                    'keyword': 'name',
+                    'keyword': 'name'
                 },
                 'data': {}, // 不需要重复写跟form一样的变量
-                'method': smpSearch,
+                'method': smpSearch
             },
             // 高级搜索的数据
             'advanced': {
@@ -66,28 +66,28 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'touched': false,
                 'submitted': false,
                 'form': {
-                    'name': null,
+                    'name': null
                 },
                 'ctrls': {
                     'pagination': [],
                     'tab': [],
                     'menu': [],
-                    'select': ['status', 'type', ],
+                    'select': ['status', 'type'],
                     'checkbox': [],
                     'radio': [],
-                    'date': ['startTime', 'endTime', ],
+                    'date': ['startTime', 'endTime'],
                     'editor': [],
-                    'uploader': [],
+                    'uploader': []
                 },
                 'replace': {
                     'name': 'name',
                     'status': 'status',
                     'type': 'type',
                     'startTime': 'startTime',
-                    'endTime': 'endTime',
+                    'endTime': 'endTime'
                 },
-                'data': {}, // 不需要重复写跟form一样的变量
-            },
+                'data': {} // 不需要重复写跟form一样的变量
+            }
         };
 
         // 显示高级搜索
@@ -114,7 +114,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             },
             'update': function(data) {
                 return servHttp.post('', data);
-            },
+            }
         };
 
         // 控件配置
@@ -128,19 +128,19 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'radio': null,
             'date': null,
             'editor': null,
-            'uploader': null,
+            'uploader': null
         };
 
         // 分页配置
         $scope.v.control.pagination = {
             '_config': {
                 'pageSize': 25,
-                'maxSize': 7,
+                'maxSize': 7
             },
             '_action': {
                 // 数据请求状态
-                'submitted': false,
-            },
+                'submitted': false
+            }
         };
 
         // 分页实例
@@ -148,8 +148,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'main': {
                 '_action': null,
                 'pageNo': 1,
-                'count': 0,
-            },
+                'count': 0
+            }
         };
 
         // tab 控件
@@ -157,9 +157,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             '_config': {},
             '_action': {
                 // 数据请求状态
-                'submitted': false,
+                'submitted': false
             },
-            'change': changeTab,
+            'change': changeTab
         };
 
         // tab 实例
@@ -167,19 +167,19 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'main': {
                 'options': [{
                     _value: '全部商品',
-                    _key: 0,
+                    _key: 0
                 }, {
                     _value: '线上商品',
-                    _key: 1,
+                    _key: 1
                 }, {
                     _value: '下架商品',
-                    _key: 2,
+                    _key: 2
                 }],
                 'current': {
                     _value: '全部商品',
-                    _key: 0,
-                },
-            },
+                    _key: 0
+                }
+            }
         };
 
         // menu 控件
@@ -187,42 +187,42 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             '_config': {},
             '_action': {
                 // 数据请求状态
-                'submitted': false,
+                'submitted': false
             },
-            'change': changeMenu,
+            'change': changeMenu
         };
 
         // menu 实例
         $scope.v.control.menu.ins = {
             'main': {
                 'options': [],
-                'current': null,
-            },
+                'current': null
+            }
         };
 
         // sort 控件
         $scope.v.control.sort = {
             '_config': {
-                'type': ['ASC', 'DESC', 'NONE'],
+                'type': ['ASC', 'DESC', 'NONE']
             },
             '_action': {
                 // 数据请求状态
-                'submitted': false,
+                'submitted': false
             },
-            'change': changeSort,
+            'change': changeSort
         };
 
         $scope.v.control.sort.ins = {
             'main': {
                 'replace': {
                     'price': {'ASC': 'PRICEASC', 'DESC': 'PRICEDESC', 'NONE': ''},
-                    'sale': {'ASC': 'SALESASC', 'DESC': 'SALEDESC', 'NONE': ''},
+                    'sale': {'ASC': 'SALESASC', 'DESC': 'SALEDESC', 'NONE': ''}
                 },
                 'current': {
                     'name': null,
-                    'sortBy': null,
-                },
-            },
+                    'sortBy': null
+                }
+            }
         };
 
         // select 控件
@@ -230,9 +230,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             '_config': {},
             '_action': {
                 // 数据请求状态
-                'submitted': false,
+                'submitted': false
             },
-            'change': changeSelect,
+            'change': changeSelect
         };
 
         // select 实例
@@ -250,7 +250,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 }],
                 'current': null,
                 'disabled': false,
-                'showed': false,
+                'showed': false
             },
             'type': {
                 'options': [{
@@ -265,8 +265,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 }],
                 'current': null,
                 'disabled': false,
-                'showed': false,
-            },
+                'showed': false
+            }
         };
 
         // checkbox 控件
@@ -274,8 +274,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             '_config': {},
             '_action': {
                 // 数据请求状态
-                'submitted': false,
-            },
+                'submitted': false
+            }
         };
 
         // checkbox 实例
@@ -286,17 +286,17 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'showed': false,
                 'value': null,
                 'change': null,
-                'input': null,
+                'input': null
             },
             // 多个选项
             'group': {
                 'value': [],
                 'change': null,
                 'choices': {
-                    'no1': { 'disabled': false, 'showed': false },
-                    'no2': { 'disabled': false, 'showed': false },
-                },
-            },
+                    'no1': {'disabled': false, 'showed': false},
+                    'no2': {'disabled': false, 'showed': false}
+                }
+            }
         };
 
         // radio 控件
@@ -304,8 +304,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             '_config': {},
             '_action': {
                 // 数据请求状态
-                'submitted': false,
-            },
+                'submitted': false
+            }
         };
 
         // radio 实例
@@ -314,10 +314,10 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'value': null,
                 'change': null,
                 'choices': {
-                    'no1': { 'disabled': false, 'showed': false },
-                    'no2': { 'disabled': false, 'showed': false },
-                },
-            },
+                    'no1': {'disabled': false, 'showed': false},
+                    'no2': {'disabled': false, 'showed': false}
+                }
+            }
         };
 
         // 日期控件
@@ -330,18 +330,18 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'max': calcDate(7, true),
                 // 时间选项
                 'time': {
-                    'showMeridian': false,
+                    'showMeridian': false
                 },
                 // 日期选项
                 'date': {
-                    'showWeeks': false,
+                    'showWeeks': false
                 },
-                'show': showCalendar,
+                'show': showCalendar
             },
             '_action': {
                 // 数据请求状态
-                'submitted': false,
-            },
+                'submitted': false
+            }
         };
 
         // 日期控件实例
@@ -349,30 +349,30 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             'startTime': {
                 'disabled': false,
                 'showed': false,
-                'value': null,
+                'value': null
             },
             'endTime': {
                 'disabled': false,
                 'showed': false,
-                'value': null,
-            },
+                'value': null
+            }
         };
 
         // 富文本编辑器
         $scope.v.control.editor = {
             '_config': {
                 'options': getEditorOptions(),
-                'ready': readyEditor,
+                'ready': readyEditor
             },
             '_action': {
                 // 数据请求状态
-                'submitted': false,
-            },
+                'submitted': false
+            }
         };
 
         // 富文本编辑器实例
         $scope.v.control.editor.ins = {
-            'desc': { 'instance': null, 'content': null, 'disabled': false, 'showed': false },
+            'desc': {'instance': null, 'content': null, 'disabled': false, 'showed': false}
         };
 
         // 上传插件
@@ -382,14 +382,14 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'options': {
                     multi_selection: false,
                     max_files: 1,
-                    file_data_name: 'imageFile',
-                },
+                    file_data_name: 'imageFile'
+                }
                 // 'callbacks': uploaderCallbacks,
             },
             '_action': {
                 // 数据请求状态
-                'submitted': false,
-            },
+                'submitted': false
+            }
         };
 
         // 上传插件实例
@@ -403,20 +403,20 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'data': [],
                 'files': [],
                 'disabled': false,
-                'showed': false,
-            },
+                'showed': false
+            }
         };
 
         // 枚举类型
         $scope.v.enum = {
             'type': {
                 '0': '商品',
-                '1': '店铺',
+                '1': '店铺'
             },
             'status': {
                 'SUCCESS': '成功',
-                'FAILED': '失败',
-            },
+                'FAILED': '失败'
+            }
         };
 
         // 表单数据
@@ -425,14 +425,14 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 // 表单验证
                 'touched': false,
                 // 表单验证
-                'submitted': false,
+                'submitted': false
             },
             // 从页面中获取 id 值
-            'id': null, //document.getElementById('id').value,
+            'id': null, // document.getElementById('id').value,
             // 从页面中获取 type 值
-            'type': null, //document.getElementById('type').value,
+            'type': null, // document.getElementById('type').value,
             // 从页面中获取 appKey 值
-            'appKey': null, //document.getElementById('appKey').value,
+            'appKey': null // document.getElementById('appKey').value,
 
             // 表单的变量
         };
@@ -524,7 +524,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             $scope.message('确定删除该图片？', 'confirm').then(function() {
                 delUploaded(_name, index);
             }).catch(function() {
-                //取消
+                // 取消
             });
         }
 
@@ -553,7 +553,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // 初始化编辑器附加功能
             addEditorFeatures(instance);
             // 页面主函数（有需要的时候要等编辑器加载完毕后才去请求数据）
-            //main();
+            // main();
         }
 
         // 计算时间间隔
@@ -760,9 +760,10 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
             var name = $scope.v.control.sort.ins[_name].current.name;
             var sortBy = $scope.v.control.sort.ins[_name].current.sortBy;
+            var index = null;
 
             if (name === _name) {
-                var index = $scope.v.control.sort._config.type.indexOf(sortBy);
+                index = $scope.v.control.sort._config.type.indexOf(sortBy);
                 index = index + 1;
                 if (index >= $scope.v.control.sort._config.type.length) {
                     index = 0;
@@ -951,7 +952,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             if (form.$invalid) {
                 // console.dir(form.$error);
                 // $scope.addAlert({'type': 'danger', 'msg': '提交数据有误，请正确输入数据后再尝试提交。'});
-                //$scope.message('提交数据有误，请仔细检查数据后再尝试提交。').then(function() {
+                // $scope.message('提交数据有误，请仔细检查数据后再尝试提交。').then(function() {
                 // 错误输入框的focus操作
                 $timeout(function() {
                     var errObj = document.querySelector('.form-group .has-error input');
@@ -968,7 +969,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                         }
                     }
                 }, 50);
-                //});
+                // });
                 return false;
             }
 
@@ -1139,11 +1140,11 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 遍历判断控件里是否有值
         function checkAdvSearchCtrlData() {
-            for (var ctrl in $scope.v.search.advanced.ctrls) {
+            for (let ctrl in $scope.v.search.advanced.ctrls) {
                 if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
-                    var ctl = $scope.v.search.advanced.ctrls[ctrl];
+                    let ctl = $scope.v.search.advanced.ctrls[ctrl];
                     if (hasLength(ctl)) {
-                        _.each(ctl, function (_name) {
+                        _.each(ctl, function(_name) {
                             switch (ctrl) {
                                 case 'pagination':
                                     if (hasValue($scope.v.control[ctrl].ins[_name].pageNo)) {
@@ -1185,9 +1186,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // 是否有高级搜索内容
         function hasAdvSearchFormData() {
             // 循环判断form下的key是否有值
-            for (var prop in $scope.v.search.advanced.form) {
+            for (let prop in $scope.v.search.advanced.form) {
                 if ($scope.v.search.advanced.form.hasOwnProperty(prop)) {
-                    var value = $scope.v.search.advanced.form[prop];
+                    let value = $scope.v.search.advanced.form[prop];
                     if (_.isArray(value) || _.isString(value)) {
                         if (hasLength(value)) {
                             return true;
@@ -1219,44 +1220,44 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 遍历复制控件里的值
         function copyAdvSearchCtrlData() {
-            for (var ctrl in $scope.v.search.advanced.ctrls) {
+            for (let ctrl in $scope.v.search.advanced.ctrls) {
                 if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
-                    var ctl = $scope.v.search.advanced.ctrls[ctrl];
+                    let ctl = $scope.v.search.advanced.ctrls[ctrl];
                     if (hasLength(ctl)) {
-                        _.each(ctl, function (_name) {
+                        _.each(ctl, function(_name) {
                             var src = null;
-                            var dst = $scope.v.search.advanced.data[_name];
+                            var dst = $scope.v.search.advanced;
                             switch (ctrl) {
                                 case 'pagination':
                                     src = $scope.v.control[ctrl].ins[_name].pageNo;
-                                    dst = hasValue(src) ? src : null;
+                                    dst.data[_name] = hasValue(src) ? src : null;
                                     break;
                                 case 'tab':
                                 case 'menu':
                                 case 'select':
                                     src = $scope.v.control[ctrl].ins[_name].current._key;
-                                    dst = hasValue(src) ? src : null;
+                                    dst.data[_name] = hasValue(src) ? src : null;
                                     break;
                                 case 'checkbox':
                                     src = $scope.v.control[ctrl].ins[_name].value;
-                                    // dst = hasValue(src) ? src : null; // 单个
-                                    dst = hasLength(src) ? src : null; // 多个
+                                    // dst.data[_name] = hasValue(src) ? src : null; // 单个
+                                    dst.data[_name] = hasLength(src) ? src : null; // 多个
                                     break;
                                 case 'radio':
                                     src = $scope.v.control[ctrl].ins[_name].value;
-                                    dst = hasValue(src) ? src : null;
+                                    dst.data[_name] = hasValue(src) ? src : null;
                                     break;
                                 case 'date':
                                     src = $scope.v.control[ctrl].ins[_name].value.getTime();
-                                    dst = hasValue(src) ? src : null;
+                                    dst.data[_name] = hasValue(src) ? src : null;
                                     break;
                                 case 'editor':
                                     src = $scope.v.control[ctrl].ins[_name].content;
-                                    dst = hasLength(src) ? src : null;
+                                    dst.data[_name] = hasLength(src) ? src : null;
                                     break;
                                 case 'uploader':
                                     src = $scope.v.control[ctrl].ins[_name].data;
-                                    dst = hasLength(src) ? src : null;
+                                    dst.data[_name] = hasLength(src) ? src : null;
                                     break;
                             }
                         });
@@ -1270,9 +1271,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             $scope.v.search.advanced.data = {};
 
             // 遍历表单输入框的值赋值
-            for (var prop in $scope.v.search.advanced.form) {
+            for (let prop in $scope.v.search.advanced.form) {
                 if ($scope.v.search.advanced.form.hasOwnProperty(prop)) {
-                    var ipt = $scope.v.search.advanced.form[prop];
+                    let ipt = $scope.v.search.advanced.form[prop];
                     if (_.isArray(ipt) || _.isString(ipt)) {
                         if (hasLength(ipt)) {
                             $scope.v.search.advanced.data[prop] = angular.copy(ipt);
@@ -1330,11 +1331,11 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 遍历设置控件里的值为 null
         function setAdvSearchCtrlDataNull() {
-            for (var ctrl in $scope.v.search.advanced.ctrls) {
+            for (let ctrl in $scope.v.search.advanced.ctrls) {
                 if ($scope.v.search.advanced.ctrls.hasOwnProperty(ctrl)) {
-                    var ctl = $scope.v.search.advanced.ctrls[ctrl];
+                    let ctl = $scope.v.search.advanced.ctrls[ctrl];
                     if (hasLength(ctl)) {
-                        _.each(ctl, function (_name) {
+                        _.each(ctl, function(_name) {
                             switch (ctrl) {
                                 case 'pagination':
                                     $scope.v.control[ctrl].ins[_name].pageNo = 1;
@@ -1379,7 +1380,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             // $scope.v.control.select.ins.type.current = null;
 
             // 循环把form下的key全部置null
-            for (var prop in $scope.v.search.advanced.form) {
+            for (let prop in $scope.v.search.advanced.form) {
                 if ($scope.v.search.advanced.form.hasOwnProperty(prop)) {
                     $scope.v.search.advanced.form[prop] = null;
                 }
@@ -1389,7 +1390,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // 重置高级搜索提交的数据
         function resetAdvSearchData() {
             // 循环把data下的key全部置null
-            for (var prop in $scope.v.search.advanced.data) {
+            for (let prop in $scope.v.search.advanced.data) {
                 if ($scope.v.search.advanced.data.hasOwnProperty(prop)) {
                     $scope.v.search.advanced.data[prop] = null;
                 }
@@ -1399,21 +1400,20 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         // 扩展高级搜索请求参数
         function extendAdvSearchData(data) {
             // 遍历请求数据进行赋值
-            for (var prop in $scope.v.search.advanced.data) {
+            for (let prop in $scope.v.search.advanced.data) {
                 if ($scope.v.search.advanced.data.hasOwnProperty(prop)) {
-                    var raw = $scope.v.search.advanced.data[prop];
+                    let raw = $scope.v.search.advanced.data[prop];
                     if (_.isArray(raw) || _.isString(raw)) {
                         if (hasLength(raw)) {
-                            var k = $scope.v.search.advanced.replace[prop];
+                            let k = $scope.v.search.advanced.replace[prop];
                             data[k] = angular.copy(raw);
                         }
                     } else {
                         if (hasValue(raw)) {
-                            var k = $scope.v.search.advanced.replace[prop];
+                            let k = $scope.v.search.advanced.replace[prop];
                             data[k] = angular.copy(raw);
                         }
                     }
-
                 }
             }
 
@@ -1452,9 +1452,9 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
 
         // 根据状态做一些请求数据修改
         function extraModifyData(data) {
-            //if ($scope.v.search.advanced.data.status === 'REFUNDING') {
-            //    data.status = ''; // 全部订单
-            //}
+            // if ($scope.v.search.advanced.data.status === 'REFUNDING') {
+            //     data.status = ''; // 全部订单
+            // }
 
             return data;
         }
@@ -1574,7 +1574,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'pageNo': $scope.v.control.pagination.ins[_name].pageNo - 1,
                 'pagesize': $scope.v.control.pagination._config.pageSize,
                 // 'status': $scope.v.control.tab.ins.main.current._key,
-                'sortBy': $scope.v.control.sort.ins.main.replace[$scope.v.control.sort.ins.main.current.name][$scope.v.control.sort.ins.main.current.sortBy],
+                'sortBy': $scope.v.control.sort.ins.main.replace[$scope.v.control.sort.ins.main.current.name][$scope.v.control.sort.ins.main.current.sortBy]
             };
         }
 
@@ -1719,7 +1719,6 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
         }, true);
     }
 ]);
-
 
 // app.controller('ctrlThirdsLogOrdersModal', ['$rootScope', '$scope', '$modalInstance', '$filter', '$timeout', 'servHttp', '_data',
 //     function($rootScope, $scope, $modalInstance, $filter, $timeout, servHttp, _data) {
