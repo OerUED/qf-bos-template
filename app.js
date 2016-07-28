@@ -72,6 +72,10 @@ function hasValue(v) {
     return (!_.isUndefined(v) && !_.isNull(v));
 }
 
+function hasProp(v, p) {
+    return ({}.hasOwnProperty.call(v, p));
+}
+
 // 自带数组和字符串判断的有值函数
 function _hasValue(v) {
     return ((_.isArray(v) || _.isString(v)) ? hasLength(v) : hasValue(v));
@@ -83,6 +87,15 @@ function _getValue(v, d) {
         return (hasLength(v) ? v : d);
     } else {
         return (hasValue(v) ? v : d);
+    }
+}
+
+// 复制带有默认值的返回值
+function _getCopyValue(v, d) {
+    if (_.isArray(v) || _.isString(v)) {
+        return (hasLength(v) ? angular.copy(v) : d);
+    } else {
+        return (hasValue(v) ? angular.copy(v) : d);
     }
 }
 

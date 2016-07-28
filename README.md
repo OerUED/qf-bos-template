@@ -49,6 +49,13 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/07/28
+
+1. 封装 hasOwnProperty() 方法，统一调 hasProp() 函数；
+2. 添加 _getCopyValue() 函数封装深拷贝取值操作；
+3. 封装弹窗使用方法；
+4. 将 var 全部替换为 let；
+
 #### 2016/07/26
 
 1. 添加 .eslintrc 和 .editorconfig；
