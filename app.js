@@ -83,20 +83,12 @@ function _hasValue(v) {
 
 // 获取带有默认值的返回值
 function _getValue(v, d) {
-    if (_.isArray(v) || _.isString(v)) {
-        return (hasLength(v) ? v : d);
-    } else {
-        return (hasValue(v) ? v : d);
-    }
+    return _hasValue(v) ? v : (d === undefined ? v : d);
 }
 
 // 复制带有默认值的返回值
 function _getCopyValue(v, d) {
-    if (_.isArray(v) || _.isString(v)) {
-        return (hasLength(v) ? angular.copy(v) : d);
-    } else {
-        return (hasValue(v) ? angular.copy(v) : d);
-    }
+    return _hasValue(v) ? angular.copy(v) : (d === undefined ? v : d);
 }
 
 // 获取url参数
