@@ -38,6 +38,7 @@ Some useful template files for qf-bos.
 #### 2016/08/01
 
 1. 修改 form-tips 的样式；
+2. 添加 form-input-addon 样式；
 
 #### 2016/06/12
 
