@@ -35,6 +35,10 @@ Some useful template files for qf-bos.
 
 ## lessTemplate.less
 
+#### 2016/08/01
+
+1. 修改 form-tips 的样式；
+
 #### 2016/06/12
 
 1. 添加 checkbox 带输入框的样式；
