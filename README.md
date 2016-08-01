@@ -49,6 +49,11 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/08/01
+
+1. 修改搜索的判断条件；
+2. 修改高级搜索的赋值操作；
+
 #### 2016/07/28
 
 1. 封装 hasOwnProperty() 方法，统一调 hasProp() 函数；

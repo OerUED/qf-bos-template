@@ -1087,7 +1087,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             }
 
             // 页面按钮点击的时候没有传入这个参数
-            let isNewSearch = !_hasValue(isNextPage);
+            let isNewSearch = !_hasValue(isNextPage) || hasFalse(isNextPage);
 
             if (isNewSearch) {
                 if (_hasValue($scope.v.search.simple.form.keyword)) { // 新的搜索有关键词
@@ -1455,7 +1455,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             }
 
             // 页面按钮点击的时候没有传入这个参数
-            let isNewSearch = !_hasValue(isNextPage);
+            let isNewSearch = !_hasValue(isNextPage) || hasFalse(isNextPage);
 
             if (isNewSearch) {
                 if (hasAdvSearchFormData()) {
