@@ -362,9 +362,6 @@
 </head>
 
 <body>
-    <input type="hidden" data-th-value="${id}" id="activityId"/>
-    <input type="hidden" data-th-value="${type}" id="activityType"/>
-
     <div data-layout-fragment="currentPath">
         <p>
             <a data-th-href="@{~/promotion/activity-manage}">店铺审核</a>
@@ -374,6 +371,8 @@
     </div>
     <div data-layout-fragment="main">
         <div class="personal-detail ng-cloak" ng-controller="ctrlPersonalDetail">
+            <input type="hidden" data-th-value="${id}" id="activityId"/>
+            <input type="hidden" data-th-value="${type}" id="activityType"/>
             <!-- 导航栏 -->
             <div class="mod-nav fn-clear">
                 <div class="fn-left"></div>

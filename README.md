@@ -3,6 +3,10 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/08/02
+
+1. 修改 id 和 type 的 hidden 取值位置；
+
 #### 2016/07/07
 
 1. 修改 tab 的 change() 函数位置；
