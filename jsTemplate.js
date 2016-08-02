@@ -415,7 +415,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 // 数据请求状态
                 'submitted': false
             }
-        }
+        };
 
         // 弹窗实例
         $scope.v.control.modal.ins = {
@@ -425,7 +425,7 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                 'windowClass': 'trade-delivery-dialog',
                 'data': null
             }
-        }
+        };
 
         // 枚举类型
         $scope.v.enum = {
@@ -1679,15 +1679,15 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
             };
 
             $scope.f._close = function(data) {
-                $modalInstance.close(data);
+                $modalInstance.close(angular.copy(data));
             };
 
             $scope.f._dismiss = function(data) {
-                $modalInstance.dismiss(data);
+                $modalInstance.dismiss(angular.copy(data));
             };
 
-            if (_.isFunction(_data.controller)) {
-                _data.controller.call(this, $scope);
+            if (_.isFunction(_data.ctrl)) {
+                _data.ctrl.call(this, $scope);
             }
         }
 
