@@ -3,9 +3,9 @@
 <div class="search-advanced-box" ng-init="inputfocus = false"
      ng-class="{'active': inputfocus}">
     <div class="search-input-box">
-        <span class="iconfont" ng-click="v.search.simple.method('main', false)">&#xe60e;</span>
+        <span class="iconfont" ng-click="v.search.simple.method('main', true)">&#xe60e;</span>
         <input class="search-advanced" ng-focus="inputfocus = true" ng-blur="inputfocus = false"
-               ng-model="v.search.simple.form.keyword" my-search="v.search.simple.method('main', false)" type="text"
+               ng-model="v.search.simple.form.keyword" my-search="v.search.simple.method('main', true)" type="text"
                placeholder="请输入店铺名称或联系电话"/>
         <span class="ft-clear iconfont">&#58904;</span>
     </div>
@@ -164,7 +164,7 @@
             </li>
         </ul>
         <div class="form-submit">
-            <button class="btn btn-primary btn-search" type="button" ng-click="v.search.advanced.method('main', false)"
+            <button class="btn btn-primary btn-search" type="button" ng-click="v.search.advanced.method('main', true)"
                     ng-disabled="v.page.requesting">搜索
             </button>
             <button class="btn btn-default btn-clear" type="button" ng-click="v.search.advanced.clear()">清除
@@ -207,7 +207,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="r in v.lstData">
+    <tr ng-repeat="r in v.control.pagination.ins.main.list">
         <td ng-bind="r.name"></td>
         <td ng-bind="r.phone"></td>
         <td>
@@ -243,13 +243,13 @@
 5.空数据
 
 <div class="mod-noneData"
-     ng-if="(v.page.init === false) &amp;&amp; (v.lstData.length === 0) &amp;&amp; (v.page.hasData === false)">
+     ng-if="(v.page.init === false) &amp;&amp; (v.control.pagination.ins.main.list.length === 0) &amp;&amp; (v.page.hasData === false)">
     <div data-th-replace="fragments/noneData"></div>
 </div>
 
 6.列表尾部
 
-<div class="mod-footer fn-clear" ng-if="v.lstData.length &gt; 0">
+<div class="mod-footer fn-clear" ng-if="v.control.pagination.ins.main.list.length &gt; 0">
     <div class="fn-left">
         <span class="page-all" ng-bind="'总共 '+ v.control.pagination.ins.main.count + ' 条记录'"></span>
     </div>
@@ -257,8 +257,8 @@
     <div class="fn-right">
         <pagination class="pagination-xl"
                     total-items="v.control.pagination.ins.main.count"
-                    ng-model="v.control.pagination.ins.main.pageNo"
-                    items-per-page="v.control.pagination._config.pageSize"
+                    ng-model="v.control.pagination.ins.main.num"
+                    items-per-page="v.control.pagination._config.size"
                     max-size="v.control.pagination._config.maxSize"
                     boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                     force-ellipses="true"
@@ -505,7 +505,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="r in v.lstData">
+                <tr ng-repeat="r in v.control.pagination.ins.main.list">
                     <td ng-bind="r.name"></td>
                     <td ng-bind="r.phone"></td>
                     <td>
@@ -539,7 +539,7 @@
             </table>
         </div>
         <!-- 结尾 -->
-        <div class="mod-footer fn-clear" ng-if="v.lstData.length &gt; 0">
+        <div class="mod-footer fn-clear" ng-if="v.control.pagination.ins.main.list.length &gt; 0">
             <div class="fn-left">
                 <span class="page-all" ng-bind="'总共 '+ v.control.pagination.ins.main.count + ' 条记录'"></span>
             </div>
@@ -547,8 +547,8 @@
             <div class="fn-right">
                 <pagination class="pagination-xl"
                             total-items="v.control.pagination.ins.main.count"
-                            ng-model="v.control.pagination.ins.main.pageNo"
-                            items-per-page="v.control.pagination._config.pageSize"
+                            ng-model="v.control.pagination.ins.main.num"
+                            items-per-page="v.control.pagination._config.size"
                             max-size="v.control.pagination._config.maxSize"
                             boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                             force-ellipses="true"
