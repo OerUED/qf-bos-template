@@ -91,6 +91,17 @@ function _getCopyValue(v, d) {
     return _hasValue(v) ? angular.copy(v) : (d === undefined ? v : d);
 }
 
+// 删除数组中的某一项
+function _removeItem(arr, item) {
+    if (_hasValue(arr) && _.isArray(arr)) {
+        let index = [].indexOf.call(arr, item);
+        if (index > -1) {
+            [].splice.call(arr, index, 1);
+        }
+    }
+    return arr;
+}
+
 // 获取url参数
 function getQueryString(name) {
     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');

@@ -9,9 +9,9 @@
                placeholder="请输入店铺名称或联系电话"/>
         <span class="ft-clear iconfont">&#58904;</span>
     </div>
-    <span ng-click="v.search.advanced.show()">高级搜索<span
+    <span ng-click="v.search.advanced.show()">高级搜索<i
             class="icon-arrow icon-arrow-dark icon-arrow-down"
-            ng-class="{'active': v.search.advanced.showed}"></span></span>
+            ng-class="{'active': v.search.advanced.showed}"></i></span>
 </div>
 
 2.高级搜索
@@ -158,8 +158,8 @@
 3.搜索返回
 
 <div class="search-return fn-clear" ng-if="v.search.isProcessing">
-    <p class="text fn-left">搜索结果</p>
-    <a href="javascript:;" class="btn-back fn-right" ng-click="v.search.cancel('main')"><i class="iconfont">
+    <p class="fn-left">搜索结果</p>
+    <a class="fn-right btn-back" ng-click="v.search.cancel('main')" href="javascript:;"><i class="iconfont">
         &#xe615;</i>返回</a>
 </div>
 
