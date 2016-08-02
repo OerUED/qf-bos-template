@@ -1249,8 +1249,8 @@ app.controller('ctrlPromotionProductManage', ['$rootScope', '$scope', '$modal', 
                                     dst.data[_name] = _hasValue(src) ? src : null;
                                     break;
                                 case 'date':
-                                    src = $scope.v.control[ctrl].ins[_name].value.getTime();
-                                    dst.data[_name] = _hasValue(src) ? src : null;
+                                    src = $scope.v.control[ctrl].ins[_name].value;
+                                    dst.data[_name] = _hasValue(src) ? src.getTime() : null;
                                     break;
                                 case 'editor':
                                     src = $scope.v.control[ctrl].ins[_name].content;
