@@ -16,7 +16,7 @@
 
 2.高级搜索
 
-<div class="form-search" ng-if="v.search.advanced.showed">
+<div class="form-search" ng-show="v.search.advanced.showed">
     <form name="formSearch" ng-submit="" novalidate="novalidate" autocomplete="off">
         <ul class="form-list fn-clear">
             <li class="form-group">
@@ -175,7 +175,7 @@
 
 3.搜索返回
 
-<div class="search-return fn-clear" ng-if="v.search.isProcessing">
+<div class="search-return fn-clear" ng-show="v.search.isProcessing">
     <p class="fn-left">搜索结果</p>
     <a class="fn-right btn-back" ng-click="v.search.cancel('main')" href="javascript:;"><i class="iconfont">
         &#xe615;</i>返回</a>
@@ -183,7 +183,7 @@
 
 4.表格
 
-<table class="table table-hover tab-fixed tab-cut">
+<table class="table table-hover tab-fixed tab-cut" ng-show="v.page.requesting === false">
     <colgroup>
         <col width="10%"></col>
         <col width="10%"></col>
@@ -243,13 +243,13 @@
 5.空数据
 
 <div class="mod-noneData"
-     ng-if="(v.page.init === false) &amp;&amp; (v.control.pagination.ins.main.list.length === 0) &amp;&amp; (v.page.hasData === false)">
+     ng-show="(v.page.init === false) &amp;&amp; (v.control.pagination.ins.main.list.length === 0) &amp;&amp; (v.page.hasData === false) &amp;&amp; (v.page.requesting === false)">
     <div data-th-replace="fragments/noneData"></div>
 </div>
 
 6.列表尾部
 
-<div class="mod-footer fn-clear" ng-if="v.control.pagination.ins.main.list.length &gt; 0">
+<div class="mod-footer fn-clear" ng-show="v.control.pagination.ins.main.list.length &gt; 0">
     <div class="fn-left">
         <span class="page-all" ng-bind="'总共 '+ v.control.pagination.ins.main.count + ' 条记录'"></span>
     </div>
@@ -260,6 +260,7 @@
                     ng-model="v.control.pagination.ins.main.num"
                     items-per-page="v.control.pagination._config.size"
                     max-size="v.control.pagination._config.maxSize"
+                    ng-disabled="v.page.requesting"
                     boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                     force-ellipses="true"
                     first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
@@ -313,7 +314,7 @@
 12.radio 模板
 
 <label class="ui-radio">
-    <input type="radio" name="productPublish" value="ONSALE"
+    <input type="radio" name="productPublish" ng-value="ONSALE"
            ng-model="v.control.radio.ins.group.value"/>
     <i>立即发布</i>
 </label>
@@ -481,7 +482,7 @@
         </div>
         <!-- 内容 -->
         <div class="mod-contain fn-clear wrap-container" my-auto="">
-            <table class="table table-hover tab-fixed tab-cut">
+            <table class="table table-hover tab-fixed tab-cut" ng-show="v.page.requesting === false">
                 <colgroup>
                     <col width="10%"></col>
                     <col width="10%"></col>
@@ -539,7 +540,7 @@
             </table>
         </div>
         <!-- 结尾 -->
-        <div class="mod-footer fn-clear" ng-if="v.control.pagination.ins.main.list.length &gt; 0">
+        <div class="mod-footer fn-clear" ng-show="v.control.pagination.ins.main.list.length &gt; 0">
             <div class="fn-left">
                 <span class="page-all" ng-bind="'总共 '+ v.control.pagination.ins.main.count + ' 条记录'"></span>
             </div>
@@ -550,6 +551,7 @@
                             ng-model="v.control.pagination.ins.main.num"
                             items-per-page="v.control.pagination._config.size"
                             max-size="v.control.pagination._config.maxSize"
+                            ng-disabled="v.page.requesting"
                             boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                             force-ellipses="true"
                             first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
@@ -635,13 +637,20 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
     <th>
         <span class="" ng-click="v.control.sort.change('main', 'sale')">销量
             <i class="glyphicon glyphicon-sort"
-               ng-if="(v.control.sort.ins.main.current.name === 'sale') && (v.control.sort.ins.main.current.sortBy === 'NONE')"></i>
+               ng-show="(v.control.sort.ins.main.current.name === 'sale') &amp;&amp; (v.control.sort.ins.main.current.sortBy === 'NONE')"></i>
             <i class="glyphicon glyphicon-arrow-down"
-               ng-if="(v.control.sort.ins.main.current.name === 'sale') && (v.control.sort.ins.main.current.sortBy === 'DESC')"></i>
+               ng-show="(v.control.sort.ins.main.current.name === 'sale') &amp;&amp; (v.control.sort.ins.main.current.sortBy === 'DESC')"></i>
             <i class="glyphicon glyphicon-arrow-up"
-               ng-if="(v.control.sort.ins.main.current.name === 'sale') && (v.control.sort.ins.main.current.sortBy === 'ASC')"></i>
+               ng-show="(v.control.sort.ins.main.current.name === 'sale') &amp;&amp; (v.control.sort.ins.main.current.sortBy === 'ASC')"></i>
         </span>
     </th>
     <th>佣金比例</th>
     <th>操作</th>
 </tr>
+
+22.加载图片
+
+<div class="mod-loading" ng-show="v.page.requesting === true">
+    <img src="/_resources/images/loading.gif" alt="" />
+    <p>正在加载...</p>
+</div>
