@@ -40,8 +40,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             'radio': null,
             'date': null,
             'editor': null,
-            'uploader': null,
-            'modal': null
+            'uploader': null
         };
 
         // 列表
@@ -459,32 +458,6 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             }
         };
 
-        // 弹窗
-        $scope.v.control.modal = {
-            '_config': {},
-            '_action': {},
-            '_template': {
-                'show': null,
-                'controller': null,
-                'templateUrl': '',
-                'windowClass': '',
-                'data': null,
-                'block': null
-            }
-        };
-
-        // 弹窗实例
-        $scope.v.control.modal.ins = {
-            'product': {
-                'show': showSelectedProducts,
-                'controller': ctrlSelectedProducts,
-                'templateUrl': 'coupon-publish-show-selected.html',
-                'windowClass': 'coupon-publish-show-selected-width',
-                'data': null,
-                'block': null
-            }
-        };
-
         // 枚举类型
         $scope.v.enum = {
             'type': {
@@ -508,6 +481,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             'askForDelUploaded': askForDelUploaded,
             'zoomInImg': zoomInImg,
             // 页面函数
+            'showSelectedProducts': showSelectedProducts,
             'addProduct': addProduct,
             'delProduct': delProduct,
             'hasProduct': hasProduct,
@@ -1510,7 +1484,6 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                     if ($scope.v.control.radio.ins.link.value === 'PART') {
                         return getLstData('main').then(function(_data) {
                             initPageComplete();
-                            watchPageNum('main');
                             return _data;
                         });
                     } else {
@@ -1523,10 +1496,12 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 // 列表页获取数据
                 // return getLstData('main').then(function(_data) {
                 //     initPageComplete();
-                //     watchPageNum('main');
                 //     return _data;
                 // });
             }
+
+            // 页面没有列表的时候不需要打开
+            watchPageNum('main');
         }
 
         // 当页面中有富文本编辑器的时候, 编辑器加载完会自动调用 main 函数
@@ -1583,7 +1558,6 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         }
 
         function ctrlSelectedProducts($vm) {
-            $vm.f = {};
             // 重新拷贝一份
             $vm.v.productIds = angular.copy($vm.v.data);
 
@@ -1679,46 +1653,127 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         }
 
         function showSelectedProducts() {
-            let cfgModal = $scope.v.control.modal.ins.product;
-            cfgModal.data = $scope.v.form.productIds;
-            cfgModal.block = $scope.v.control.block.ins.modal;
+            let cfgModal = {
+                'controller': ctrlSelectedProducts,
+                'templateUrl': 'coupon-publish-show-selected.html',
+                'windowClass': 'coupon-publish-show-selected-width',
+                'data': $scope.v.form.productIds,
+                'block': $scope.v.control.block.ins.modal
+            };
 
             return showModal(cfgModal).then(function(data) {
                 // 确定和取消的返回数据都通过 data
                 if (_hasValue(data)) {
                     $scope.v.form.productIds = data;
                 }
+                // 弹窗关闭清除状态数据
+                resetBlockData('modal');
                 return data;
             });
         }
 
+        function resetBlockData(_name) {
+            $scope.v.control.block.ins[_name] = {
+                'hasData': false,
+                'requesting': false,
+                'reqTimer': null,
+                'list': []
+                // 'search': null,
+                // 'page': null,
+                // 'tab': null,
+                // 'menu': null,
+                // 'sort': null,
+                // 'select': null
+            };
+        }
+
         // 弹窗公共处理
-        function ctrlCommonModal($scope, $modalInstance, _data) {
+        function ctrlCommonModal($scope, $timeout, $modalInstance, $parent) {
             const that = this;
 
-            $scope.message = _data.message;
+            $scope.message = $parent.message;
+
+            // 页面调用函数
+            $scope.f = {};
 
             $scope.v = {
-                'data': _data.body,
-                'block': _data.block
+                'api': $parent.api,
+                'data': $parent.body,
+                'block': $parent.block
+            };
+
+            $scope.v.modal = {
+                // 页面初始化完毕标志
+                'init': true,
+                // 编辑状态
+                'editing': false,
+                // 页面请求数据成功标志
+                'hasData': false,
+                // http 请求状态
+                'requesting': false,
+                // http 请求状态定时器
+                'reqTimer': null
             };
 
             // 内部函数
             $scope.m = {
-                'nullPromises': _data.nullPromises,
-                'procApi': _data.procApi
+                '$p': $parent.$p,
+                'procRequest': $parent.procRequest,
+                'procApi': $parent.procApi
             };
 
-            $scope.m.close = function(data) {
-                $modalInstance.close(angular.copy(data));
+            // 判断页面是否有一项正在处于请求状态
+            $scope.m.procRequesting = function() {
+                if ($scope.v.modal.requesting === true) {
+                    $scope.message('正在请求数据中……', 'error');
+                    return true;
+                } else {
+                    // 进入请求状态
+                    $scope.v.modal.requesting = true;
+
+                    // 延时重置请求状态
+                    $scope.v.modal.reqTimer = $timeout(function() {
+                        $scope.v.modal.requesting = false;
+                    }, 5000);
+
+                    return false;
+                }
             };
 
-            $scope.m.dismiss = function(data) {
-                $modalInstance.dismiss(angular.copy(data));
+            // 结束请求
+            $scope.m.endOfRequest = function() {
+                if ($scope.v.modal.requesting === true) {
+                    $timeout.cancel($scope.v.modal.reqTimer);
+                    $scope.v.modal.requesting = false;
+                } else {
+                    $scope.v.modal.requesting = false;
+                    // $scope.message('请求数据接口较慢！', 'error');
+                }
             };
 
-            if (_hasValue(_data.ctrl) && _.isFunction(_data.ctrl)) {
-                _data.ctrl.call(that, $scope);
+            // modal 里独立的请求
+            $scope.m.req = function(_api, _data) {
+                // 页面处于请求状态
+                if ($scope.m.procRequesting() === true) {
+                    return $scope.m.$p();
+                }
+
+                return $scope.m.procRequest($scope.v.api[_api](_data)).then(function(_data) {
+                    $scope.m.endOfRequest(); // 关闭请求状态
+                    return _data;
+                });
+            };
+
+            $scope.m.close = function(_data) {
+                $modalInstance.close(angular.copy(_data));
+            };
+
+            $scope.m.dismiss = function(_data) {
+                $modalInstance.dismiss(angular.copy(_data));
+            };
+
+            if (_hasValue($parent.ctrl) && _.isFunction($parent.ctrl)) {
+                $parent.ctrl.call(that, $scope);
             }
         }
 
@@ -1738,9 +1793,11 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'templateUrl': cfg.templateUrl,
                 'windowClass': cfg.windowClass,
                 'resolve': {
-                    '_data': function() {
+                    '$parent': function() {
                         return {
-                            'nullPromises': getNullPromises,
+                            '$p': getNullPromises,
+                            'procRequest': procRequest,
+                            'api': $scope.v.api,
                             'procApi': procApi,
                             'message': $scope.message,
                             'ctrl': cfg.controller,
@@ -1752,15 +1809,16 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             });
 
             return modalInstance.result.then(
-                function(data) {
-                    return data;
+                function(_data) {
+                    return _data;
                 },
-                function(data) {
-                    return data;
+                function(_data) {
+                    return _data;
                 }
             );
         }
 
+        // 列表更新
         function updateLstData(_name) {
             // 搜索状态下的翻页
             if ($scope.v.control.block.ins[_name].search.isProcessing === true) {
@@ -1775,6 +1833,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             }
         }
 
+        // 页码监控
         function watchPageNum(_name) {
             // 点击分页的时候，页面跳转
             return $scope.$watch('v.control.block.ins.' + _name + '.page.num', function(newVal, oldVal) {
