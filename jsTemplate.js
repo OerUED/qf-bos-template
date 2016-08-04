@@ -14,24 +14,6 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             'enum': null
         };
 
-        // 函数
-        $scope.f = {
-            'ok': ok,
-            'cancel': cancel,
-            'submit': submit,
-            // 枚举过滤器
-            'enumFilter': enumFilter,
-            // 上传相关
-            'askForDelUploaded': askForDelUploaded,
-            'zoomInImg': zoomInImg,
-            // 页面函数
-            'addProduct': addProduct,
-            'delProduct': delProduct,
-            'hasProduct': hasProduct,
-            'addAllProducts': addAllProducts,
-            'getAllProducts': getAllProducts
-        };
-
         // 页面参数
         $scope.v.page = {
             // 来源
@@ -48,7 +30,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             // 块相关
             'list': null,
             'search': null,
-            'pagination': null,
+            'page': null,
             'tab': null,
             'menu': null,
             'sort': null,
@@ -82,7 +64,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         };
 
         // 分页配置
-        $scope.v.control.pagination = {
+        $scope.v.control.page = {
             '_config': {
                 'size': 25,
                 'maxSize': 7
@@ -145,7 +127,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'list': [],
                 // 以下是实例
                 'search': null,
-                'pagination': null,
+                'page': null,
                 'tab': null,
                 'menu': null,
                 'sort': null,
@@ -161,7 +143,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'reqTimer': null,
                 'list': [],
                 'search': null,
-                'pagination': null,
+                'page': null,
                 'tab': null,
                 'menu': null,
                 'sort': null,
@@ -173,7 +155,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'reqTimer': null,
                 'list': [],
                 'search': null,
-                'pagination': null,
+                'page': null,
                 'tab': null,
                 'menu': null,
                 'sort': null,
@@ -223,7 +205,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         };
 
         // 分页实例
-        $scope.v.control.block.ins.main.pagination = {
+        $scope.v.control.block.ins.main.page = {
             'num': 1,
             'count': 0
         };
@@ -486,7 +468,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'controller': null,
                 'templateUrl': '',
                 'windowClass': '',
-                'data': null
+                'data': null,
+                'block': null
             }
         };
 
@@ -497,7 +480,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'controller': ctrlSelectedProducts,
                 'templateUrl': 'coupon-publish-show-selected.html',
                 'windowClass': 'coupon-publish-show-selected-width',
-                'data': null
+                'data': null,
+                'block': null
             }
         };
 
@@ -511,6 +495,24 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'SUCCESS': '成功',
                 'FAILED': '失败'
             }
+        };
+
+        // 函数
+        $scope.f = {
+            'ok': ok,
+            'cancel': cancel,
+            'submit': submit,
+            // 枚举过滤器
+            'enumFilter': enumFilter,
+            // 上传相关
+            'askForDelUploaded': askForDelUploaded,
+            'zoomInImg': zoomInImg,
+            // 页面函数
+            'addProduct': addProduct,
+            'delProduct': delProduct,
+            'hasProduct': hasProduct,
+            'addAllProducts': addAllProducts,
+            'getAllProducts': getAllProducts
         };
 
         // 表单数据
@@ -537,6 +539,12 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             'productIds': []
         };
 
+        // block 关联
+        $scope.b = {
+            'main': $scope.v.control.block.ins.main,
+            'modal': $scope.v.control.block.ins.modal
+        };
+
         // 接口（每一个api对应一个单独的处理函数）
         $scope.v.api = {
             'list': function(data) {
@@ -547,9 +555,6 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             },
             'search': function(data) {
                 return servHttp.post('/product/getProductList', data);
-            },
-            'import': function(data) {
-                return servHttp.get('', data);
             },
             'get': function(data) {
                 return servHttp.get('/promotion/coupon/detail', data);
@@ -750,8 +755,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         // 判断页码是否在第一页，是的话就不用手动触发请求新数据
         function needManualChangePage(_name) {
             // 新搜索更改页码
-            if ($scope.v.control.block.ins[_name].pagination.num !== 1) {
-                $scope.v.control.block.ins[_name].pagination.num = 1;
+            if ($scope.v.control.block.ins[_name].page.num !== 1) {
+                $scope.v.control.block.ins[_name].page.num = 1;
                 return false; // 已经修改页码可以直接跳出，不走请求流程
             } else {
                 return true;
@@ -766,6 +771,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 // 异步执行
                 $timeout(function() {
                     updateLstData(_name).then(function(_data) {
+                        if (_hasValue(_data)) {
+                            // scroll2Top();
+                        }
+                        return _data;
                     });
                 });
             }
@@ -779,6 +788,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 // 异步执行
                 $timeout(function() {
                     updateLstData(_name).then(function(_data) {
+                        if (_hasValue(_data)) {
+                            // scroll2Top();
+                        }
+                        return _data;
                     });
                 });
             }
@@ -807,7 +820,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 // 异步执行
                 $timeout(function() {
                     updateLstData(_name).then(function(_data) {
-                        // $scope.v.control.sort._action.submitted = false;
+                        if (_hasValue(_data)) {
+                            // scroll2Top();
+                        }
+                        return _data;
                     });
                 });
             }
@@ -821,6 +837,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 // 异步执行
                 $timeout(function() {
                     updateLstData(_name).then(function(_data) {
+                        if (_hasValue(_data)) {
+                            // scroll2Top();
+                        }
+                        return _data;
                     });
                 });
             }
@@ -866,7 +886,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             $scope.v.form.minPrice = toRMBYuan(_getValue(data.rule.fullFee));
 
             if ($scope.v.control.radio.ins.type.value === 3) {
-                $scope.v.form.discount = toRMBYuan(_getValue(data.profitFee));
+                $scope.v.form.discount = _getValue(data.profitFee);
             } else {
                 $scope.v.form.price = toRMBYuan(_getValue(data.profitFee));
             }
@@ -928,7 +948,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             };
 
             if ($scope.v.control.radio.ins.type.value === 3) {
-                data.profitFee = toRMBFen($scope.v.form.discount);
+                data.profitFee = $scope.v.form.discount;
             } else {
                 data.profitFee = toRMBFen($scope.v.form.price);
             }
@@ -1126,25 +1146,30 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         function cancelSearching(_name) {
             resetSearching(_name);
 
-            if ($scope.v.control.block.ins[_name].pagination.num !== 1) {
-                $scope.v.control.block.ins[_name].pagination.num = 1;
+            if ($scope.v.control.block.ins[_name].page.num !== 1) {
+                $scope.v.control.block.ins[_name].page.num = 1;
             } else {
-                updateLstData(_name);
+                updateLstData(_name).then(function(_data) {
+                    if (_hasValue(_data)) {
+                        // scroll2Top();
+                    }
+                    return _data;
+                });
             }
         }
 
         // 没有关键词返回空结果
         function returnEmptyResult(_name) {
             $scope.v.control.block.ins[_name].list = [];
-            $scope.v.control.block.ins[_name].pagination.count = 0;
+            $scope.v.control.block.ins[_name].page.count = 0;
             return true;
         }
 
         // 没有关键词返回所有结果
         function returnSearchResult(_name) {
             // 新搜索更改页码
-            if ($scope.v.control.block.ins[_name].pagination.num !== 1) {
-                $scope.v.control.block.ins[_name].pagination.num = 1;
+            if ($scope.v.control.block.ins[_name].page.num !== 1) {
+                $scope.v.control.block.ins[_name].page.num = 1;
                 return true; // 已经修改页面可以直接跳出，不走请求流程
             } else {
                 return false;
@@ -1337,12 +1362,13 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             // 循环把form下的key全部置null
             for (let prop in $scope.v.control.block.ins[_name].search.advanced.form) {
                 if (hasProp($scope.v.control.block.ins[_name].search.advanced.form, prop)) {
-                    $scope.v.control.block.ins[_name].search.advanced.form[prop] = null;
+                    if (_.isArray($scope.v.control.block.ins[_name].search.advanced.form[prop])) {
+                        $scope.v.control.block.ins[_name].search.advanced.form[prop] = [];
+                    } else {
+                        $scope.v.control.block.ins[_name].search.advanced.form[prop] = null;
+                    }
                 }
             }
-
-            // 特殊处理
-            $scope.v.control.block.ins[_name].search.advanced.form.categoryId = [];
 
             // 遍历设置控件里的值为 null
             clearAdvSearchCtrlData(_name);
@@ -1379,12 +1405,16 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             //     data.status = ''; // 全部订单
             // }
 
-            if (data.priceFrom) {
+            if (_hasValue(data.priceFrom)) {
                 data.priceFrom = toRMBFen(data.priceFrom);
             }
 
-            if (data.priceUntil) {
+            if (_hasValue(data.priceUntil)) {
                 data.priceUntil = toRMBFen(data.priceUntil);
+            }
+
+            if (_hasValue(data.cateIds)) {
+                data.cateIds = [_.last(data.cateIds).id];
             }
 
             return data;
@@ -1443,8 +1473,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             return {
                 'productSortType': 'DEFAULT',
                 'productStatus': null,
-                'pageNo': $scope.v.control.block.ins[_name].pagination.num - 1,
-                'pagesize': $scope.v.control.pagination._config.size
+                'pageNo': $scope.v.control.block.ins[_name].page.num - 1,
+                'pagesize': $scope.v.control.page._config.size
                 // 'status': $scope.v.control.block.ins[_name].tab.current._key
             };
         }
@@ -1464,7 +1494,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 统一处理页面数据赋值
         function setLstData(_name, count, list) {
-            $scope.v.control.block.ins[_name].pagination.count = count;
+            $scope.v.control.block.ins[_name].page.count = count;
             $scope.v.control.block.ins[_name].list = angular.copy(list);
         }
 
@@ -1480,6 +1510,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                     if ($scope.v.control.radio.ins.link.value === 'PART') {
                         return getLstData('main').then(function(_data) {
                             initPageComplete();
+                            watchPageNum('main');
                             return _data;
                         });
                     } else {
@@ -1492,6 +1523,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 // 列表页获取数据
                 // return getLstData('main').then(function(_data) {
                 //     initPageComplete();
+                //     watchPageNum('main');
                 //     return _data;
                 // });
             }
@@ -1557,10 +1589,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
             $vm.v.form = {};
 
-            $vm.v.lstData = [];
-
             $vm.v.page = {
-                'requesting': false,
                 'no': 1,
                 'size': 10,
                 'maxSize': 7,
@@ -1609,51 +1638,50 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             };
 
             $vm.m.procModalApi = function(_api, data) {
-                $vm.v.page.requesting = true;
-                return $vm.m.procApi(_api, 'modal', data).then(function(_data) {
-                    $vm.v.page.requesting = false;
-                    return _data;
-                });
+                return $vm.m.procApi(_api, 'modal', data);
             };
 
             $vm.m.updateLstData = function() {
-                if ($vm.v.page.count < 1) {
-                    return null;
-                }
-
                 let data = {
                     'productIds': $vm.m.getProductIds($vm.v.page.no - 1)
                 };
 
                 return $vm.m.procModalApi('prods', data).then(function(_data) {
                     if (_hasValue(_data)) {
-                        $vm.v.lstData = _data.rows;
+                        $vm.v.block.list = _data.rows;
                     }
                     return _data;
                 });
             };
 
             $vm.m.main = function() {
-                $vm.m.updateLstData();
-            };
-
-            $vm.$watch('v.page.no', function(newVal, oldVal) {
-                if (parseInt(newVal, 10) !== parseInt(oldVal, 10)) {
-                    return $vm.m.updateLstData().then(function(_data) {
-                        if (_hasValue(_data)) {
-                            $vm.m.scroll2Top();
-                        }
-                        return _data;
+                if ($vm.v.page.count > 0) {
+                    $vm.m.updateLstData().then(function() {
+                        $vm.m.watchPageNo();
                     });
                 }
-            }, true);
+            };
+
+            $vm.m.watchPageNo = function() {
+                return $vm.$watch('v.page.no', function(newVal, oldVal) {
+                    if (parseInt(newVal, 10) !== parseInt(oldVal, 10)) {
+                        return $vm.m.updateLstData().then(function(_data) {
+                            if (_hasValue(_data)) {
+                                $vm.m.scroll2Top();
+                            }
+                            return _data;
+                        });
+                    }
+                }, true);
+            };
 
             $vm.m.main();
         }
 
         function showSelectedProducts() {
-            let cfgModal = $scope.v.control.modal.ins['product'];
+            let cfgModal = $scope.v.control.modal.ins.product;
             cfgModal.data = $scope.v.form.productIds;
+            cfgModal.block = $scope.v.control.block.ins.modal;
 
             return showModal(cfgModal).then(function(data) {
                 // 确定和取消的返回数据都通过 data
@@ -1671,12 +1699,13 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             $scope.message = _data.message;
 
             $scope.v = {
-                'api': _data.api,
-                'data': _data.body
+                'data': _data.body,
+                'block': _data.block
             };
 
             // 内部函数
             $scope.m = {
+                'nullPromises': _data.nullPromises,
                 'procApi': _data.procApi
             };
 
@@ -1697,6 +1726,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         function showModal(cfg) {
             if (!_hasValue(cfg) ||
                 !_hasValue(cfg.controller) ||
+                !_hasValue(cfg.block) ||
                 !_hasValue(cfg.templateUrl) ||
                 !_hasValue(cfg.windowClass)) {
                 return getNullPromises();
@@ -1710,10 +1740,11 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'resolve': {
                     '_data': function() {
                         return {
+                            'nullPromises': getNullPromises,
                             'procApi': procApi,
-                            'api': $scope.v.api,
                             'message': $scope.message,
                             'ctrl': cfg.controller,
+                            'block': cfg.block,
                             'body': _getCopyValue(cfg.data)
                         };
                     }
@@ -1744,16 +1775,18 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             }
         }
 
-        // 点击分页的时候，页面跳转
-        $scope.$watch('v.control.block.ins.main.pagination.num', function(newVal, oldVal) {
-            if (parseInt(newVal, 10) !== parseInt(oldVal, 10)) {
-                return updateLstData('main').then(function(_data) {
-                    if (_hasValue(_data)) {
-                        scroll2Top();
-                    }
-                    return _data;
-                });
-            }
-        }, true);
+        function watchPageNum(_name) {
+            // 点击分页的时候，页面跳转
+            return $scope.$watch('v.control.block.ins.' + _name + '.page.num', function(newVal, oldVal) {
+                if (parseInt(newVal, 10) !== parseInt(oldVal, 10)) {
+                    return updateLstData(_name).then(function(_data) {
+                        if (_hasValue(_data)) {
+                            scroll2Top();
+                        }
+                        return _data;
+                    });
+                }
+            }, true);
+        }
     }
 ]);

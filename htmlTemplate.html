@@ -5,18 +5,18 @@
     <div class="search-input-box">
         <span class="iconfont" ng-click="v.control.search.simple('main', true)">&#xe60e;</span>
         <input class="search-advanced" ng-focus="inputfocus = true" ng-blur="inputfocus = false"
-               ng-model="v.control.block.ins.main.search.simple.form.keyword" my-search="v.control.search.simple('main', true)" type="text"
+               ng-model="b.main.search.simple.form.keyword" my-search="v.control.search.simple('main', true)" type="text"
                placeholder="请输入店铺名称或联系电话"/>
         <span class="ft-clear iconfont">&#58904;</span>
     </div>
     <span ng-click="v.control.search.show('main')">高级搜索<i
         class="icon-arrow icon-arrow-dark icon-arrow-down"
-        ng-class="{'active': v.control.block.ins.main.search.advanced.showed}"></i></span>
+        ng-class="{'active': b.main.search.advanced.showed}"></i></span>
 </div>
 
 2.高级搜索
 
-<div class="form-search" ng-show="v.control.block.ins.main.search.advanced.showed">
+<div class="form-search" ng-show="b.main.search.advanced.showed">
     <form name="formSearch" ng-submit="" novalidate="novalidate" autocomplete="off">
         <ul class="form-list fn-clear">
             <li class="form-group">
@@ -165,7 +165,7 @@
         </ul>
         <div class="form-submit">
             <button class="btn btn-primary btn-search" type="button" ng-click="v.control.search.advanced('main', true)"
-                    ng-disabled="v.control.block.ins.main.requesting">搜索
+                    ng-disabled="b.main.requesting">搜索
             </button>
             <button class="btn btn-default btn-clear" type="button" ng-click="v.control.search.clear('main')">清除
             </button>
@@ -175,7 +175,7 @@
 
 3.搜索返回
 
-<div class="search-return fn-clear" ng-show="v.control.block.ins.main.search.isProcessing">
+<div class="search-return fn-clear" ng-show="b.main.search.isProcessing">
     <p class="fn-left">搜索结果</p>
     <a class="fn-right btn-back" ng-click="v.control.search.cancel('main')" href="javascript:;"><i class="iconfont">
         &#xe615;</i>返回</a>
@@ -206,8 +206,8 @@
         <th>操作</th>
     </tr>
     </thead>
-    <tbody ng-show="v.control.block.ins.main.requesting === false">
-    <tr ng-repeat="r in v.control.block.ins.main.list">
+    <tbody ng-show="b.main.requesting === false">
+    <tr ng-repeat="r in b.main.list">
         <td ng-bind="r.name"></td>
         <td ng-bind="r.phone"></td>
         <td>
@@ -243,24 +243,24 @@
 5.空数据
 
 <div class="mod-noneData"
-     ng-show="(v.page.init === false) &amp;&amp; (v.control.block.ins.main.list.length === 0) &amp;&amp; (v.control.block.ins.main.hasData === false) &amp;&amp; (v.control.block.ins.main.requesting === false)">
+     ng-show="(v.page.init === false) &amp;&amp; (b.main.list.length === 0) &amp;&amp; (b.main.hasData === false) &amp;&amp; (b.main.requesting === false)">
     <div data-th-replace="fragments/noneData"></div>
 </div>
 
 6.列表尾部
 
-<div class="mod-footer fn-clear" ng-show="v.control.block.ins.main.list.length &gt; 0">
+<div class="mod-footer fn-clear" ng-show="b.main.list.length &gt; 0">
     <div class="fn-left">
-        <span class="page-all" ng-bind="'总共 '+ v.control.block.ins.main.pagination.count + ' 条记录'"></span>
+        <span class="page-all" ng-bind="'总共 '+ b.main.page.count + ' 条记录'"></span>
     </div>
     <!-- 分页 -->
     <div class="fn-right">
         <pagination class="pagination-xl"
-                    total-items="v.control.block.ins.main.pagination.count"
-                    ng-model="v.control.block.ins.main.pagination.num"
-                    items-per-page="v.control.pagination._config.size"
-                    max-size="v.control.pagination._config.maxSize"
-                    ng-disabled="v.control.block.ins.main.requesting"
+                    total-items="b.main.page.count"
+                    ng-model="b.main.page.num"
+                    items-per-page="v.control.page._config.size"
+                    max-size="v.control.page._config.maxSize"
+                    ng-disabled="b.main.requesting"
                     boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                     force-ellipses="true"
                     first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
@@ -289,8 +289,8 @@
 
 <div class="tab-list">
     <a href="javascript:;" class="tab-item"
-       ng-repeat="tab in v.control.block.ins.main.tab.options" ng-bind="tab._value"
-       ng-class="{true : 'active', false: ''}[v.control.block.ins.main.tab.current._key === tab._key]"
+       ng-repeat="tab in b.main.tab.options" ng-bind="tab._value"
+       ng-class="{true : 'active', false: ''}[b.main.tab.current._key === tab._key]"
        ng-click="v.control.tab.change('main', $index)"></a>
 </div>
 
@@ -341,14 +341,14 @@
 
 <div class="form-submit">
     <button class="btn btn-primary btn-lg btn-submit" type="button"
-            ng-click="f.submit(formMain)" ng-disabled="v.control.block.ins.main.requesting"
+            ng-click="f.submit(formMain)" ng-disabled="b.main.requesting"
             ng-if="!v.page.editing">确定
     </button>
     <button class="btn btn-primary btn-lg btn-ok" type="button" ng-click="f.ok(formMain)"
-            ng-disabled="v.control.block.ins.main.requesting" ng-if="v.page.editing">确定修改
+            ng-disabled="b.main.requesting" ng-if="v.page.editing">确定修改
     </button>
     <button class="btn btn-default btn-lg btn-cancel" ng-click="f.cancel()"
-            ng-disabled="v.control.block.ins.main.requesting" ng-if="v.page.editing">取消
+            ng-disabled="b.main.requesting" ng-if="v.page.editing">取消
     </button>
 </div>
 
@@ -428,14 +428,14 @@
                 </div>
                 <div class="form-submit">
                     <button class="btn btn-primary btn-lg btn-submit" type="button"
-                            ng-click="f.submit(formMain)" ng-disabled="v.control.block.ins.main.requesting"
+                            ng-click="f.submit(formMain)" ng-disabled="b.main.requesting"
                             ng-if="!v.page.editing">确定
                     </button>
                     <button class="btn btn-primary btn-lg btn-ok" type="button" ng-click="f.ok(formMain)"
-                            ng-disabled="v.control.block.ins.main.requesting" ng-if="v.page.editing">确定修改
+                            ng-disabled="b.main.requesting" ng-if="v.page.editing">确定修改
                     </button>
                     <button class="btn btn-default btn-lg btn-cancel" ng-click="f.cancel()"
-                            ng-disabled="v.control.block.ins.main.requesting" ng-if="v.page.editing">取消
+                            ng-disabled="b.main.requesting" ng-if="v.page.editing">取消
                     </button>
                 </div>
             </form>
@@ -473,8 +473,8 @@
             <div class="fn-left">
                 <div class="tab-list">
                     <a href="javascript:;" class="tab-item"
-                       ng-repeat="tab in v.control.block.ins.main.tab.options" ng-bind="tab._value"
-                       ng-class="{true : 'active', false: ''}[v.control.block.ins.main.tab.current._key === tab._key]"
+                       ng-repeat="tab in b.main.tab.options" ng-bind="tab._value"
+                       ng-class="{true : 'active', false: ''}[b.main.tab.current._key === tab._key]"
                        ng-click="v.control.tab.change('main', $index)"></a>
                 </div>
             </div>
@@ -505,8 +505,8 @@
                     <th>操作</th>
                 </tr>
                 </thead>
-                <tbody ng-show="v.control.block.ins.main.requesting === false">
-                <tr ng-repeat="r in v.control.block.ins.main.list">
+                <tbody ng-show="b.main.requesting === false">
+                <tr ng-repeat="r in b.main.list">
                     <td ng-bind="r.name"></td>
                     <td ng-bind="r.phone"></td>
                     <td>
@@ -540,18 +540,18 @@
             </table>
         </div>
         <!-- 结尾 -->
-        <div class="mod-footer fn-clear" ng-show="v.control.block.ins.main.list.length &gt; 0">
+        <div class="mod-footer fn-clear" ng-show="b.main.list.length &gt; 0">
             <div class="fn-left">
-                <span class="page-all" ng-bind="'总共 '+ v.control.block.ins.main.pagination.count + ' 条记录'"></span>
+                <span class="page-all" ng-bind="'总共 '+ b.main.page.count + ' 条记录'"></span>
             </div>
             <!-- 分页 -->
             <div class="fn-right">
                 <pagination class="pagination-xl"
-                            total-items="v.control.block.ins.main.pagination.count"
-                            ng-model="v.control.block.ins.main.pagination.num"
-                            items-per-page="v.control.pagination._config.size"
-                            max-size="v.control.pagination._config.maxSize"
-                            ng-disabled="v.control.block.ins.main.requesting"
+                            total-items="b.main.page.count"
+                            ng-model="b.main.page.num"
+                            items-per-page="v.control.page._config.size"
+                            max-size="v.control.page._config.maxSize"
+                            ng-disabled="b.main.requesting"
                             boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                             force-ellipses="true"
                             first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
@@ -637,11 +637,11 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
     <th>
         <span class="" ng-click="v.control.sort.change('main', 'sale')">销量
             <i class="glyphicon glyphicon-sort"
-               ng-show="(v.control.block.ins.main.sort.current.name === 'sale') &amp;&amp; (v.control.block.ins.main.sort.current.sortBy === 'NONE')"></i>
+               ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'NONE')"></i>
             <i class="glyphicon glyphicon-arrow-down"
-               ng-show="(v.control.block.ins.main.sort.current.name === 'sale') &amp;&amp; (v.control.block.ins.main.sort.current.sortBy === 'DESC')"></i>
+               ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'DESC')"></i>
             <i class="glyphicon glyphicon-arrow-up"
-               ng-show="(v.control.block.ins.main.sort.current.name === 'sale') &amp;&amp; (v.control.block.ins.main.sort.current.sortBy === 'ASC')"></i>
+               ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'ASC')"></i>
         </span>
     </th>
     <th>佣金比例</th>
@@ -650,7 +650,7 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
 
 22.加载图片
 
-<div class="mod-loading" ng-show="v.control.block.ins.main.requesting === true">
+<div class="mod-loading" ng-show="b.main.requesting === true">
     <img src="/_resources/images/loading.gif" alt="" />
     <p>正在加载...</p>
 </div>
