@@ -3,6 +3,15 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/08/04
+
+1. 根据 js 模板重构代码；
+
+#### 2016/08/03
+
+1. 根据 js 模板修改调用；
+2. 根据实际情况选择调用 ng-if 或 ng-show；
+
 #### 2016/08/02
 
 1. 修改 id 和 type 的 hidden 取值位置；
@@ -39,6 +48,11 @@ Some useful template files for qf-bos.
 
 ## lessTemplate.less
 
+#### 2016/08/03
+
+1. 高级搜索单项限制最小高度；
+2. 添加 loading 动画样式；
+
 #### 2016/08/01
 
 1. 修改 form-tips 的样式；
@@ -57,6 +71,19 @@ Some useful template files for qf-bos.
 1. 模板代码初始化；
 
 ## jsTemplate.js
+
+#### 2016/08/04
+
+1. 重构模板代码；
+
+#### 2016/08/03
+
+1. 修复缺少的分号；
+2. 弹窗关闭之后数据传值使用深拷贝；
+
+#### 2016/08/02
+
+1. 修复高级搜索取值出错问题；
 
 #### 2016/08/01
 
