@@ -118,12 +118,18 @@ function getUrlParam(param) {
     var params = window.location.search.substring(1).split('&'),
         result = null;
 
-    for (var i = 0; i < params.length; i++) {
-        var part = params[i].split('=');
+    for (var i = 0, len = params.length; i < len; i++) {
+        var param = params[i].split('=');
+        var paramLen = param.length;
 
-        if ((part.length === 2) && (part[0] === param)) {
-            result = decodeURIComponent(part[1]);
-            break;
+        if (paramLen > 0) {
+            if ((paramLen === 1) && (param[0].length > 0)) {
+                result = null;
+                break;
+            } else if (paramLen === 2) {
+                result = decodeURIComponent(param[1]);
+                break;
+            }
         }
     }
 
@@ -134,17 +140,18 @@ function getUrlParamObj() {
     var params = window.location.search.substring(1).split('&'),
         result = {};
 
-    _.each(params, function (p) {
-        var part = p.split('=');
+    for (var i = 0, len = params.length; i < len; i++) {
+        var param = params[i].split('=');
+        var paramLen = param.length;
 
-        if (part.length > 0) {
-            if ((part.length === 1) && (hasLength(part[0]))) {
-                result[part[0]] = null;
-            } else if (part.length === 2) {
-                result[part[0]] = decodeURIComponent(part[1]);
+        if (paramLen > 0) {
+            if ((paramLen === 1) && (param[0].length > 0)) {
+                result[param[0]] = null;
+            } else if (paramLen === 2) {
+                result[param[0]] = decodeURIComponent(param[1]);
             }
         }
-    });
+    }
 
     return result;
 }
