@@ -1542,7 +1542,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         }
 
         function delProduct(id) {
-            $scope.v.form.productIds = _removeItem($scope.v.form.productIds, id);
+            _removeItem($scope.v.form.productIds, id);
         }
 
         function hasProduct(id) {
@@ -1582,7 +1582,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             };
 
             $vm.f.delProduct = function(id) {
-                $vm.v.productIds = _removeItem($vm.v.productIds, id);
+                _removeItem($vm.v.productIds, id);
             };
 
             $vm.f.hasProduct = function(id) {

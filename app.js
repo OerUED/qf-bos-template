@@ -91,6 +91,14 @@ function _getCopyValue(v, d) {
     return _hasValue(v) ? angular.copy(v) : (d === undefined ? v : d);
 }
 
+// 数组中是否有某一项
+function _hasItem(arr, item) {
+    if (_hasValue(arr) && _.isArray(arr) && _hasValue(item)) {
+        return (_.indexOf(arr, item) > -1);
+    }
+    return false;
+}
+
 // 删除数组中的某一项
 function _removeItem(arr, item) {
     if (_hasValue(arr) && _.isArray(arr) && _hasValue(item)) {
@@ -100,6 +108,14 @@ function _removeItem(arr, item) {
         }
     }
     return null;
+}
+
+// 数组中是否有某一项
+function _hasObjItem(arr, obj) {
+    if (_hasValue(arr) && _.isArray(arr) && _hasValue(obj)) {
+        return (_.findIndex(arr, obj) > -1);
+    }
+    return false;
 }
 
 // 删除对象数组中的某一项
