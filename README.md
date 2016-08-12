@@ -6,6 +6,8 @@ Some useful template files for qf-bos.
 #### 2016/08/12
 
 1. 修改模板遗漏的部分；
+2. 添加可排序表头；
+3. 修改列表页面模板；
 
 #### 2016/08/04
 
@@ -55,6 +57,8 @@ Some useful template files for qf-bos.
 #### 2016/08/12
 
 1. 修改 form-group 样式；
+2. 添加可排序表头样式；
+3. 添加表格操作栏的链接样式；
 
 #### 2016/08/03
 
@@ -79,6 +83,11 @@ Some useful template files for qf-bos.
 1. 模板代码初始化；
 
 ## jsTemplate.js
+
+#### 2016/08/12
+
+1. 修改 watchPageNum() 调用的位置；
+2. 完善列表排序的功能；
 
 #### 2016/08/04
 

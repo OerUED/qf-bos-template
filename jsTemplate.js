@@ -744,7 +744,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             if (needManualChangePage(_name) === true) {
                 // 异步执行
                 $timeout(function() {
-                    updateLstData(_name).then(function(_data) {
+                    return updateLstData(_name).then(function(_data) {
                         if (_hasValue(_data)) {
                             // scroll2Top();
                         }
@@ -761,7 +761,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             if (needManualChangePage(_name) === true) {
                 // 异步执行
                 $timeout(function() {
-                    updateLstData(_name).then(function(_data) {
+                    return updateLstData(_name).then(function(_data) {
                         if (_hasValue(_data)) {
                             // scroll2Top();
                         }
@@ -769,6 +769,17 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                     });
                 });
             }
+        }
+
+        function getSortType(_name) {
+            let name = $scope.v.control.sort.ins[_name].current.name;
+            let sortBy = $scope.v.control.sort.ins[_name].current.sortBy;
+
+            if (sortBy === 'NONE') {
+                return null;
+            }
+
+            return $scope.v.control.block.ins[_name].sort.replace[name][sortBy];
         }
 
         // 列表排序改变
@@ -790,10 +801,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             }
 
             // 是否手动触发请求
-            if (needManualChangePage(_name, $scope.v.control.sort._action) === true) {
+            if (needManualChangePage(_name) === true) {
                 // 异步执行
                 $timeout(function() {
-                    updateLstData(_name).then(function(_data) {
+                    return updateLstData(_name).then(function(_data) {
                         if (_hasValue(_data)) {
                             // scroll2Top();
                         }
@@ -1445,8 +1456,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         // 列表数据统一获取（基础数据）
         function getQueryData(_name) {
             return {
-                'productSortType': 'DEFAULT',
-                'productStatus': null,
+                'sort': getSortType(_name),
+                // 'productStatus': null,
                 'pageNo': $scope.v.control.block.ins[_name].page.num - 1,
                 'pagesize': $scope.v.control.page._config.size
                 // 'status': $scope.v.control.block.ins[_name].tab.current._key
@@ -1476,7 +1487,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         function main() {
             // 判断当前是否是编辑状态
             $scope.v.page.editing = _hasValue($scope.v.form.id);
-
+            // 页面没有列表的时候不需要打开
+            watchPageNum('main');
             // 编辑状态
             if (hasTrue($scope.v.page.editing)) {
                 // 编辑页获取数据
@@ -1499,9 +1511,6 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 //     return _data;
                 // });
             }
-
-            // 页面没有列表的时候不需要打开
-            watchPageNum('main');
         }
 
         // 当页面中有富文本编辑器的时候, 编辑器加载完会自动调用 main 函数

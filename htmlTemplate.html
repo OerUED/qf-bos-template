@@ -483,7 +483,7 @@
             <div class="fn-right"></div>
         </div>
         <!-- 内容 -->
-        <div class="mod-contain fn-clear wrap-container" my-auto="">
+        <div class="mod-contain fn-clear wrap-container">
             <table class="table table-hover tab-fixed tab-cut">
                 <colgroup>
                     <col width="10%"></col>
@@ -507,7 +507,7 @@
                     <th>操作</th>
                 </tr>
                 </thead>
-                <tbody ng-show="b.main.requesting === false">
+                <tbody ng-show="(b.main.list.length &gt; 0) &amp;&amp; (b.main.requesting === false)">
                 <tr ng-repeat="r in b.main.list">
                     <td ng-bind="r.name"></td>
                     <td ng-bind="r.phone"></td>
@@ -540,6 +540,13 @@
                 </tr>
                 </tbody>
             </table>
+            <div class="mod-noneData" ng-show="(b.main.list.length &lt; 1) &amp;&amp; (b.main.requesting === false)">
+                <div data-th-replace="fragments/noneData"></div>
+            </div>
+            <div class="mod-loading" ng-show="b.main.requesting === true">
+                <img src="/_resources/images/loading.gif" alt="" />
+                <p>正在加载...</p>
+            </div>
         </div>
         <!-- 结尾 -->
         <div class="mod-footer fn-clear" ng-show="b.main.list.length &gt; 0">
@@ -662,3 +669,13 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
 <textarea name="productDescription" ng-ueditor="v.control.editor.options"
           ready="v.control.editor.ready($editor)"
           ng-model="v.form.description" required="required"></textarea>
+
+24.可排序表头
+
+<th class="sort-item">
+    <span ng-class="{true : 'active', false: ''}[b.main.sort.current.name === 'sale']" ng-click="v.control.sort.change('main', 'sale')">销量
+        <i class="iconfont" ng-show="((b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'NONE')) || (b.main.sort.current.name !== 'sale')">&#xe668;</i>
+        <i class="iconfont" ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'ASC')">&#xe667;</i>
+        <i class="iconfont" ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'DESC')">&#xe666;</i>
+    </span>
+</th>

@@ -133,6 +133,19 @@
     }
     .mod-contain {
         .table {
+            .sort-item {
+                cursor: pointer;
+                color: #666;
+                .active {
+                    color: #33ba8f;
+                    position: relative;
+                    .iconfont {
+                        position: absolute;
+                        top: 1px;
+                        right: 1px;
+                    }
+                }
+            }
             // 表格竖线
             td:after {
                 position: absolute;
@@ -166,6 +179,18 @@
                 text-align: left;
                 p {
                     margin-bottom: 4px;
+                }
+            }
+            .p-operate {
+                line-height: 26px;
+                a {
+                    color: #666;
+                    margin: 0 2px;
+                    word-break: keep-all;
+                }
+                a:hover {
+                    text-decoration: underline;
+                    color: #1DB990;
                 }
             }
         }
