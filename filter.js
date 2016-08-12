@@ -90,8 +90,8 @@ app.filter('nullToSpace', function() {
 });
 
 // 百分比
-app.filter('percentage', ['$filter', function ($filter) {
-    return function (input, decimals) {
+app.filter('percentage', ['$filter', function($filter) {
+    return function(input, decimals) {
         if (hasValue(input)) {
             return $filter('number')(toRMBFen(input), decimals) + '%';
         } else {
@@ -101,8 +101,8 @@ app.filter('percentage', ['$filter', function ($filter) {
 }]);
 
 // 价格区间显示
-app.filter('showPriceSummary', ['$filter', function ($filter) {
-    return function (input, isSku) {
+app.filter('showPriceSummary', ['$filter', function($filter) {
+    return function(input, isSku) {
         var minPrice = null, maxPrice = null;
 
         if (hasTrue(isSku)) {
@@ -122,8 +122,15 @@ app.filter('showPriceSummary', ['$filter', function ($filter) {
 }]);
 
 // 显示价格
-app.filter('showPrice', ['$filter', function ($filter) {
-    return function (input) {
+app.filter('showPrice', ['$filter', function($filter) {
+    return function(input) {
         return $filter('currency')(toRMBYuan(input));
+    };
+}]);
+
+// 显示空线
+app.filter('showNullLine', ['$filter', function($filter) {
+    return function(input) {
+        return _getValue(input, '——');
     };
 }]);

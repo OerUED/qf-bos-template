@@ -3,6 +3,10 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/08/12
+
+1. 修改模板遗漏的部分；
+
 #### 2016/08/04
 
 1. 根据 js 模板重构代码；
@@ -47,6 +51,10 @@ Some useful template files for qf-bos.
 1. 模板代码初始化；
 
 ## lessTemplate.less
+
+#### 2016/08/12
+
+1. 修改 form-group 样式；
 
 #### 2016/08/03
 

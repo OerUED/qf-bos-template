@@ -65,7 +65,7 @@
                     <div class="item-input-wrap">
                         <div class="input-group datetime-picker-wrap">
                             <div class="input-group-addon iconfont"
-                                 ng-click="v.control.date._config.show('startTime')">&#xe62e;</div>
+                                 ng-click="v.control.date.show('startTime')">&#xe62e;</div>
                             <input readonly="readonly" type="text" class="form-control"
                                    datetime-picker="yyyy-MM-dd HH:mm:ss"
                                    ng-model="v.control.date.ins.startTime.value"
@@ -74,7 +74,8 @@
                                    show-Button-Bar="true"
                                    datepicker-options="v.control.date._config.date"
                                    timepicker-options="v.control.date._config.time"
-                                   ng-click="v.control.date._config.show('startTime')" name="startTime"
+                                   ng-click="v.control.date.show('startTime')" name="startTime"
+                                   min-date="v.control.date._config.now"
                                    max-date="v.control.date.ins.endTime.value"/>
                         </div>
                     </div>
@@ -86,7 +87,7 @@
                     <div class="item-input-wrap">
                         <div class="input-group datetime-picker-wrap">
                             <div class="input-group-addon iconfont"
-                                 ng-click="v.control.date._config.show('endTime')">&#xe62e;</div>
+                                 ng-click="v.control.date.show('endTime')">&#xe62e;</div>
                             <input readonly="readonly" type="text" class="form-control"
                                    datetime-picker="yyyy-MM-dd HH:mm:ss" ng-model="v.control.date.ins.endTime.value"
                                    is-open="v.control.date.ins.endTime.showed" enable-time="true" today-Text="今天"
@@ -94,7 +95,7 @@
                                    show-Button-Bar="true"
                                    datepicker-options="v.control.date._config.date"
                                    timepicker-options="v.control.date._config.time"
-                                   ng-click="v.control.date._config.show('endTime')" name="endTime"
+                                   ng-click="v.control.date.show('endTime')" name="endTime"
                                    min-date="v.control.date.ins.startTime.value"/>
                         </div>
                     </div>
@@ -107,7 +108,7 @@
                         <div class="start-time-wrap">
                             <div class="input-group datetime-picker-wrap">
                                 <div class="input-group-addon iconfont"
-                                     ng-click="v.control.date._config.show('startTime')">&#xe62e;</div>
+                                     ng-click="v.control.date.show('startTime')">&#xe62e;</div>
                                 <input readonly="readonly" type="text" class="form-control"
                                        datetime-picker="yyyy-MM-dd HH:mm:ss"
                                        ng-model="v.control.date.ins.startTime.value"
@@ -118,7 +119,8 @@
                                        show-Button-Bar="true"
                                        datepicker-options="v.control.date._config.date"
                                        timepicker-options="v.control.date._config.time"
-                                       ng-click="v.control.date._config.show('startTime')" name="startTime"
+                                       ng-click="v.control.date.show('startTime')" name="startTime"
+                                       min-date="v.control.date._config.now"
                                        max-date="v.control.date.ins.endTime.value"/>
                             </div>
                         </div>
@@ -126,7 +128,7 @@
                         <div class="end-time-wrap">
                             <div class="input-group datetime-picker-wrap">
                                 <div class="input-group-addon iconfont"
-                                     ng-click="v.control.date._config.show('endTime')">&#xe62e;</div>
+                                     ng-click="v.control.date.show('endTime')">&#xe62e;</div>
                                 <input readonly="readonly" type="text" class="form-control"
                                        datetime-picker="yyyy-MM-dd HH:mm:ss"
                                        ng-model="v.control.date.ins.endTime.value"
@@ -137,7 +139,7 @@
                                        show-Button-Bar="true"
                                        datepicker-options="v.control.date._config.date"
                                        timepicker-options="v.control.date._config.time"
-                                       ng-click="v.control.date._config.show('endTime')" name="endTime"
+                                       ng-click="v.control.date.show('endTime')" name="endTime"
                                        min-date="v.control.date.ins.startTime.value"/>
                             </div>
                         </div>

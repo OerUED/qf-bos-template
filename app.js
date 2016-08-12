@@ -93,13 +93,24 @@ function _getCopyValue(v, d) {
 
 // 删除数组中的某一项
 function _removeItem(arr, item) {
-    if (_hasValue(arr) && _.isArray(arr)) {
-        let index = [].indexOf.call(arr, item);
+    if (_hasValue(arr) && _.isArray(arr) && _hasValue(item)) {
+        let index = _.indexOf(arr, item);
         if (index > -1) {
-            [].splice.call(arr, index, 1);
+            return [].splice.call(arr, index, 1);
         }
     }
-    return arr;
+    return null;
+}
+
+// 删除对象数组中的某一项
+function _removeObjItem(arr, obj) {
+    if (_hasValue(arr) && _.isArray(arr) && _hasValue(obj)) {
+        let index = _.findIndex(arr, obj);
+        if (index > -1) {
+            return [].splice.call(arr, index, 1);
+        }
+    }
+    return null;
 }
 
 // 获取url参数
