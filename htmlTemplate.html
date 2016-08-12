@@ -672,10 +672,134 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
 
 24.可排序表头
 
-<th class="sort-item">
-    <span ng-class="{true : 'active', false: ''}[b.main.sort.current.name === 'sale']" ng-click="v.control.sort.change('main', 'sale')">销量
+<th ng-click="v.control.sort.change('main', 'sale')">
+    <span class="sort-item" ng-class="{true : 'active', false: ''}[(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy !== 'NONE')]">销量
         <i class="iconfont" ng-show="((b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'NONE')) || (b.main.sort.current.name !== 'sale')">&#xe668;</i>
         <i class="iconfont" ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'ASC')">&#xe667;</i>
         <i class="iconfont" ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'DESC')">&#xe666;</i>
     </span>
 </th>
+
+25.详情页面模板
+
+<!DOCTYPE html>
+<html data-layout-decorator="/layout/mainPage">
+
+<head>
+    <title>分组详情</title>
+</head>
+
+<body>
+<div data-layout-fragment="currentPath">
+    <p>
+        <a data-th-href="@{~/product/grouping-manage}">分组管理</a>
+        <breadcrumb></breadcrumb>
+        <span class="current">查看分组</span>
+    </p>
+</div>
+<div data-layout-fragment="main">
+    <div class="grouping-detail ng-cloak wrap-container" my-auto="" ng-controller="ctrlGroupingDetail">
+        <!-- 导航栏 -->
+        <div class="mod-nav fn-clear"></div>
+        <!-- 开头 -->
+        <div class="mod-header fn-clear">
+            <!-- 左侧菜单 -->
+            <div class="fn-left"></div>
+            <!-- 右侧按钮 -->
+            <div class="fn-right"></div>
+        </div>
+        <!-- 内容 -->
+        <div class="mod-contain fn-clear">
+            <input type="hidden" data-th-value="${id}" id="groupId"/>
+            <div class="operation-wrap">
+                <a class="btn btn-primary btn-edit" href="/product/grouping-edit?id={{v.form.id}}">编辑/修改</a>
+                <button class="btn btn-default btn-close" type="button" ng-click="f.delGroup()">删除分组</button>
+            </div>
+            <div class="detail-wrap">
+                <div class="form-wrap">
+                    <ul class="form-list">
+                        <li class="form-group fn-clear">
+                            <label class="form-label">分组名称：</label>
+                            <div class="form-main">
+                                <p ng-bind="v.form.name"></p>
+                            </div>
+                        </li>
+                        <li class="form-group fn-clear">
+                            <label class="form-label">分组商品：</label>
+                            <div class="form-main"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--<div class="list-head"></div>-->
+        <div class="list-body" ng-show="b.main.list.length &gt; 0">
+            <table class="table table-hover tab-fixed tab-cut">
+                <colgroup>
+                    <col width="10%"></col>
+                    <col width="10%"></col>
+                    <col width="10%"></col>
+                    <col width="30%"></col>
+                    <col width="10%"></col>
+                    <col width="10%"></col>
+                    <col width="10%"></col>
+                    <col width="10%"></col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>淘宝ID</th>
+                    <th colspan="2">商品</th>
+                    <th>销量</th>
+                    <th>库存</th>
+                    <th>价格</th>
+                    <th>分组</th>
+                </tr>
+                </thead>
+                <tbody ng-show="(b.main.list.length &gt; 0) &amp;&amp; (b.main.requesting === false)">
+                <tr ng-repeat="r in b.main.list">
+                    <td ng-bind="r.id"></td>
+                    <td ng-bind="r.thirdItemId | showNullLine"></td>
+                    <td class="p-img">
+                        <img alt="商品图片" ng-src="{{r.imgUrl}}"/>
+                    </td>
+                    <td class="p-info">
+                        <p ng-bind="r.name"></p>
+                    </td>
+                    <td ng-bind="r.sales | number"></td>
+                    <td ng-bind="r.amount | number"></td>
+                    <td ng-bind="r.priceSummary | showPriceSummary : true"></td>
+                    <td ng-bind="r.group | showArrString"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="mod-noneData" ng-show="(b.main.list.length &lt; 1) &amp;&amp; (b.main.requesting === false)">
+                <div data-th-replace="fragments/noneData"></div>
+            </div>
+            <div class="mod-loading" ng-show="b.main.requesting === true">
+                <img src="/_resources/images/loading.gif" alt="" />
+                <p>正在加载...</p>
+            </div>
+        </div>
+        <div class="list-footer fn-clear">
+            <div class="fn-left">
+                <span class="page-all" ng-bind="'总共 '+ b.main.page.count + ' 条记录'"></span>
+            </div>
+            <!-- 分页 -->
+            <div class="fn-right">
+                <pagination class="pagination-xl"
+                            total-items="b.main.page.count"
+                            ng-model="b.main.page.num"
+                            items-per-page="v.control.page._config.size"
+                            max-size="v.control.page._config.maxSize"
+                            ng-disabled="b.main.requesting"
+                            boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
+                            force-ellipses="true"
+                            first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

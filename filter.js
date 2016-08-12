@@ -134,3 +134,14 @@ app.filter('showNullLine', ['$filter', function($filter) {
         return _getValue(input, '——');
     };
 }]);
+
+// 显示数组字符串
+app.filter('showArrString', ['$filter', function($filter) {
+    return function(input) {
+        if (_hasValue(input) && _.isArray(input)) {
+            return input.join(', ');
+        } else {
+            return '--';
+        }
+    };
+}]);

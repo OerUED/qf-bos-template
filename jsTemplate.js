@@ -235,8 +235,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         $scope.v.control.block.ins.main.sort = {
             'replace': {
-                'price': {'ASC': 'PRICEASC', 'DESC': 'PRICEDESC', 'NONE': ''},
-                'sale': {'ASC': 'SALESASC', 'DESC': 'SALEDESC', 'NONE': ''}
+                'price': {'ASC': 'PRICEASC', 'DESC': 'PRICEDESC', 'NONE': 'DEFAULT'},
+                'sale': {'ASC': 'SALESASC', 'DESC': 'SALESDESC', 'NONE': 'DEFAULT'}
             },
             'current': {
                 'name': null,
@@ -772,10 +772,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         }
 
         function getSortType(_name) {
-            let name = $scope.v.control.sort.ins[_name].current.name;
-            let sortBy = $scope.v.control.sort.ins[_name].current.sortBy;
+            let name = $scope.v.control.block.ins[_name].sort.current.name;
+            let sortBy = $scope.v.control.block.ins[_name].sort.current.sortBy;
 
-            if (sortBy === 'NONE') {
+            if (!_hasValue(name) || !_hasValue(sortBy)) {
                 return null;
             }
 
@@ -784,20 +784,20 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 列表排序改变
         function changeSort(_name, _item) {
-            let name = $scope.v.control.sort.ins[_name].current.name;
-            let sortBy = $scope.v.control.sort.ins[_name].current.sortBy;
+            let name = $scope.v.control.block.ins[_name].sort.current.name;
+            let sortBy = $scope.v.control.block.ins[_name].sort.current.sortBy;
             let index = null;
 
-            if (name === _name) {
+            if (name === _item) {
                 index = $scope.v.control.sort._config.type.indexOf(sortBy);
                 index = index + 1;
                 if (index >= $scope.v.control.sort._config.type.length) {
                     index = 0;
                 }
-                $scope.v.control.sort.ins[_name].current.sortBy = $scope.v.control.sort._config.type[index];
+                $scope.v.control.block.ins[_name].sort.current.sortBy = $scope.v.control.sort._config.type[index];
             } else {
-                $scope.v.control.sort.ins[_name].current.name = _name;
-                $scope.v.control.sort.ins[_name].current.sortBy = $scope.v.control.sort._config.type[0];
+                $scope.v.control.block.ins[_name].sort.current.name = _item;
+                $scope.v.control.block.ins[_name].sort.current.sortBy = $scope.v.control.sort._config.type[0];
             }
 
             // 是否手动触发请求
@@ -1493,15 +1493,13 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             if (hasTrue($scope.v.page.editing)) {
                 // 编辑页获取数据
                 return getSaveData().then(function(_data) {
-                    if ($scope.v.control.radio.ins.link.value === 'PART') {
-                        return getLstData('main').then(function(_data) {
+                    if (_hasValue(_data)) {
+                        return getLstData('main').then(function (_data) {
                             initPageComplete();
                             return _data;
                         });
-                    } else {
-                        initPageComplete();
-                        return _data;
                     }
+                    return _data;
                 });
             } else {
                 initPageComplete();

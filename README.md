@@ -8,6 +8,7 @@ Some useful template files for qf-bos.
 1. 修改模板遗漏的部分；
 2. 添加可排序表头；
 3. 修改列表页面模板；
+4. 添加详情页面模板；
 
 #### 2016/08/04
 
@@ -59,6 +60,7 @@ Some useful template files for qf-bos.
 1. 修改 form-group 样式；
 2. 添加可排序表头样式；
 3. 添加表格操作栏的链接样式；
+4. 添加详情页面表单样式模板；
 
 #### 2016/08/03
 

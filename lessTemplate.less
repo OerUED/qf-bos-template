@@ -165,7 +165,6 @@
                 font-style: normal;
             }
             td {
-                //height: 80px;
                 padding: 20px;
             }
             .p-img {
@@ -406,5 +405,142 @@
     }
     .ui-radio {
         margin-right: 20px;
+    }
+}
+
+3.详情页面表单样式模板
+
+.grouping-detail {
+    .mod-contain {
+        position: relative;
+        padding: 20px 147px 20px 137px;
+        .operation-wrap {
+            position: absolute;
+            top: 34px;
+            right: 44px;
+            width: 120px;
+            .btn {
+                width: 120px;
+                margin-bottom: 12px;
+            }
+        }
+        .form-wrap {
+            min-width: 320px;
+            max-width: 960px;
+        }
+        .form-list {
+            li.form-group:last-child {
+                margin-bottom: 0!important;
+            }
+        }
+        li.form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-size: 12px;
+            font-weight: normal;
+            line-height: 40px;
+            position: relative;
+            display: block;
+            float: left;
+            width: 137px;
+            height: 40px;
+            margin: 0 0 0 -137px;
+            padding-right: 30px;
+            -webkit-user-select: none;
+            text-align: right;
+        }
+        .form-main {
+            line-height: 40px;
+            position: relative;
+            color: @font-darker;
+            i,
+            em {
+                font-style: normal;
+            }
+        }
+        .form-main-clear {
+            line-height: normal!important;
+        }
+    }
+    .list-body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: 540px;
+        margin: 0 30px 20px 30px;
+        border: 1px solid #edeff0;
+        border-radius: 4px;
+        .table {
+            margin: 0;
+            tbody {
+                // 表格竖线
+                td:after {
+                    position: absolute;
+                    top: 18px;
+                    right: 0;
+                    bottom: 18px;
+                    display: block;
+                    width: 1px;
+                    content: '';
+                    background: #edeff0;
+                }
+                td.p-img:after,
+                td:last-child:after {
+                    display: none!important;
+                }
+                td {
+                    padding: 8px;
+                }
+            }
+        }
+        .sort-item {
+            position: relative;
+            cursor: pointer;
+            color: #666;
+            &.active {
+                color: #33ba8f;
+            }
+            .iconfont {
+                position: absolute;
+                top: 0;
+                right: -12px;
+                font-size: 12px;
+            }
+        }
+        .p-img {
+            img {
+                width: 70px;
+                height: 70px;
+                border: 1px solid #edeff0;
+            }
+        }
+        .p-info {
+            text-align: left;
+            p {
+                margin-bottom: 4px;
+            }
+        }
+        .p-operate {
+            line-height: 26px;
+            a {
+                color: #666;
+                margin: 0 2px;
+                word-break: keep-all;
+            }
+            a:hover {
+                text-decoration: underline;
+                color: #1DB990;
+            }
+        }
+    }
+    .list-footer {
+        padding: 0 30px 20px 30px;
+        .pagination {
+            margin: 0;
+        }
+    }
+    .mod-loading {
+        text-align: center;
+        padding: 40px 0;
     }
 }
