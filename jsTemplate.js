@@ -237,8 +237,16 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         $scope.v.control.block.ins.main.sort = {
             'replace': {
-                'price': {'ASC': 'PRICEASC', 'DESC': 'PRICEDESC', 'NONE': 'DEFAULT'},
-                'sale': {'ASC': 'SALESASC', 'DESC': 'SALESDESC', 'NONE': 'DEFAULT'}
+                'price': {
+                    'ASC': 'PRICEASC',
+                    'DESC': 'PRICEDESC',
+                    'NONE': 'DEFAULT'
+                },
+                'sale': {
+                    'ASC': 'SALESASC',
+                    'DESC': 'SALESDESC',
+                    'NONE': 'DEFAULT'
+                }
             },
             'current': {
                 'name': null,
@@ -410,14 +418,24 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'used': false   // 当页面中有富文本编辑器的时候置为 true
             },
             '_action': {},
-            '_template': {'instance': null, 'content': null, 'disabled': false, 'showed': false},
+            '_template': {
+                'instance': null,
+                'content': null,
+                'disabled': false,
+                'showed': false
+            },
             'options': getEditorOptions(),
             'ready': readyEditor
         };
 
         // 富文本编辑器实例
         $scope.v.control.editor.ins = {
-            'desc': {'instance': null, 'content': null, 'disabled': false, 'showed': false}
+            'desc': {
+                'instance': null,
+                'content': null,
+                'disabled': false,
+                'showed': false
+            }
         };
 
         // 上传插件
