@@ -8,6 +8,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             'form': null,
             // 接口
             'api': null,
+            // Dom 操作
+            'dom': null,
             // 控件
             'control': null,
             // 枚举
@@ -489,6 +491,13 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             'getAllProducts': getAllProducts
         };
 
+        // Dom 操作
+        $scope.v.dom = {
+            'id': document.getElementById('groupId'),
+            'type': document.getElementById('type'),
+            'appKey': document.getElementById('appKey')
+        };
+
         // 表单数据
         $scope.v.form = {
             '_action': {
@@ -497,12 +506,13 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 // 表单验证
                 'submitted': false
             },
+
             // 从页面中获取 id 值
-            'id': document.getElementById('couponId').value,
+            'id': (hasValue($scope.v.dom.id) ? $scope.v.dom.id.value : null),
             // 从页面中获取 type 值
-            'type': null, // document.getElementById('type').value,
+            'type': (hasValue($scope.v.dom.type) ? $scope.v.dom.type.value : null),
             // 从页面中获取 appKey 值
-            'appKey': null, // document.getElementById('appKey').value,
+            'appKey': (hasValue($scope.v.dom.appKey) ? $scope.v.dom.appKey.value : null),
 
             // 表单的变量
             'name': null,
@@ -543,7 +553,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 显示高级搜索
         function showAdvSearch(_name) {
-            $scope.v.control.block.ins[_name].search.advanced.showed = !$scope.v.control.block.ins[_name].search.advanced.showed;
+            let _block = $scope.v.control.block.ins[_name];
+            _block.search.advanced.showed = !_block.search.advanced.showed;
         }
 
         // 枚举类型的 Filter
@@ -553,38 +564,39 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 上传回调函数
         function uploaderCallbacks(_name) {
+            let _uploader = $scope.v.control.uploader.ins[_name];
             return {
                 'filesAdded': function(uploader, files) {
-                    if ($scope.v.control.uploader.ins[_name].data.length > uploader.settings.max_files ||
+                    if (_uploader.data.length > uploader.settings.max_files ||
                         // uploader.files.length > uploader.settings.max_files ||
-                        $scope.v.control.uploader.ins[_name].data.length + files.length > uploader.settings.max_files ||
+                        _uploader.data.length + files.length > uploader.settings.max_files ||
                         files.length > uploader.settings.max_files) {
                         uploader.splice();
                         $scope.message('操作失败：上传个数超出限制！', 'error');
                         return false;
                     } else {
-                        $scope.v.control.uploader.ins[_name].loading = true;
-                        $scope.v.control.uploader.ins[_name].files = angular.copy(files);
+                        _uploader.loading = true;
+                        _uploader.files = angular.copy(files);
                         uploader.settings.multipart_params._appKey = $scope.v.form.appKey;
                         uploader.start();
                         return true;
                     }
                 },
                 'uploadProgress': function(uploader, file) {
-                    $scope.v.control.uploader.ins[_name].loading = parseFloat(file.percent / 100.0);
+                    _uploader.loading = parseFloat(file.percent / 100.0);
                 },
                 'fileUploaded': function(uploader, file, response) {
-                    $scope.v.control.uploader.ins[_name].loading = false;
+                    _uploader.loading = false;
                     let res = JSON.parse(response.response);
 
-                    $scope.v.control.uploader.ins[_name].push(_name, res);
+                    _uploader.push(_name, res);
 
                     $timeout(function() {
                         uploader.destroy();
                     }, 50);
                 },
                 'error': function(uploader, error) {
-                    $scope.v.control.uploader.ins[_name].loading = false;
+                    _uploader.loading = false;
                     switch (error.code) {
                         case -600:
                             $scope.message('操作失败：文件大小超出限制！', 'error');
@@ -627,8 +639,9 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 放大图片
         function zoomInImg(_name) {
-            if (_hasValue($scope.v.control.uploader.ins[_name].data)) {
-                window.open($scope.v.control.uploader.ins[_name].data[0].url, '_blank');
+            let _uploader = $scope.v.control.uploader.ins[_name];
+            if (_hasValue(_uploader.data)) {
+                window.open(_uploader.data[0].url, '_blank');
             }
         }
 
@@ -651,23 +664,25 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 显示日期选择器
         function showCalendar(_name) {
-            if ($scope.v.control.date.ins[_name].disabled === false) {
-                $scope.v.control.date.ins[_name].showed = !$scope.v.control.date.ins[_name].showed;
+            let _date = $scope.v.control.date.ins[_name];
+            if (_date.disabled === false) {
+                _date.showed = !_date.showed;
             }
         }
 
         // 判断页面是否有一项正在处于请求状态
         function procRequesting(_name) {
-            if (hasTrue($scope.v.control.block.ins[_name].requesting)) {
+            let _block = $scope.v.control.block.ins[_name];
+            if (hasTrue(_block.requesting)) {
                 $scope.message('正在请求数据中……', 'error');
                 return true;
             } else {
                 // 进入请求状态
-                $scope.v.control.block.ins[_name].requesting = true;
+                _block.requesting = true;
 
                 // 延时重置请求状态
-                $scope.v.control.block.ins[_name].reqTimer = $timeout(function() {
-                    $scope.v.control.block.ins[_name].requesting = false;
+                _block.reqTimer = $timeout(function() {
+                    _block.requesting = false;
                 }, 5000);
 
                 return false;
@@ -676,11 +691,12 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 结束请求
         function endOfRequest(_name) {
-            if (hasTrue($scope.v.control.block.ins[_name].requesting)) {
-                $timeout.cancel($scope.v.control.block.ins[_name].reqTimer);
-                $scope.v.control.block.ins[_name].requesting = false;
+            let _block = $scope.v.control.block.ins[_name];
+            if (hasTrue(_block.requesting)) {
+                $timeout.cancel(_block.reqTimer);
+                _block.requesting = false;
             } else {
-                $scope.v.control.block.ins[_name].requesting = false;
+                _block.requesting = false;
                 // $scope.message('请求数据接口较慢！', 'error');
             }
         }
@@ -728,9 +744,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 判断页码是否在第一页，是的话就不用手动触发请求新数据
         function needManualChangePage(_name) {
+            let _block = $scope.v.control.block.ins[_name];
             // 新搜索更改页码
-            if ($scope.v.control.block.ins[_name].page.num !== 1) {
-                $scope.v.control.block.ins[_name].page.num = 1;
+            if (_block.page.num !== 1) {
+                _block.page.num = 1;
                 return false; // 已经修改页码可以直接跳出，不走请求流程
             } else {
                 return true;
@@ -739,7 +756,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // Tab 菜单改变
         function changeTab(_name, index) {
-            $scope.v.control.block.ins[_name].tab.current = angular.copy($scope.v.control.block.ins[_name].tab.options[index]);
+            let _block = $scope.v.control.block.ins[_name];
+            _block.tab.current = angular.copy(_block.tab.options[index]);
             // 是否手动触发请求
             if (needManualChangePage(_name) === true) {
                 // 异步执行
@@ -756,7 +774,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // Menu 菜单改变
         function changeMenu(_name, index) {
-            $scope.v.control.block.ins[_name].menu.current = angular.copy($scope.v.control.block.ins[_name].menu.options[index]);
+            let _block = $scope.v.control.block.ins[_name];
+            _block.menu.current = angular.copy(_block.menu.options[index]);
             // 是否手动触发请求
             if (needManualChangePage(_name) === true) {
                 // 异步执行
@@ -772,20 +791,22 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         }
 
         function getSortType(_name) {
-            let name = $scope.v.control.block.ins[_name].sort.current.name;
-            let sortBy = $scope.v.control.block.ins[_name].sort.current.sortBy;
+            let _block = $scope.v.control.block.ins[_name];
+            let name = _block.sort.current.name;
+            let sortBy = _block.sort.current.sortBy;
 
             if (!_hasValue(name) || !_hasValue(sortBy)) {
                 return null;
             }
 
-            return $scope.v.control.block.ins[_name].sort.replace[name][sortBy];
+            return _block.sort.replace[name][sortBy];
         }
 
         // 列表排序改变
         function changeSort(_name, _item) {
-            let name = $scope.v.control.block.ins[_name].sort.current.name;
-            let sortBy = $scope.v.control.block.ins[_name].sort.current.sortBy;
+            let _block = $scope.v.control.block.ins[_name];
+            let name = _block.sort.current.name;
+            let sortBy = _block.sort.current.sortBy;
             let index = null;
 
             if (name === _item) {
@@ -794,10 +815,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 if (index >= $scope.v.control.sort._config.type.length) {
                     index = 0;
                 }
-                $scope.v.control.block.ins[_name].sort.current.sortBy = $scope.v.control.sort._config.type[index];
+                _block.sort.current.sortBy = $scope.v.control.sort._config.type[index];
             } else {
-                $scope.v.control.block.ins[_name].sort.current.name = _item;
-                $scope.v.control.block.ins[_name].sort.current.sortBy = $scope.v.control.sort._config.type[0];
+                _block.sort.current.name = _item;
+                _block.sort.current.sortBy = $scope.v.control.sort._config.type[0];
             }
 
             // 是否手动触发请求
@@ -816,7 +837,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // Select 选项改变（特殊）
         function changeMainSelect(_name, index) {
-            $scope.v.control.block.ins.main.select[_name].current = angular.copy($scope.v.control.block.ins.main.select[_name].options[index]);
+            let _block = $scope.v.control.block.ins[_name];
+            _block.select.current = angular.copy(_block.select.options[index]);
             // 是否手动触发请求
             if (needManualChangePage(_name) === true) {
                 // 异步执行
@@ -1096,7 +1118,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         // 返回顶部
         function scroll2Top() {
             $timeout(function() {
-                document.querySelector('.coupon-publish .list-wrap .list-body').scrollTop = 0;
+                document.querySelector('.list-wrap .list-body').scrollTop = 0;
             });
         }
 
@@ -1112,27 +1134,31 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 请求接口，然后有数据返回，用来标识数据库里是否有数据（列表页面时会用到）
         function hasPageData(_name) {
+            let _block = $scope.v.control.block.ins[_name];
             // 因为watch的原因要异步处理
-            if (hasFalse($scope.v.control.block.ins[_name].hasData)) {
+            if (hasFalse(_block.hasData)) {
                 $timeout(function() {   // 页面初始化完毕
-                    $scope.v.control.block.ins[_name].hasData = true;
+                    _block.hasData = true;
                 });
             }
         }
 
         // 重置搜索参数
         function resetSearching(_name) {
-            $scope.v.control.block.ins[_name].search.isProcessing = false;
-            $scope.v.control.block.ins[_name].search.useAdvanced = false;
-            $scope.v.control.block.ins[_name].search.advanced.showed = false;
+            let _block = $scope.v.control.block.ins[_name];
+            _block.search.isProcessing = false;
+            _block.search.useAdvanced = false;
+            _block.search.advanced.showed = false;
         }
 
         // 搜索，返回
         function cancelSearching(_name) {
+            let _block = $scope.v.control.block.ins[_name];
+
             resetSearching(_name);
 
-            if ($scope.v.control.block.ins[_name].page.num !== 1) {
-                $scope.v.control.block.ins[_name].page.num = 1;
+            if (_block.page.num !== 1) {
+                _block.page.num = 1;
             } else {
                 updateLstData(_name).then(function(_data) {
                     if (_hasValue(_data)) {
@@ -1145,16 +1171,18 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 没有关键词返回空结果
         function returnEmptyResult(_name) {
-            $scope.v.control.block.ins[_name].list = [];
-            $scope.v.control.block.ins[_name].page.count = 0;
+            let _block = $scope.v.control.block.ins[_name];
+            _block.list = [];
+            _block.page.count = 0;
             return true;
         }
 
         // 没有关键词返回所有结果
         function returnSearchResult(_name) {
+            let _block = $scope.v.control.block.ins[_name];
             // 新搜索更改页码
-            if ($scope.v.control.block.ins[_name].page.num !== 1) {
-                $scope.v.control.block.ins[_name].page.num = 1;
+            if (_block.page.num !== 1) {
+                _block.page.num = 1;
                 return true; // 已经修改页面可以直接跳出，不走请求流程
             } else {
                 return false;
@@ -1163,14 +1191,15 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 简单搜索（这个函数的返回值必须是 Promises）
         function smpSearch(_name, isNew) {
+            let _block = $scope.v.control.block.ins[_name];
             if (hasTrue(isNew)) {
                 resetSearching(_name);
-                $scope.v.control.block.ins[_name].search.isProcessing = true;
+                _block.search.isProcessing = true;
 
-                if (_hasValue($scope.v.control.block.ins[_name].search.simple.form.keyword)) { // 新的搜索有关键词
+                if (_hasValue(_block.search.simple.form.keyword)) { // 新的搜索有关键词
 
-                    $scope.v.control.block.ins[_name].search.simple.data = {
-                        'keyword': angular.copy($scope.v.control.block.ins[_name].search.simple.form.keyword)
+                    _block.search.simple.data = {
+                        'keyword': angular.copy(_block.search.simple.form.keyword)
                     };
 
                     // 返回搜索结果
@@ -1178,7 +1207,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                         return getNullPromises(); // 已经修改页面可以直接跳出，不走请求流程
                     }
                 } else { // 新的搜索没有关键词
-                    $scope.v.control.block.ins[_name].search.simple.data.keyword = null;
+                    _block.search.simple.data.keyword = null;
 
                     // 返回空白结果
                     // if (returnEmptyResult(_name) === true) {
@@ -1194,8 +1223,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
             let data = getQueryData(_name);
 
-            let key = $scope.v.control.block.ins[_name].search.simple.replace.keyword;
-            data[key] = $scope.v.control.block.ins[_name].search.simple.data.keyword;
+            let key = _block.search.simple.replace.keyword;
+            data[key] = _block.search.simple.data.keyword;
 
             return reqSmpSearch(_name, data);
         }
@@ -1212,9 +1241,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 遍历判断控件里是否有值
         function hasAdvSearchCtrlData(_name) {
-            for (let ctrl in $scope.v.control.block.ins[_name].search.advanced.ctrls) {
-                if (hasProp($scope.v.control.block.ins[_name].search.advanced.ctrls, ctrl)) {
-                    let objs = $scope.v.control.block.ins[_name].search.advanced.ctrls[ctrl];
+            let _block = $scope.v.control.block.ins[_name];
+            for (let ctrl in _block.search.advanced.ctrls) {
+                if (hasProp(_block.search.advanced.ctrls, ctrl)) {
+                    let objs = _block.search.advanced.ctrls[ctrl];
                     if (_hasValue(objs)) {
                         for (let i = 0, len = objs.length; i < len; i++) {
                             let name = objs[i];
@@ -1241,10 +1271,11 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 是否有高级搜索内容
         function hasAdvSearchData(_name) {
+            let _block = $scope.v.control.block.ins[_name];
             // 循环判断form下的key是否有值
-            for (let prop in $scope.v.control.block.ins[_name].search.advanced.form) {
-                if (hasProp($scope.v.control.block.ins[_name].search.advanced.form, prop)) {
-                    let value = $scope.v.control.block.ins[_name].search.advanced.form[prop];
+            for (let prop in _block.search.advanced.form) {
+                if (hasProp(_block.search.advanced.form, prop)) {
+                    let value = _block.search.advanced.form[prop];
                     if (_hasValue(value)) {
                         return true;
                     }
@@ -1261,13 +1292,14 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 遍历复制控件里的值
         function setAdvSearchCtrlData(_name) {
-            for (let ctrl in $scope.v.control.block.ins[_name].search.advanced.ctrls) {
-                if (hasProp($scope.v.control.block.ins[_name].search.advanced.ctrls, ctrl)) {
-                    let objs = $scope.v.control.block.ins[_name].search.advanced.ctrls[ctrl];
+            let _block = $scope.v.control.block.ins[_name];
+            for (let ctrl in _block.search.advanced.ctrls) {
+                if (hasProp(_block.search.advanced.ctrls, ctrl)) {
+                    let objs = _block.search.advanced.ctrls[ctrl];
                     if (_hasValue(objs)) {
                         _.each(objs, function(name) {
                             let src = null;
-                            let dst = $scope.v.control.block.ins[_name].search.advanced;
+                            let dst = _block.search.advanced;
 
                             switch (ctrl) {
                                 case 'select':
@@ -1296,16 +1328,17 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 配置高级搜索参数
         function setAdvSearchData(_name) {
-            $scope.v.control.block.ins[_name].search.advanced.data = {};
+            let _block = $scope.v.control.block.ins[_name];
+            _block.search.advanced.data = {};
 
             // 遍历表单输入框的值赋值
-            for (let prop in $scope.v.control.block.ins[_name].search.advanced.form) {
-                if (hasProp($scope.v.control.block.ins[_name].search.advanced.form, prop)) {
-                    let text = $scope.v.control.block.ins[_name].search.advanced.form[prop];
+            for (let prop in _block.search.advanced.form) {
+                if (hasProp(_block.search.advanced.form, prop)) {
+                    let text = _block.search.advanced.form[prop];
                     if (_hasValue(text)) {
-                        $scope.v.control.block.ins[_name].search.advanced.data[prop] = text;
+                        _block.search.advanced.data[prop] = text;
                     } else {
-                        $scope.v.control.block.ins[_name].search.advanced.data[prop] = null;
+                        _block.search.advanced.data[prop] = null;
                     }
                 }
             }
@@ -1316,9 +1349,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 遍历设置控件里的值为 null
         function clearAdvSearchCtrlData(_name) {
-            for (let ctrl in $scope.v.control.block.ins[_name].search.advanced.ctrls) {
-                if (hasProp($scope.v.control.block.ins[_name].search.advanced.ctrls, ctrl)) {
-                    let objs = $scope.v.control.block.ins[_name].search.advanced.ctrls[ctrl];
+            let _block = $scope.v.control.block.ins[_name];
+            for (let ctrl in _block.search.advanced.ctrls) {
+                if (hasProp(_block.search.advanced.ctrls, ctrl)) {
+                    let objs = _block.search.advanced.ctrls[ctrl];
                     if (_hasValue(objs)) {
                         _.each(objs, function(name) {
                             switch (ctrl) {
@@ -1344,13 +1378,14 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 清空高级搜索内容
         function clearAdvSearch(_name) {
+            let _block = $scope.v.control.block.ins[_name];
             // 循环把form下的key全部置null
-            for (let prop in $scope.v.control.block.ins[_name].search.advanced.form) {
-                if (hasProp($scope.v.control.block.ins[_name].search.advanced.form, prop)) {
-                    if (_.isArray($scope.v.control.block.ins[_name].search.advanced.form[prop])) {
-                        $scope.v.control.block.ins[_name].search.advanced.form[prop] = [];
+            for (let prop in _block.search.advanced.form) {
+                if (hasProp(_block.search.advanced.form, prop)) {
+                    if (_.isArray(_block.search.advanced.form[prop])) {
+                        _block.search.advanced.form[prop] = [];
                     } else {
-                        $scope.v.control.block.ins[_name].search.advanced.form[prop] = null;
+                        _block.search.advanced.form[prop] = null;
                     }
                 }
             }
@@ -1361,22 +1396,24 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 重置高级搜索提交的数据
         function resetAdvSearchData(_name) {
+            let _block = $scope.v.control.block.ins[_name];
             // 循环把data下的key全部置null
-            for (let prop in $scope.v.control.block.ins[_name].search.advanced.data) {
-                if (hasProp($scope.v.control.block.ins[_name].search.advanced.data, prop)) {
-                    $scope.v.control.block.ins[_name].search.advanced.data[prop] = null;
+            for (let prop in _block.search.advanced.data) {
+                if (hasProp(_block.search.advanced.data, prop)) {
+                    _block.search.advanced.data[prop] = null;
                 }
             }
         }
 
         // 扩展高级搜索请求参数
         function extendAdvSearchData(_name, data) {
+            let _block = $scope.v.control.block.ins[_name];
             // 遍历请求数据进行赋值
-            for (let prop in $scope.v.control.block.ins[_name].search.advanced.data) {
-                if (hasProp($scope.v.control.block.ins[_name].search.advanced.data, prop)) {
-                    let value = $scope.v.control.block.ins[_name].search.advanced.data[prop];
+            for (let prop in _block.search.advanced.data) {
+                if (hasProp(_block.search.advanced.data, prop)) {
+                    let value = _block.search.advanced.data[prop];
                     if (_hasValue(value)) {
-                        let key = $scope.v.control.block.ins[_name].search.advanced.replace[prop];
+                        let key = _block.search.advanced.replace[prop];
                         data[key] = value;
                     }
                 }
@@ -1407,11 +1444,12 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 高级搜索（这个函数的返回值必须是 Promises）
         function advSearch(_name, isNew) {
-            $scope.v.control.block.ins[_name].search.advanced.touched = true;
+            let _block = $scope.v.control.block.ins[_name];
+            _block.search.advanced.touched = true;
 
             if (hasTrue(isNew)) {
-                $scope.v.control.block.ins[_name].search.isProcessing = true;
-                $scope.v.control.block.ins[_name].search.useAdvanced = true;
+                _block.search.isProcessing = true;
+                _block.search.useAdvanced = true;
 
                 if (hasAdvSearchData(_name) === true) {
                     setAdvSearchData(_name);
@@ -1455,12 +1493,13 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 列表数据统一获取（基础数据）
         function getQueryData(_name) {
+            let _block = $scope.v.control.block.ins[_name];
             return {
                 'sort': getSortType(_name),
                 // 'productStatus': null,
-                'pageNo': $scope.v.control.block.ins[_name].page.num - 1,
+                'pageNo': _block.page.num - 1,
                 'pagesize': $scope.v.control.page._config.size
-                // 'status': $scope.v.control.block.ins[_name].tab.current._key
+                // 'status': _block.tab.current._key
             };
         }
 
@@ -1479,8 +1518,9 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 统一处理页面数据赋值
         function setLstData(_name, count, list) {
-            $scope.v.control.block.ins[_name].page.count = count;
-            $scope.v.control.block.ins[_name].list = angular.copy(list);
+            let _block = $scope.v.control.block.ins[_name];
+            _block.page.count = count;
+            _block.list = angular.copy(list);
         }
 
         // 页面主函数
@@ -1550,9 +1590,10 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         }
 
         function addAllProducts() {
-            for (let i = 0, len = $scope.v.control.block.ins.main.list.length; i < len; i++) {
-                if (!hasProduct($scope.v.control.block.ins.main.list[i].id)) {
-                    addProduct($scope.v.control.block.ins.main.list[i].id);
+            let _block = $scope.v.control.block.ins.main;
+            for (let i = 0, len = _block.list.length; i < len; i++) {
+                if (!hasProduct(_block.list[i].id)) {
+                    addProduct(_block.list[i].id);
                 }
             }
         }
@@ -1603,7 +1644,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
             $vm.m.scroll2Top = function() {
                 $timeout(function() {
-                    document.querySelector('.coupon-publish-show-selected .list-body').scrollTop = 0;
+                    document.querySelector('.modal-body .list-body').scrollTop = 0;
                 });
             };
 
@@ -1827,10 +1868,11 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 列表更新
         function updateLstData(_name) {
+            let _block = $scope.v.control.block.ins[_name];
             // 搜索状态下的翻页
-            if ($scope.v.control.block.ins[_name].search.isProcessing === true) {
+            if (_block.search.isProcessing === true) {
                 // 高级搜索
-                if ($scope.v.control.block.ins[_name].search.useAdvanced === true) {
+                if (_block.search.useAdvanced === true) {
                     return advSearch(_name);
                 } else { // 简单搜索
                     return smpSearch(_name);

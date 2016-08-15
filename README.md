@@ -86,6 +86,11 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/08/15
+
+1. 添加统一的 dom 操作管理；
+2. 缩短 block 的命名变量；
+
 #### 2016/08/12
 
 1. 修改 watchPageNum() 调用的位置；
