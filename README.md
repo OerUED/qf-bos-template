@@ -89,6 +89,7 @@ Some useful template files for qf-bos.
 #### 2016/08/16
 
 1. 添加统一的 watchPageNum() 处理；
+2. 修复 Dom 取值为空字符串的问题；
 
 #### 2016/08/15
 

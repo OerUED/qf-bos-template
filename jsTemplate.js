@@ -527,11 +527,11 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             },
 
             // 从页面中获取 id 值
-            'id': (hasValue($scope.v.dom.id) ? $scope.v.dom.id.value : null),
+            'id': (hasValue($scope.v.dom.id) ? _getValue($scope.v.dom.id.value, null) : null),
             // 从页面中获取 type 值
-            'type': (hasValue($scope.v.dom.type) ? $scope.v.dom.type.value : null),
+            'type': (hasValue($scope.v.dom.type) ? _getValue($scope.v.dom.type.value, null) : null),
             // 从页面中获取 appKey 值
-            'appKey': (hasValue($scope.v.dom.appKey) ? $scope.v.dom.appKey.value : null),
+            'appKey': (hasValue($scope.v.dom.appKey) ? _getValue($scope.v.dom.appKey.value, null) : null),
 
             // 表单的变量
             'name': null,
@@ -1517,7 +1517,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'sort': getSortType(_name),
                 // 'productStatus': null,
                 'pageNo': _block.page.num - 1,
-                'pagesize': $scope.v.control.page._config.size
+                'pageSize': $scope.v.control.page._config.size
                 // 'status': _block.tab.current._key
             };
         }
