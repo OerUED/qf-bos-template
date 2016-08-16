@@ -208,7 +208,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         // 分页实例
         $scope.v.control.block.ins.main.page = {
             'num': 1,
-            'count': 0
+            'count': 0,
+            'watcher': null
         };
 
         // tab 实例
@@ -1539,14 +1540,15 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             let _block = $scope.v.control.block.ins[_name];
             _block.page.count = count;
             _block.list = angular.copy(list);
+            if (!hasValue(_block.page.watcher)) {
+                _block.page.watcher = watchPageNum(_name);
+            }
         }
 
         // 页面主函数
         function main() {
             // 判断当前是否是编辑状态
             $scope.v.page.editing = _hasValue($scope.v.form.id);
-            // 页面没有列表的时候不需要打开
-            watchPageNum('main');
             // 编辑状态
             if (hasTrue($scope.v.page.editing)) {
                 // 编辑页获取数据
@@ -1595,23 +1597,29 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         //     width: auto;
         // }
 
-        function addProduct(id) {
-            $scope.v.form.productIds.push(id);
+        function addProduct(item) {
+            $scope.v.form.productIds.push({
+                'id': item.id
+            });
         }
 
         function delProduct(id) {
-            _removeItem($scope.v.form.productIds, id);
+            _removeObjItem($scope.v.form.productIds, {
+                'id': id
+            });
         }
 
         function hasProduct(id) {
-            return ($scope.v.form.productIds.indexOf(id) > -1);
+            return _hasObjItem($scope.v.form.productIds, {
+                'id': id
+            });
         }
 
         function addAllProducts() {
             let _block = $scope.v.control.block.ins.main;
             for (let i = 0, len = _block.list.length; i < len; i++) {
                 if (!hasProduct(_block.list[i].id)) {
-                    addProduct(_block.list[i].id);
+                    addProduct(_block.list[i]);
                 }
             }
         }
@@ -1636,16 +1644,22 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'count': $vm.v.data.length
             };
 
-            $vm.f.addProduct = function(id) {
-                $vm.v.productIds.push(id);
+            $vm.f.addProduct = function(item) {
+                $vm.v.productIds.push({
+                    'id': item.id
+                });
             };
 
             $vm.f.delProduct = function(id) {
-                _removeItem($vm.v.productIds, id);
+                _removeObjItem($vm.v.productIds, {
+                    'id': id
+                });
             };
 
             $vm.f.hasProduct = function(id) {
-                return ($vm.v.productIds.indexOf(id) > -1);
+                return _hasObjItem($vm.v.productIds, {
+                    'id': id
+                });
             };
 
             $vm.f.ok = function() {
@@ -1671,7 +1685,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
                 for (let i = parseInt(page, 10) * $vm.v.page.size, maxLen = $vm.v.page.count, len = i + $vm.v.page.size;
                      (i < maxLen) && (i < len); i++) {
-                    res.push($vm.v.data[i]);
+                    res.push($vm.v.data[i].id);
                 }
 
                 return res.join(',');
@@ -1738,6 +1752,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
             });
         }
 
+        // 弹窗关闭后重置 block 状态
         function resetBlockData(_name) {
             $scope.v.control.block.ins[_name] = {
                 'hasData': false,

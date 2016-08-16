@@ -86,6 +86,10 @@ Some useful template files for qf-bos.
 
 ## jsTemplate.js
 
+#### 2016/08/16
+
+1. 添加统一的 watchPageNum() 处理；
+
 #### 2016/08/15
 
 1. 添加统一的 dom 操作管理；
