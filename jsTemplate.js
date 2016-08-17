@@ -1940,5 +1940,13 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 }
             }, true);
         }
+
+        // 卸载页码监控
+        function unWatchPageNum(_name) {
+            let _block = $scope.v.control.block.ins[_name];
+            if (hasValue(_block.page.watcher)) {
+                _block.page.watcher();
+            }
+        }
     }
 ]);

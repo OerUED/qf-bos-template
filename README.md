@@ -93,6 +93,7 @@ Some useful template files for qf-bos.
 #### 2016/08/17
 
 1. 分离 block 与 page 的 requesting 状态；
+2. 添加 unWatchPageNum() 函数处理卸载页码监控；
 
 #### 2016/08/16
 
