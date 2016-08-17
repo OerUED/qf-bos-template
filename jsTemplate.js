@@ -209,7 +209,8 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         $scope.v.control.block.ins.main.page = {
             'num': 1,
             'count': 0,
-            'watcher': null
+            'watcher': null,
+            'requesting': false
         };
 
         // tab 实例
@@ -1902,16 +1903,26 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         // 列表更新
         function updateLstData(_name) {
             let _block = $scope.v.control.block.ins[_name];
+            _block.page.requesting = true;
             // 搜索状态下的翻页
             if (_block.search.isProcessing === true) {
                 // 高级搜索
                 if (_block.search.useAdvanced === true) {
-                    return advSearch(_name);
+                    return advSearch(_name).then(function(_data) {
+                        _block.page.requesting = false;
+                        return _data;
+                    });
                 } else { // 简单搜索
-                    return smpSearch(_name);
+                    return smpSearch(_name).then(function(_data) {
+                        _block.page.requesting = false;
+                        return _data;
+                    });
                 }
             } else { // 非搜索状态
-                return getLstData(_name);
+                return getLstData(_name).then(function(_data) {
+                    _block.page.requesting = false;
+                    return _data;
+                });
             }
         }
 

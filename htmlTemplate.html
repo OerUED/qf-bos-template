@@ -208,7 +208,7 @@
         <th>操作</th>
     </tr>
     </thead>
-    <tbody ng-show="b.main.requesting === false">
+    <tbody ng-show="b.main.page.requesting === false">
     <tr ng-repeat="r in b.main.list">
         <td ng-bind="r.name"></td>
         <td ng-bind="r.phone"></td>
@@ -245,7 +245,7 @@
 5.空数据
 
 <div class="mod-noneData"
-     ng-show="(v.page.init === false) &amp;&amp; (b.main.list.length === 0) &amp;&amp; (b.main.hasData === false) &amp;&amp; (b.main.requesting === false)">
+     ng-show="(v.page.init === false) &amp;&amp; (b.main.list.length === 0) &amp;&amp; (b.main.hasData === false) &amp;&amp; (b.main.page.requesting === false)">
     <div data-th-replace="fragments/noneData"></div>
 </div>
 
@@ -262,7 +262,7 @@
                     ng-model="b.main.page.num"
                     items-per-page="v.control.page._config.size"
                     max-size="v.control.page._config.maxSize"
-                    ng-disabled="b.main.requesting"
+                    ng-disabled="b.main.page.requesting"
                     boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                     force-ellipses="true"
                     first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
@@ -507,7 +507,7 @@
                     <th>操作</th>
                 </tr>
                 </thead>
-                <tbody ng-show="(b.main.list.length &gt; 0) &amp;&amp; (b.main.requesting === false)">
+                <tbody ng-show="(b.main.list.length &gt; 0) &amp;&amp; (b.main.page.requesting === false)">
                 <tr ng-repeat="r in b.main.list">
                     <td ng-bind="r.name"></td>
                     <td ng-bind="r.phone"></td>
@@ -540,10 +540,10 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="mod-noneData" ng-show="(b.main.list.length &lt; 1) &amp;&amp; (b.main.requesting === false)">
+            <div class="mod-noneData" ng-show="(b.main.list.length &lt; 1) &amp;&amp; (b.main.page.requesting === false)">
                 <div data-th-replace="fragments/noneData"></div>
             </div>
-            <div class="mod-loading" ng-show="b.main.requesting === true">
+            <div class="mod-loading" ng-show="b.main.page.requesting === true">
                 <img src="/_resources/images/loading.gif" alt="" />
                 <p>正在加载...</p>
             </div>
@@ -560,7 +560,7 @@
                             ng-model="b.main.page.num"
                             items-per-page="v.control.page._config.size"
                             max-size="v.control.page._config.maxSize"
-                            ng-disabled="b.main.requesting"
+                            ng-disabled="b.main.page.requesting"
                             boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                             force-ellipses="true"
                             first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>
@@ -659,7 +659,7 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
 
 22.加载图片
 
-<div class="mod-loading" ng-show="b.main.requesting === true">
+<div class="mod-loading" ng-show="b.main.page.requesting === true">
     <img src="/_resources/images/loading.gif" alt="" />
     <p>正在加载...</p>
 </div>
@@ -756,7 +756,7 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
                     <th>分组</th>
                 </tr>
                 </thead>
-                <tbody ng-show="(b.main.list.length &gt; 0) &amp;&amp; (b.main.requesting === false)">
+                <tbody ng-show="(b.main.list.length &gt; 0) &amp;&amp; (b.main.page.requesting === false)">
                 <tr ng-repeat="r in b.main.list">
                     <td ng-bind="r.id"></td>
                     <td ng-bind="r.thirdItemId | showNullLine"></td>
@@ -773,10 +773,10 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
                 </tr>
                 </tbody>
             </table>
-            <div class="mod-noneData" ng-show="(b.main.list.length &lt; 1) &amp;&amp; (b.main.requesting === false)">
+            <div class="mod-noneData" ng-show="(b.main.list.length &lt; 1) &amp;&amp; (b.main.page.requesting === false)">
                 <div data-th-replace="fragments/noneData"></div>
             </div>
-            <div class="mod-loading" ng-show="b.main.requesting === true">
+            <div class="mod-loading" ng-show="b.main.page.requesting === true">
                 <img src="/_resources/images/loading.gif" alt="" />
                 <p>正在加载...</p>
             </div>
@@ -792,7 +792,7 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
                             ng-model="b.main.page.num"
                             items-per-page="v.control.page._config.size"
                             max-size="v.control.page._config.maxSize"
-                            ng-disabled="b.main.requesting"
+                            ng-disabled="b.main.page.requesting"
                             boundary-links="true" boundary-link-numbers="false" direction-links="true" rotate="false"
                             force-ellipses="true"
                             first-text="首页" last-text="末页" previous-text="上一页" next-text="下一页"></pagination>

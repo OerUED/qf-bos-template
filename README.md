@@ -3,6 +3,10 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/08/17
+
+1. 分离 block 与 page 的 requesting 状态；
+
 #### 2016/08/12
 
 1. 修改模板遗漏的部分；
@@ -85,6 +89,10 @@ Some useful template files for qf-bos.
 1. 模板代码初始化；
 
 ## jsTemplate.js
+
+#### 2016/08/17
+
+1. 分离 block 与 page 的 requesting 状态；
 
 #### 2016/08/16
 
