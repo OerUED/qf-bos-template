@@ -334,6 +334,14 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                 'value': 1,
                 'change': null,
                 'input': null
+            },
+            'selected': {
+                'value': [],
+                'change': null,
+                'choices': {
+                    'no1': {'disabled': false, 'showed': false},
+                    'no2': {'disabled': false, 'showed': false}
+                }
             }
         };
 
