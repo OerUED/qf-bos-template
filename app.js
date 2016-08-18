@@ -32,6 +32,16 @@ app.config(['$httpProvider', function($httpProvider) {
 
 // 常用函数 add by tianlu
 
+// 计算时间间隔
+function calcDate(day, isResetTime) {
+    let now = new Date();
+    now.setDate(now.getDate() + day);
+    if (hasTrue(isResetTime)) {
+        now.setHours(23, 59, 59, 999);
+    }
+    return now;
+}
+
 // 判断变量是日期
 function hasDate(v) {
     return (hasValue(v) && _.isDate(v));
