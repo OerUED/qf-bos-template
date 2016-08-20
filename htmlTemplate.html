@@ -394,8 +394,8 @@
 </div>
 <div data-layout-fragment="main">
     <div class="personal-detail ng-cloak" ng-controller="ctrlPersonalDetail">
-        <input type="hidden" data-th-value="${id}" id="activityId"/>
-        <input type="hidden" data-th-value="${type}" id="activityType"/>
+        <input type="hidden" data-th-value="${id}" id="id"/>
+        <input type="hidden" data-th-value="${type}" id="type"/>
         <!-- 导航栏 -->
         <div class="mod-nav fn-clear">
             <div class="fn-left"></div>
@@ -635,42 +635,20 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
     </div>
 </div>
 
-21.可排序的表头
-
-<tr>
-    <th>店铺名称</th>
-    <th>联系电话</th>
-    <th>店铺类型</th>
-    <th>创建时间</th>
-    <th>更新时间</th>
-    <th>
-        <span class="" ng-click="v.control.sort.change('main', 'sale')">销量
-            <i class="glyphicon glyphicon-sort"
-               ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'NONE')"></i>
-            <i class="glyphicon glyphicon-arrow-down"
-               ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'DESC')"></i>
-            <i class="glyphicon glyphicon-arrow-up"
-               ng-show="(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy === 'ASC')"></i>
-        </span>
-    </th>
-    <th>佣金比例</th>
-    <th>操作</th>
-</tr>
-
-22.加载图片
+21.加载图片
 
 <div class="mod-loading" ng-show="b.main.page.requesting === true">
     <img src="/_resources/images/loading.gif" alt="" />
     <p>正在加载...</p>
 </div>
 
-23.百度编辑器
+22.百度编辑器
 
 <textarea name="productDescription" ng-ueditor="v.control.editor.options"
           ready="v.control.editor.ready($editor)"
           ng-model="v.form.description" required="required"></textarea>
 
-24.可排序表头
+23.可排序表头
 
 <th ng-click="v.control.sort.change('main', 'sale')">
     <span class="sort-item" ng-class="{true : 'active', false: ''}[(b.main.sort.current.name === 'sale') &amp;&amp; (b.main.sort.current.sortBy !== 'NONE')]">销量
@@ -680,7 +658,7 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
     </span>
 </th>
 
-25.详情页面模板
+24.详情页面模板
 
 <!DOCTYPE html>
 <html data-layout-decorator="/layout/mainPage">
@@ -710,7 +688,7 @@ pattern="^(13[0-9]|14[7]|15[0|1|2|3|5|6|7|8|9]|17[6|7|8]|18[0-9])\d{8}$"
         </div>
         <!-- 内容 -->
         <div class="mod-contain fn-clear">
-            <input type="hidden" data-th-value="${id}" id="groupId"/>
+            <input type="hidden" data-th-value="${id}" id="id"/>
             <div class="operation-wrap">
                 <a class="btn btn-primary btn-edit" href="/product/grouping-edit?id={{v.form.id}}">编辑/修改</a>
                 <button class="btn btn-default btn-close" type="button" ng-click="f.delGroup()">删除分组</button>

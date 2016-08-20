@@ -521,7 +521,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // Dom 操作
         $scope.v.dom = {
-            'id': document.getElementById('groupId'),
+            'id': document.getElementById('id'),
             'type': document.getElementById('type'),
             'appKey': document.getElementById('appKey')
         };
@@ -592,9 +592,9 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
 
         // 上传回调函数
         function uploaderCallbacks(_name) {
-            let _uploader = $scope.v.control.uploader.ins[_name];
             return {
                 'filesAdded': function(uploader, files) {
+                    let _uploader = $scope.v.control.uploader.ins[_name];
                     if (_uploader.data.length > uploader.settings.max_files ||
                         // uploader.files.length > uploader.settings.max_files ||
                         _uploader.data.length + files.length > uploader.settings.max_files ||
@@ -611,9 +611,11 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                     }
                 },
                 'uploadProgress': function(uploader, file) {
+                    let _uploader = $scope.v.control.uploader.ins[_name];
                     _uploader.loading = parseFloat(file.percent / 100.0);
                 },
                 'fileUploaded': function(uploader, file, response) {
+                    let _uploader = $scope.v.control.uploader.ins[_name];
                     _uploader.loading = false;
                     let res = JSON.parse(response.response);
 
@@ -624,6 +626,7 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
                     }, 50);
                 },
                 'error': function(uploader, error) {
+                    let _uploader = $scope.v.control.uploader.ins[_name];
                     _uploader.loading = false;
                     switch (error.code) {
                         case -600:

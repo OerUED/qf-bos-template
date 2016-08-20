@@ -3,6 +3,10 @@ Some useful template files for qf-bos.
 
 ## htmlTemplate.html
 
+#### 2016/08/20
+
+1. 删除重复的可排序表头；
+
 #### 2016/08/17
 
 1. 分离 block 与 page 的 requesting 状态；
@@ -89,6 +93,11 @@ Some useful template files for qf-bos.
 1. 模板代码初始化；
 
 ## jsTemplate.js
+
+#### 2016/08/20
+
+1. 统一 ID 的取值；
+2. 修复上传控件变量未定义问题；
 
 #### 2016/08/17
 
