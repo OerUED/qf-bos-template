@@ -23,12 +23,12 @@
                 <div class="item-wrap store-name">
                     <label class="item-name">店铺名称</label>
                     <div class="item-input-wrap"
-                         ng-class="{'has-error': (formSearch.storeName.$invalid &amp;&amp; (formSearch.storeName.$touched || v.search.advanced.touched))}">
+                         ng-class="{'has-error': (formSearch.storeName.$invalid &amp;&amp; (formSearch.storeName.$touched || b.main.search.advanced.touched))}">
                         <input class="form-control" placeholder="请输入店铺名称" name="storeName" max-word="256"
-                               ng-model="v.search.advanced.form.name" ng-trim="false" replace-space="" type="text"/>
+                               ng-model="b.main.search.advanced.form.name" ng-trim="false" replace-space="" type="text"/>
                         <div class="form-tips help-block form-error-icon"
                              ng-messages="formSearch.storeName.$error"
-                             ng-show="formSearch.storeName.$invalid &amp;&amp; (formSearch.storeName.$touched || v.search.advanced.touched)">
+                             ng-show="formSearch.storeName.$invalid &amp;&amp; (formSearch.storeName.$touched || b.main.search.advanced.touched)">
                             <div ng-message="maxword">最长只能输入256个字符</div>
                         </div>
                     </div>
@@ -38,12 +38,12 @@
                 <div class="item-wrap phone-num">
                     <label class="item-name">联系电话</label>
                     <div class="item-input-wrap"
-                         ng-class="{'has-error': (formSearch.phoneNum.$invalid &amp;&amp; (formSearch.phoneNum.$touched || v.search.advanced.touched))}">
+                         ng-class="{'has-error': (formSearch.phoneNum.$invalid &amp;&amp; (formSearch.phoneNum.$touched || b.main.search.advanced.touched))}">
                         <input class="form-control" placeholder="请输入联系电话" name="phoneNum" max-word="11"
-                               ng-model="v.search.advanced.form.phone" ng-trim="false" replace-space="" type="text"/>
+                               ng-model="b.main.search.advanced.form.phone" ng-trim="false" replace-space="" type="text"/>
                         <div class="form-tips help-block form-error-icon"
                              ng-messages="formSearch.phoneNum.$error"
-                             ng-show="formSearch.phoneNum.$invalid &amp;&amp; (formSearch.phoneNum.$touched || v.search.advanced.touched)">
+                             ng-show="formSearch.phoneNum.$invalid &amp;&amp; (formSearch.phoneNum.$touched || b.main.search.advanced.touched)">
                             <div ng-message="maxword">最长只能输入11个字符</div>
                         </div>
                     </div>
@@ -152,13 +152,13 @@
                     <div class="item-input-wrap">
                         <div class="start-num-wrap">
                             <input class="form-control" type="number" placeholder="" name="minPrice"
-                                   ng-model="v.search.advanced.form.minPrice" min="0.01" step="0.01"
-                                   max="v.search.advanced.form.maxPrice"/>
+                                   ng-model="b.main.search.advanced.form.minPrice" min="0.01" step="0.01"
+                                   max="b.main.search.advanced.form.maxPrice"/>
                         </div>
                         <span class="short-line"></span>
                         <div class="end-num-wrap">
                             <input class="form-control" type="number" placeholder="" name="maxPrice"
-                                   ng-model="v.search.advanced.form.maxPrice" min="v.search.advanced.form.minPrice"
+                                   ng-model="b.main.search.advanced.form.maxPrice" min="b.main.search.advanced.form.minPrice"
                                    step="0.01" max="999999999.00"/>
                         </div>
                     </div>
