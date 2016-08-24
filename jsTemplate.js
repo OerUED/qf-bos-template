@@ -560,22 +560,22 @@ app.controller('ctrlCouponPublish', ['$rootScope', '$scope', '$modal', '$filter'
         // 接口（每一个api对应一个单独的处理函数）
         $scope.v.api = {
             'list': function(data) {
-                return servHttp.post('/product/getProductList', data);
+                return servHttp.post('', data);
             },
             'prods': function(data) {
-                return servHttp.post('/promotion/coupon/getProducts', data);
+                return servHttp.post('', data);
             },
             'search': function(data) {
-                return servHttp.post('/product/getProductList', data);
+                return servHttp.post('', data);
             },
             'get': function(data) {
-                return servHttp.get('/promotion/coupon/detail', data);
+                return servHttp.get('', data);
             },
             'save': function(data) {
-                return servHttp.post('/promotion/coupon/create', data);
+                return servHttp.post('', data);
             },
             'update': function(data) {
-                return servHttp.post('/promotion/coupon/edit', data);
+                return servHttp.post('', data);
             }
         };
 
