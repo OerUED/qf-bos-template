@@ -223,6 +223,28 @@ function toRMBYuan(fen) {
     }
 }
 
+function toMillisecond(days, hours, minutes, seconds) {
+    seconds = seconds || 0;
+    minutes = minutes || 0;
+    hours = hours || 0;
+    days = days || 0;
+    return (days * 86400 + hours * 3600 + minutes * 60 + seconds * 1) * 1000;
+}
+
+function toDHMS(millisecond) {
+    var ms = parseInt((millisecond || 0) / 1000, 10);
+    var seconds = parseInt(ms % 60 / 1, 10);
+    var minutes = parseInt((ms - seconds) % 3600 / 60, 10);
+    var hours = parseInt((ms - minutes * 60) % 86400 / 3600, 10);
+    var days = parseInt((ms - hours * 3600) / 86400, 10);
+    return {
+        'days': days,
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds
+    };
+}
+
 function getEditorOptions() {
     return {
         toolbars: [
