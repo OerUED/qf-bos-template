@@ -231,12 +231,15 @@ function toMillisecond(days, hours, minutes, seconds) {
     return (days * 86400 + hours * 3600 + minutes * 60 + seconds * 1) * 1000;
 }
 
-function toDHMS(millisecond) {
-    var ms = parseInt((millisecond || 0) / 1000, 10);
+function toDHMS(ms) {
+    ms = parseInt((ms || 0) / 1000, 10);
     var seconds = parseInt(ms % 60 / 1, 10);
-    var minutes = parseInt((ms - seconds) % 3600 / 60, 10);
-    var hours = parseInt((ms - minutes * 60) % 86400 / 3600, 10);
-    var days = parseInt((ms - hours * 3600) / 86400, 10);
+    ms = ms - seconds;
+    var minutes = parseInt(ms % 3600 / 60, 10);
+    ms = ms - minutes * 60;
+    var hours = parseInt(ms % 86400 / 3600, 10);
+    ms = ms - hours * 3600;
+    var days = parseInt(ms / 86400, 10);
     return {
         'days': days,
         'hours': hours,
